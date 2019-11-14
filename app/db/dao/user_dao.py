@@ -1,6 +1,6 @@
-from app.models.users import Register
+from app.models.users import RegisterIn
 from app.db.models import User
 
 
-def register_user(user: Register):
-    User(**user.dict())
+def register_user(user: RegisterIn) -> User:
+    return User(**user.dict())
