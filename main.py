@@ -7,7 +7,7 @@ from app import settings
 from app.db.base import db
 from app.routers import user_controller
 
-db.bind(**settings.db_params)
+db.bind(**settings.DB_PARAMS)
 db.generate_mapping(create_tables=True)
 
 app = FastAPI()
