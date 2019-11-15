@@ -1,4 +1,5 @@
 from pony.orm import PrimaryKey, Required
+
 from app.db.base import db
 
 

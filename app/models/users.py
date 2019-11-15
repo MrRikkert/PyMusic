@@ -12,3 +12,13 @@ class RegisterIn(RegisterBase):
 
 class RegisterOut(RegisterBase):
     pass
+
+
+class UserToken(BaseModel):
+    access_token: str
+    token_type: str
+
+
+class UserTokenData(BaseModel):
+    iss: str
+    sub: str
