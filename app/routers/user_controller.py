@@ -3,7 +3,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from starlette import status
 from starlette.status import HTTP_401_UNAUTHORIZED
 
-from app.logic.user import UserLogic
+from app.logic import user as user_logic
 from app.models.users import RegisterIn, RegisterOut, UserToken, UserTokenData
 from app.utils.security import create_access_token
 
@@ -14,13 +14,13 @@ router = APIRouter()
     "/register", status_code=status.HTTP_201_CREATED, response_model=RegisterOut
 )
 async def register(register: RegisterIn):
-    UserLogic.register_user(register)
+    user_logic.register_user(register)
     return RegisterOut(**register.dict())
 
 
 @router.post("/login", response_model=UserToken)
 async def login(form_data: OAuth2PasswordRequestForm = Depends()):
-    user = UserLogic.authenticate_user(form_data.username, form_data.password)
+    user = user_logic.authenticate_user(form_data.username, form_data.password)
     if user is None:
         raise HTTPException(
             status_code=HTTP_401_UNAUTHORIZED,
