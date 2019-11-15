@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Schema, EmailStr
+from pydantic import BaseModel, EmailStr, Schema
 
 
 class RegisterBase(BaseModel):
@@ -7,7 +7,16 @@ class RegisterBase(BaseModel):
 
 
 class RegisterIn(RegisterBase):
-    password: str = Schema(...)
+    """Password must contain atleast one digit, one capital letter and one special character"""
+
+    # regex explained:
+    # (?=.*\d): must have atleast one digit
+    # (?=.*[A-Z]): must have atleat one capital letter
+    # (?=.*[!@#$%^&*()|\\;:.,/\-_+=]): must have atleat one special character
+    # All must match atleast once
+    password: str = Schema(
+        ..., min_length=8, regex=r"(?=.*\d)(?=.*[A-Z])(?=.*[!@#$%^&*()|\\;:.,/\-_+=])"
+    )
 
 
 class RegisterOut(RegisterBase):
