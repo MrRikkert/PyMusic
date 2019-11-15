@@ -9,7 +9,15 @@ class UserLogic:
     def register_user(self, register: RegisterIn) -> UserDb:
         """Hashes the password and adds the user to the database"""
         register.password = hash_password(register.password)
+        if self.user_exists(register.username):
+            pass
         return UserDao.register_user(register)
+
+    def username_exists(self, username: str):
+        user = self.get_user_by_name(username)
+        if user is None:
+            return False
+        return True
 
     def get_user_by_name(self, username: str) -> UserDb:
         """Returns UserDb if user exists, else returns None"""
