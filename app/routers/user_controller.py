@@ -27,5 +27,5 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
             detail="Incorrect username or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    access_token = create_access_token(UserTokenData(sub=user.id, iss=user.username))
+    access_token = create_access_token(UserTokenData(sub=user.username))
     return UserToken(access_token=access_token, token_type="bearer")

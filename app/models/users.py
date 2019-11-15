@@ -20,5 +20,16 @@ class UserToken(BaseModel):
 
 
 class UserTokenData(BaseModel):
+    """Data needed for the jwt token generation
+
+    Parameters
+    ----------
     iss: str
+        Issuer of the claim. defaults to 'PyMusic'
+
+    sub: str
+        Subject of the token. Use username here
+    """
+
+    iss: str = "PyMusic"
     sub: str

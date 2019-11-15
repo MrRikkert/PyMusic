@@ -14,9 +14,11 @@ def hash_password(password: str):
 
 
 def verify_password(password: str, hashed_password: str):
+    """Returns True when passwords match, else returns False"""
     return pwd_context.verify(password, hashed_password)
 
 
 def create_access_token(data: UserTokenData):
+    """Creates jwt token based on UserTokenData"""
     data = data.dict()
     return jwt.encode(data, SECRET_KEY, algorithm=ALGORITHM)
