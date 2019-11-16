@@ -12,10 +12,13 @@ class RegisterIn(RegisterBase):
     # regex explained:
     # (?=.*\d): must have atleast one digit
     # (?=.*[A-Z]): must have atleat one capital letter
+    # (?=.*[a-z]): must have atleat one lower case letter
     # (?=.*[!@#$%^&*()|\\;:.,/\-_+=]): must have atleat one special character
     # All must match atleast once
     password: str = Schema(
-        ..., min_length=8, regex=r"(?=.*\d)(?=.*[A-Z])(?=.*[!@#$%^&*()|\\;:.,/\-_+=])"
+        ...,
+        min_length=8,
+        regex=r"(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*()|\\;:.,/\-_+=])",
     )
 
 

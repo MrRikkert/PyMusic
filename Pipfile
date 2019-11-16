@@ -8,6 +8,7 @@ flake8 = "*"
 black = "*"
 pytest = "*"
 mypy = "*"
+pytest-cov = "*"
 
 [packages]
 fastapi = "*"
