@@ -14,8 +14,8 @@ router = APIRouter()
     "/register", status_code=status.HTTP_201_CREATED, response_model=RegisterOut
 )
 async def register(register: RegisterIn):
-    user_logic.register_user(register)
-    return RegisterOut(**register.dict())
+    user = user_logic.register_user(register)
+    return RegisterOut(**user.dict())
 
 
 @router.post("/login", response_model=UserToken)

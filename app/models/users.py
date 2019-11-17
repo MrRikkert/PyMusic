@@ -1,6 +1,16 @@
 from pydantic import BaseModel, EmailStr, Schema
 
 
+class User(BaseModel):
+    id: int = None
+    username: str = Schema(...)
+    email: str = Schema(...)
+    password: str = Schema(...)
+
+    class Config:
+        orm_mode = True
+
+
 class RegisterBase(BaseModel):
     username: str = Schema(..., min_length=5)
     email: EmailStr = Schema(...)
@@ -23,7 +33,7 @@ class RegisterIn(RegisterBase):
 
 
 class RegisterOut(RegisterBase):
-    pass
+    id: int
 
 
 class UserToken(BaseModel):
