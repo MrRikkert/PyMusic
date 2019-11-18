@@ -31,9 +31,9 @@ class SongDb(db.Entity):
     title = Required(str)
     length = Optional(int)
     scrobbles = Set(ScrobbleDb)
-    tags = Set("TagDb")
     albums = Set("AlbumDb")
     artists = Set("ArtistDb")
+    tags = Set("TagDb")
 
 
 class AlbumDb(db.Entity):
@@ -47,14 +47,14 @@ class AlbumDb(db.Entity):
 class ArtistDb(db.Entity):
     _table_ = "artist"
     id = PrimaryKey(int, auto=True)
-    Name = Required(str, unique=True)
+    name = Required(str, unique=True)
     albums = Set(AlbumDb)
     songs = Set(SongDb)
 
 
 class TagDb(db.Entity):
     _table_ = "tag"
-    song = Required(SongDb)
     tag_type = Required(str)
     value = Required(str)
-    PrimaryKey(song, tag_type, value)
+    songs = Set(SongDb)
+    PrimaryKey(tag_type, value)
