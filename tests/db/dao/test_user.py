@@ -2,7 +2,6 @@ from mixer.backend.pony import mixer
 from pony import orm
 from pony.orm import db_session
 
-from app.db.base import db
 from app.db.dao import user as user_dao
 from app.db.models import UserDb
 from app.models.users import RegisterIn
@@ -17,7 +16,6 @@ def setup_function():
 def test_register_user():
     user = RegisterIn(username="username", email="email@email.com", password="Abc@123!")
     db_user = user_dao.register_user(user)
-    db.flush()
     assert orm.count(u for u in UserDb) == 1
     assert db_user.username == user.username
     assert db_user.password == user.password

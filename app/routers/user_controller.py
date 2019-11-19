@@ -15,7 +15,7 @@ router = APIRouter()
 )
 async def register(register: RegisterIn):
     user = user_logic.register_user(register)
-    return RegisterOut(**user.dict())
+    return RegisterOut.from_orm(user)
 
 
 @router.post("/login", response_model=UserToken)

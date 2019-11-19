@@ -1,10 +1,11 @@
 from app.db.dao import user as user_dao
+from app.db.models import UserDb
 from app.exceptions import IntegrityError
-from app.models.users import RegisterIn, User
+from app.models.users import RegisterIn
 from app.utils.security import hash_password, verify_password
 
 
-def register_user(register: RegisterIn) -> User:
+def register_user(register: RegisterIn) -> UserDb:
     """Hashes the password and adds the user to the database"""
     register = register.copy(deep=True)
     register.password = hash_password(register.password)
@@ -20,12 +21,12 @@ def username_exists(username: str) -> bool:
     return True
 
 
-def get_user_by_name(username: str) -> User:
+def get_user_by_name(username: str) -> UserDb:
     """Returns User if user exists, else returns None"""
     return user_dao.get_user_by_name(username)
 
 
-def authenticate_user(username: str, password: str) -> User:
+def authenticate_user(username: str, password: str) -> UserDb:
     """Returns User if authenticated, else returns None"""
     user = get_user_by_name(username)
     if user is not None:

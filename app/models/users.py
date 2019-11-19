@@ -15,6 +15,9 @@ class RegisterBase(BaseModel):
     username: str = Schema(..., min_length=5)
     email: EmailStr = Schema(...)
 
+    class Config:
+        orm_mode = True
+
 
 class RegisterIn(RegisterBase):
     """Password must contain atleast one digit, one capital letter and one special character"""
