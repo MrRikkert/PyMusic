@@ -44,3 +44,40 @@ def test_album_exists_existing():
 def test_album_exists_non_existing():
     exists = album_logic.album_exists(name="hallo")
     assert not exists
+
+
+@db_session
+def test_add_album_without_artist():
+    album_logic.add_album(name="album")
+    assert orm.count(a for a in AlbumDb) == 1
+
+
+@db_session
+def test_add_album_with_artist():
+    album_logic.add_album(name="album", artist="artist")
+    assert orm.count(a for a in AlbumDb) == 1
+    assert orm.count(a for a in ArtistDb) == 1
+
+
+@db_session
+def test_add_album_existing_artist():
+    artist = mixer.blend(ArtistDb)
+    album_logic.add_album(name="album", artist=artist.name)
+    assert orm.count(a for a in AlbumDb) == 1
+    assert orm.count(a for a in ArtistDb) == 1
+
+
+@db_session
+def test_add_album_existing_album():
+    album = mixer.blend(AlbumDb)
+    with pytest.raises(IntegrityError):
+        album_logic.add_album(name=album.name)
+
+
+@db_session
+def test_add_album_existing_album_with_return_existing():
+    db_album = mixer.blend(AlbumDb)
+    album = album_logic.add_album(name=db_album.name, return_existing=True)
+    assert orm.count(a for a in AlbumDb) == 1
+    assert album is not None
+    assert db_album.id == album.id
