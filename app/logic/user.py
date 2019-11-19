@@ -1,4 +1,3 @@
-from app.db.dao import user as user_dao
 from app.db.models import UserDb
 from app.exceptions import IntegrityError
 from app.models.users import RegisterIn
@@ -11,7 +10,7 @@ def register_user(register: RegisterIn) -> UserDb:
     register.password = hash_password(register.password)
     if username_exists(register.username):
         raise IntegrityError("Username already exists")
-    return user_dao.register_user(register)
+    return UserDb(**register.dict())
 
 
 def username_exists(username: str) -> bool:
@@ -23,7 +22,7 @@ def username_exists(username: str) -> bool:
 
 def get_user_by_name(username: str) -> UserDb:
     """Returns User if user exists, else returns None"""
-    return user_dao.get_user_by_name(username)
+    return UserDb.get(username=username)
 
 
 def authenticate_user(username: str, password: str) -> UserDb:

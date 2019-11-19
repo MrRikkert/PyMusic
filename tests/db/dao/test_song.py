@@ -30,3 +30,22 @@ def test_add_song_correct():
     assert orm.count(t for t in TagDb) == 1
     assert orm.count(a for a in ArtistDb) == 3
     assert orm.count(a for a in AlbumDb) == 1
+
+
+@db_session
+def test_add_song_duplicate():
+    mixer.blend(ArtistDb, name="artist1")
+    song_dao.add_song(
+        Song(
+            title="title",
+            length=1,
+            album="album",
+            album_artist="artist",
+            artists=["artist1", "artist2"],
+            tags=[TagIn(tag_type="type", value="tag")],
+        )
+    )
+    assert orm.count(s for s in SongDb) == 1
+    assert orm.count(t for t in TagDb) == 1
+    assert orm.count(a for a in ArtistDb) == 3
+    assert orm.count(a for a in AlbumDb) == 1
