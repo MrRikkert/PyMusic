@@ -3,6 +3,7 @@ from app.exceptions import IntegrityError
 
 
 def get(tag_type: str, value: str) -> TagDb:
+    """Returns tag if it exists, else returns None"""
     return TagDb.get(tag_type=tag_type, value=value)
 
 

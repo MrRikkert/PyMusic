@@ -6,6 +6,7 @@ from app.exceptions import IntegrityError
 
 
 def get(name: str) -> ArtistDb:
+    """Returns artist if it exists, else returns None"""
     return ArtistDb.get(name=name)
 
 
@@ -24,6 +25,10 @@ def add(name: str, return_existing: bool = False) -> ArtistDb:
 
 
 def split(name: str) -> List[str]:
+    """Splits artist to multiple artist based on multiple delimeters
+
+    delimeters: ';', ',', "feat.", '×', "vs" and '&'
+    """
     artists = re.split(";|,|feat.|×|vs|&", name)
     artists = map(lambda x: x.strip(), artists)
     return list(artists)

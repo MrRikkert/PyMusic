@@ -6,6 +6,7 @@ from app.logic import artist as artist_logic
 
 
 def get(name: str, artist: str = None) -> AlbumDb:
+    """Returns album if it exists, else returns None"""
     album = orm.select(a for a in AlbumDb if a.name == name)
     if artist is not None:
         return album.filter(lambda a: a.album_artist.name == artist).first()
