@@ -62,5 +62,4 @@ def test_add_tag_existing_with_return_existing():
     )
     assert orm.count(a for a in TagDb) == 1
     assert tag is not None
-    assert db_tag.tag_type == tag.tag_type
-    assert db_tag.value == tag.value
+    assert db_tag.id == tag.id
