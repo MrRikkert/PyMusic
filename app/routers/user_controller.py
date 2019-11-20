@@ -14,13 +14,13 @@ router = APIRouter()
     "/register", status_code=status.HTTP_201_CREATED, response_model=RegisterOut
 )
 async def register(register: RegisterIn):
-    user = user_logic.register_user(register)
+    user = user_logic.register(register)
     return RegisterOut.from_orm(user)
 
 
 @router.post("/login", response_model=UserToken)
 async def login(form_data: OAuth2PasswordRequestForm = Depends()):
-    user = user_logic.authenticate_user(form_data.username, form_data.password)
+    user = user_logic.authenticate(form_data.username, form_data.password)
     if user is None:
         raise HTTPException(
             status_code=HTTP_401_UNAUTHORIZED,

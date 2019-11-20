@@ -16,33 +16,33 @@ def setup_function():
 @db_session
 def test_get_artist_existing():
     db_artist = mixer.blend(ArtistDb)
-    artist = artist_logic.get_artist(db_artist.name)
+    artist = artist_logic.get(db_artist.name)
     assert artist is not None
     assert db_artist.name == artist.name
 
 
 @db_session
 def test_get_artist_non_existing():
-    artist = artist_logic.get_artist("hallo")
+    artist = artist_logic.get("hallo")
     assert artist is None
 
 
 @db_session
 def test_artist_exists_existing():
     db_artist = mixer.blend(ArtistDb)
-    exists = artist_logic.artist_exists(db_artist.name)
+    exists = artist_logic.exists(db_artist.name)
     assert exists
 
 
 @db_session
 def test_artist_exists_non_existing():
-    exists = artist_logic.artist_exists("hallo")
+    exists = artist_logic.exists("hallo")
     assert not exists
 
 
 @db_session
 def test_add_artist():
-    artist_logic.add_artist("hallo")
+    artist_logic.add("hallo")
     assert orm.count(a for a in ArtistDb) == 1
 
 
@@ -50,13 +50,13 @@ def test_add_artist():
 def test_add_artist_existing():
     db_artist = mixer.blend(ArtistDb)
     with pytest.raises(IntegrityError):
-        artist_logic.add_artist(db_artist.name)
+        artist_logic.add(db_artist.name)
 
 
 @db_session
 def test_add_artist_existing_with_return_existing():
     db_artist = mixer.blend(ArtistDb)
-    artist = artist_logic.add_artist(db_artist.name, return_existing=True)
+    artist = artist_logic.add(db_artist.name, return_existing=True)
     assert orm.count(a for a in ArtistDb) == 1
     assert artist is not None
     assert db_artist.id == artist.id
@@ -65,5 +65,5 @@ def test_add_artist_existing_with_return_existing():
 @db_session
 def test_split_artist():
     artist = "artist, artist & artist ; artist vs artist & artist feat. artist"
-    artists = artist_logic.split_artist(artist)
+    artists = artist_logic.split(artist)
     assert len(artists) == 7

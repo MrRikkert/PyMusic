@@ -10,14 +10,14 @@ def add_song(song: SongIn) -> SongDb:
         title=song.title,
         length=song.length,
         tags=[
-            tag_logic.add_tag(tag.tag_type, tag.value, return_existing=True)
+            tag_logic.add(tag.tag_type, tag.value, return_existing=True)
             for tag in song.tags
         ],
-        albums=album_logic.add_album(
+        albums=album_logic.add(
             name=song.album, artist=song.album_artist, return_existing=True
         ),
         artists=[
-            artist_logic.add_artist(artist, return_existing=True)
-            for artist in artist_logic.split_artist(song.artist)
+            artist_logic.add(artist, return_existing=True)
+            for artist in artist_logic.split(song.artist)
         ],
     )
