@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from pony.orm import Optional, PrimaryKey, Required, Set
+from pony.orm import Optional, PrimaryKey, Required, Set, composite_key
 
 from app.db.base import db
 
@@ -54,7 +54,8 @@ class ArtistDb(db.Entity):
 
 class TagDb(db.Entity):
     _table_ = "tag"
+    id = PrimaryKey(str)
     tag_type = Required(str)
     value = Required(str)
     songs = Set(SongDb)
-    PrimaryKey(tag_type, value)
+    composite_key(tag_type, value)
