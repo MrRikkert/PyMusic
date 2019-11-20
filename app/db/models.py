@@ -54,7 +54,7 @@ class ArtistDb(db.Entity):
 
 class TagDb(db.Entity):
     _table_ = "tag"
-    id = PrimaryKey(str)
+    id = PrimaryKey(int, auto=True)
     tag_type = Required(str)
     value = Required(str)
     songs = Set(SongDb)
