@@ -85,3 +85,49 @@ def test_add_song_existing_tag():
     assert orm.count(t for t in TagDb) == 1
     assert orm.count(a for a in ArtistDb) == 2
     assert orm.count(a for a in AlbumDb) == 1
+
+
+@db_session
+def test_get_song_single_artist():
+    db_song = mixer.blend(SongDb, artists=mixer.blend(ArtistDb, name="artist"))
+    song = song_logic.get(title=db_song.title, artists=["artist"])
+    assert song is not None
+    assert song.title == db_song.title
+
+
+@db_session
+def test_get_song_multiple_artists():
+    db_song = mixer.blend(SongDb, artists=mixer.cycle(2).blend(ArtistDb))
+    artists = [a.name for a in db_song.artists]
+    song = song_logic.get(title=db_song.title, artists=artists)
+    assert song is not None
+    assert song.title == db_song.title
+    assert len(song.artists) == 2
+
+
+@db_session
+def test_get_song_multiple_artists_get_with_one():
+    db_song = mixer.blend(SongDb, artists=mixer.cycle(2).blend(ArtistDb))
+    artists = [a.name for a in db_song.artists]
+    song = song_logic.get(title=db_song.title, artists=[artists[0]])
+    assert song is None
+
+
+@db_session
+def test_get_song_none_existing():
+    song = song_logic.get(title="title", artists=["artist1", "artist2"])
+    assert song is None
+
+
+@db_session
+def test_song_exists_existing():
+    db_song = mixer.blend(SongDb, artists=mixer.cycle(2).blend(ArtistDb))
+    artists = [a.name for a in db_song.artists]
+    exists = song_logic.exists(title=db_song.title, artists=artists)
+    assert exists
+
+
+@db_session
+def test_song_exists_non_existing():
+    exists = song_logic.exists(title="title", artists=["artist"])
+    assert not exists
