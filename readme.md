@@ -26,3 +26,14 @@ To run the tests with coverage, use:
 
 To also generate a coverage file for your IDE, use:  
 `pytest --cov-report xml:coverage.xml --cov`
+
+## Linting
+
+Linting is done with flake8 using these paramaters:
+
+- `--max-line-length=120`
+- `--ignore=E203`
+- `--max-complexity 10`
+
+full command:  
+`flake8 --max-line-length=120 --ignore=E203 --max-complexity 10`

@@ -1,2 +1,2 @@
-from app.db.base import db
-from app.db import models
+from app.db.base import db  # noqa
+from app.db import models  # noqa

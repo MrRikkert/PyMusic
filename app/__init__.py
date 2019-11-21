@@ -1,1 +1,1 @@
-from app import middleware
+from app import middleware  # noqa
