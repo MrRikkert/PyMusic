@@ -6,16 +6,51 @@ from app.exceptions import IntegrityError
 
 
 def get(name: str) -> ArtistDb:
-    """Returns artist if it exists, else returns None"""
+    """Get artist from database
+
+    ## Arguments:
+    - `name`: `str`:
+        - Name of the artist
+
+    ## Returns:
+    - `ArtistDb`:
+        - The found artist. Returns `None` when no artist is found
+    """
     return ArtistDb.get(name=name)
 
 
 def exists(name: str) -> bool:
+    """Check if the artist already exists in the database
+
+    ## Arguments:
+    - `name`: `str`:
+        - Name of the artist
+
+    ## Returns:
+    - `bool`:
+        - `True` when artist exists, `False` when it doesn't
+    """
     artist = get(name)
     return True if artist is not None else False
 
 
 def add(name: str, return_existing: bool = False) -> ArtistDb:
+    """Add artist to the database
+
+    ## Arguments:
+    - `name`: `str`:
+        - Name of the artist
+    - `return_existing`: `bool`, optional:
+        - Return existing database object when found or not. Defaults to `False`.
+
+    ## Raises:
+    - `IntegrityError`:
+        - If the artist already exists and `return_existing` is `False`
+
+    ## Returns:
+    - `ArtistDb`:
+        - The created artist, or existing artist when `return_existing` is `True` and it already exists
+    """
     existing = get(name)
     if existing is not None:
         if not return_existing:
@@ -25,9 +60,17 @@ def add(name: str, return_existing: bool = False) -> ArtistDb:
 
 
 def split(name: str) -> List[str]:
-    """Splits artist to multiple artist based on multiple delimeters
+    """Split artist name to multiple artists
 
-    delimeters: ';', ',', "feat.", '×', "vs" and '&'
+    Delimeters used: ';', ',', "feat.", '×', "vs" and '&'
+
+    ## Arguments:
+    - `name`: `str`:
+        - Artist name
+
+    ## Returns:
+    - `List[str]`:
+        - List of artist names
     """
     artists = re.split(";|,|feat.|×|vs|&", name)
     artists = map(lambda x: x.strip(), artists)
