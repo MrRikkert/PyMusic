@@ -5,7 +5,7 @@ from app.logic import tag as tag_logic
 from app.models.songs import SongIn
 
 
-def add_song(song: SongIn) -> SongDb:
+def add(song: SongIn) -> SongDb:
     return SongDb(
         title=song.title,
         length=song.length,

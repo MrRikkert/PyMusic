@@ -15,7 +15,7 @@ def setup_function():
 
 @db_session
 def test_add_song_correct():
-    song_logic.add_song(
+    song_logic.add(
         SongIn(
             title="title",
             length=1,
@@ -33,7 +33,7 @@ def test_add_song_correct():
 
 @db_session
 def test_add_song_multiple_artists():
-    song_logic.add_song(
+    song_logic.add(
         SongIn(
             title="title",
             length=1,
@@ -52,7 +52,7 @@ def test_add_song_multiple_artists():
 @db_session
 def test_add_song_existing_album():
     album = mixer.blend(AlbumDb, album_artist=mixer.blend(ArtistDb))
-    song_logic.add_song(
+    song_logic.add(
         SongIn(
             title="title",
             length=1,
@@ -71,7 +71,7 @@ def test_add_song_existing_album():
 @db_session
 def test_add_song_existing_tag():
     tag = mixer.blend(TagDb)
-    song_logic.add_song(
+    song_logic.add(
         SongIn(
             title="title",
             length=1,
