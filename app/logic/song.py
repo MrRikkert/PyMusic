@@ -10,13 +10,27 @@ from app.logic import tag as tag_logic
 from app.models.songs import SongIn
 
 
-def add(song: SongIn, return_existing: bool = False) -> SongDb:
+def add(
+    song: SongIn, return_existing: bool = False, update_existing: bool = False
+) -> SongDb:
     artists = artist_logic.split(song.artist)
     existing = get(title=song.title, artists=artists)
 
     if existing is not None:
         if not return_existing:
             raise IntegrityError("Song already exists")
+        if update_existing:
+            existing.albums.add(
+                album_logic.add(
+                    name=song.album, artist=song.album_artist, return_existing=True
+                )
+            )
+            for tag in song.tags:
+                existing.tags.add(
+                    tag_logic.add(
+                        tag_type=tag.tag_type, value=tag.value, return_existing=True
+                    )
+                )
         return existing
     return SongDb(
         title=song.title,

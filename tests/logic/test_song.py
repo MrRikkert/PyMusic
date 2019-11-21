@@ -3,6 +3,7 @@ from mixer.backend.pony import mixer
 from pony import orm
 from pony.orm import db_session
 
+from app.db.base import db
 from app.db.models import AlbumDb, ArtistDb, SongDb, TagDb
 from app.exceptions import IntegrityError
 from app.logic import song as song_logic
@@ -132,6 +133,38 @@ def test_add_song_existing_with_return_existing():
         return_existing=True,
     )
     assert db_song.id == song.id
+
+
+@db_session
+def test_add_song_existing_with_update():
+    db_song = mixer.blend(
+        SongDb,
+        title="title",
+        albums=mixer.blend(AlbumDb, name="album"),
+        artists=mixer.blend(ArtistDb, name="artist"),
+        tags=mixer.blend(TagDb, tag_type="type", value="value"),
+    )
+    song = song_logic.add(
+        SongIn(
+            title="title",
+            length=1,
+            album="album2",
+            album_artist="artist2",
+            artist="artist",
+            tags=[TagIn(tag_type="type2", value="value2")],
+        ),
+        return_existing=True,
+        update_existing=True,
+    )
+    db.flush()
+    assert db_song.id == song.id
+    assert len(song.albums) == 2
+    assert len(song.tags) == 2
+
+    assert orm.count(s for s in SongDb) == 1
+    assert orm.count(t for t in TagDb) == 2
+    assert orm.count(a for a in ArtistDb) == 2
+    assert orm.count(a for a in AlbumDb) == 2
 
 
 @db_session
