@@ -1,9 +1,11 @@
+import pytest
 from mixer.backend.pony import mixer
 from pony import orm
 from pony.orm import db_session
 
-from app.logic import song as song_logic
 from app.db.models import AlbumDb, ArtistDb, SongDb, TagDb
+from app.exceptions import IntegrityError
+from app.logic import song as song_logic
 from app.models.songs import SongIn
 from app.models.tags import TagIn
 from tests.utils import reset_db
@@ -85,6 +87,51 @@ def test_add_song_existing_tag():
     assert orm.count(t for t in TagDb) == 1
     assert orm.count(a for a in ArtistDb) == 2
     assert orm.count(a for a in AlbumDb) == 1
+
+
+@db_session
+def test_add_song_existing():
+    mixer.blend(
+        SongDb,
+        title="title",
+        albums=mixer.blend(AlbumDb, name="album"),
+        artists=mixer.blend(ArtistDb, name="artist"),
+        tags=mixer.blend(TagDb, tag_type="type", value="value"),
+    )
+    with pytest.raises(IntegrityError):
+        song_logic.add(
+            SongIn(
+                title="title",
+                length=1,
+                album="album",
+                album_artist="artist",
+                artist="artist",
+                tags=[TagIn(tag_type="type", value="value")],
+            )
+        )
+
+
+@db_session
+def test_add_song_existing_with_return_existing():
+    db_song = mixer.blend(
+        SongDb,
+        title="title",
+        albums=mixer.blend(AlbumDb, name="album"),
+        artists=mixer.blend(ArtistDb, name="artist"),
+        tags=mixer.blend(TagDb, tag_type="type", value="value"),
+    )
+    song = song_logic.add(
+        SongIn(
+            title="title",
+            length=1,
+            album="album",
+            album_artist="artist",
+            artist="artist",
+            tags=[TagIn(tag_type="type", value="value")],
+        ),
+        return_existing=True,
+    )
+    assert db_song.id == song.id
 
 
 @db_session

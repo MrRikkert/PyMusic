@@ -3,13 +3,21 @@ from typing import List
 from pony import orm
 
 from app.db.models import SongDb
+from app.exceptions import IntegrityError
 from app.logic import album as album_logic
 from app.logic import artist as artist_logic
 from app.logic import tag as tag_logic
 from app.models.songs import SongIn
 
 
-def add(song: SongIn) -> SongDb:
+def add(song: SongIn, return_existing: bool = False) -> SongDb:
+    artists = artist_logic.split(song.artist)
+    existing = get(title=song.title, artists=artists)
+
+    if existing is not None:
+        if not return_existing:
+            raise IntegrityError("Song already exists")
+        return existing
     return SongDb(
         title=song.title,
         length=song.length,
@@ -20,10 +28,7 @@ def add(song: SongIn) -> SongDb:
         albums=album_logic.add(
             name=song.album, artist=song.album_artist, return_existing=True
         ),
-        artists=[
-            artist_logic.add(artist, return_existing=True)
-            for artist in artist_logic.split(song.artist)
-        ],
+        artists=[artist_logic.add(artist, return_existing=True) for artist in artists],
     )
 
 
