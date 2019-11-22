@@ -13,6 +13,27 @@ from app.models.songs import SongIn
 def add(
     song: SongIn, return_existing: bool = False, update_existing: bool = False
 ) -> SongDb:
+    """Add song to the database
+
+    ## Arguments:
+    - `song`: `SongIn`:
+        - The song you want to add
+    - `return_existing`: `bool`, optional:
+        - Return existing database object when found or not. Defaults to `False`.
+    - `update_existing`: `bool`, optional:
+        - Update the existing song when found or not.
+        Only updates the `albums` and `tags` properties
+        `return_existing` also needs to be `True` for this to work.
+        Defaults to `False`.
+
+    ## Raises:
+    - `IntegrityError`:
+        - If the song already exists and `return_existing` is `False`
+
+    ## Returns:
+    - `SongDb`:
+        - The created song, or existing song when `return_existing` is `true`
+    """
     artists = artist_logic.split(song.artist)
     existing = get(title=song.title, artists=artists)
 
