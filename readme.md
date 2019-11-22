@@ -37,8 +37,7 @@ Linting is done with flake8 using these paramaters:
 - `--ignore=E203`
 - `--max-complexity=10`
 
-full command:  
-`flake8 --max-line-length=120 --ignore=E203 --max-complexity=10`
+These paramaters are defined in `tox.ini` so you only need to run the bare `flake8` command
 
 ## Formatter
 
