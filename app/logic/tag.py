@@ -52,7 +52,8 @@ def add(tag_type: str, value: str, return_existing: bool = False) -> TagDb:
 
     ## Returns:
     - `TagDb`:
-        - The created tag, or existing tag when `return_existing` is `True` and it already exists
+        - The created tag, or existing tag when `return_existing` is `True`
+        and it already exists
     """
     existing = get(tag_type=tag_type, value=value)
     if existing is not None:

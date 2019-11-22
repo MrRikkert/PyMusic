@@ -20,7 +20,8 @@ class RegisterBase(BaseModel):
 
 
 class RegisterIn(RegisterBase):
-    """Password must contain atleast one digit, one capital letter and one special character"""
+    """Password must contain atleast one digit, one capital letter
+    and one special character"""
 
     # regex explained:
     # (?=.*\d): must have atleast one digit

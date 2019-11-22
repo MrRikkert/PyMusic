@@ -48,7 +48,8 @@ def add(name: str, artist: str = None, return_existing: bool = False) -> AlbumDb
     - `name`: `str`:
         - Name of the album
     - `artist`: `str`, optional:
-        - Album artist, will add artist to the database if it doesn't exist and use the existing artist if it does.
+        - Album artist, will add artist to the database if it doesn't exist
+        and use the existing artist if it does.
         Defaults to `None`.
     - `return_existing`: `bool`, optional:
         - Return existing database object when found or not. Defaults to `False`.
@@ -59,7 +60,8 @@ def add(name: str, artist: str = None, return_existing: bool = False) -> AlbumDb
 
     ## Returns:
     - `AlbumDb`:
-        - The created album, or existing album when `return_existing` is `True` and it already exists
+        - The created album, or existing album when `return_existing` is `True`
+        and it already exists
     """
     existing = get(name=name, artist=artist)
     if existing is not None:

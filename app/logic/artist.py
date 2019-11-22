@@ -49,7 +49,8 @@ def add(name: str, return_existing: bool = False) -> ArtistDb:
 
     ## Returns:
     - `ArtistDb`:
-        - The created artist, or existing artist when `return_existing` is `True` and it already exists
+        - The created artist, or existing artist when `return_existing` is `True`
+        and it already exists
     """
     existing = get(name)
     if existing is not None:
