@@ -3,6 +3,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from starlette import status
 from starlette.status import HTTP_401_UNAUTHORIZED
 
+from app.db.base import db
 from app.logic import user as user_logic
 from app.models.users import RegisterIn, RegisterOut, UserToken, UserTokenData
 from app.utils.security import create_access_token
@@ -15,6 +16,7 @@ router = APIRouter()
 )
 async def register(register: RegisterIn):
     user = user_logic.register(register)
+    db.flush()
     return RegisterOut.from_orm(user)
 
 

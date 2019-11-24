@@ -1,6 +1,16 @@
 from pony.orm import db_session
+from starlette.middleware.cors import CORSMiddleware
 from starlette.requests import Request
+
 from app.server import app
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.middleware("http")
