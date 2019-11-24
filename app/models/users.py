@@ -40,7 +40,8 @@ class RegisterOut(RegisterBase):
     id: int
 
 
-class UserToken(BaseModel):
+class LoginOut(BaseModel):
+    username: str
     access_token: str
     token_type: str
 

@@ -5,7 +5,7 @@ from starlette.status import HTTP_401_UNAUTHORIZED
 
 from app.db.base import db
 from app.logic import user as user_logic
-from app.models.users import RegisterIn, RegisterOut, UserToken, UserTokenData
+from app.models.users import RegisterIn, RegisterOut, LoginOut, UserTokenData
 from app.utils.security import create_access_token
 
 router = APIRouter()
@@ -20,7 +20,7 @@ async def register(register: RegisterIn):
     return RegisterOut.from_orm(user)
 
 
-@router.post("/login", response_model=UserToken)
+@router.post("/login", response_model=LoginOut)
 async def login(form_data: OAuth2PasswordRequestForm = Depends()):
     user = user_logic.authenticate(form_data.username, form_data.password)
     if user is None:
@@ -30,4 +30,6 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
             headers={"WWW-Authenticate": "Bearer"},
         )
     access_token = create_access_token(UserTokenData(sub=user.username))
-    return UserToken(access_token=access_token, token_type="bearer")
+    return LoginOut(
+        access_token=access_token, token_type="bearer", username=user.username
+    )
