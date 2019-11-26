@@ -1,12 +1,10 @@
 import jwt
-from fastapi.security import OAuth2PasswordBearer
 from passlib.context import CryptContext
 
 from app.models.users import UserTokenData
 from app.settings import ALGORITHM, HASH_ALGORITHMS, SECRET_KEY
 
 pwd_context = CryptContext(schemes=HASH_ALGORITHMS, deprecated="auto")
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
 
 
 def hash_password(password: str) -> str:
@@ -53,3 +51,17 @@ def create_access_token(data: UserTokenData) -> str:
     """Creates jwt token based on UserTokenData"""
     data = data.dict()
     return jwt.encode(data, SECRET_KEY, algorithm=ALGORITHM)
+
+
+def decode_access_token(token: str):
+    """Decode JWT tokens
+
+    ## Arguments:
+    - `token`: `str`:
+        - The JWT you want to decode
+
+    ## Returns:
+    - `Dict`:
+        - JWT payload
+    """
+    return jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
