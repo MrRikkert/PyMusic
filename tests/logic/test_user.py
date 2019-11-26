@@ -6,7 +6,7 @@ from pony import orm
 from pony.orm import db_session
 
 from app.db.base import db
-from app.db.models import ScrobbleDb, SongDb, UserDb
+from app.db.models import AlbumDb, ArtistDb, ScrobbleDb, SongDb, TagDb, UserDb
 from app.exceptions import IntegrityError
 from app.logic import user as user_logic
 from app.models.songs import ScrobbleIn
@@ -129,6 +129,35 @@ def test_scrobble_with_date():
             album_artist="artist",
             artist="artist1",
             tags=[TagIn(tag_type="type", value="tag")],
+            date=date,
+        ),
+    )
+    assert orm.count(s for s in SongDb) == 1
+    assert orm.count(s for s in ScrobbleDb) == 1
+    assert scrobble.date == date
+    assert len(user.scrobbles) == 1
+
+
+@db_session
+def test_scrobble_existing_song():
+    date = datetime.now()
+    user = mixer.blend(UserDb)
+    mixer.blend(
+        SongDb,
+        title="title",
+        albums=mixer.blend(AlbumDb, name="album"),
+        artists=mixer.blend(ArtistDb, name="artist"),
+        tags=mixer.blend(TagDb, tag_type="type", value="value"),
+    )
+    scrobble = user_logic.scrobble(
+        user,
+        ScrobbleIn(
+            title="title",
+            length=1,
+            album="album",
+            album_artist="artist",
+            artist="artist",
+            tags=[TagIn(tag_type="type", value="value")],
             date=date,
         ),
     )
