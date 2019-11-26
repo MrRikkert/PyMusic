@@ -10,6 +10,7 @@ pytest-cov = "*"
 mixer = "*"
 flake8 = "*"
 mccabe = "*"
+requests = "*"
 
 [packages]
 fastapi = "*"
