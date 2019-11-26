@@ -1,12 +1,16 @@
+from datetime import datetime
+
 import pytest
 from mixer.backend.pony import mixer
 from pony import orm
 from pony.orm import db_session
 
 from app.db.base import db
-from app.db.models import UserDb
+from app.db.models import ScrobbleDb, SongDb, UserDb
 from app.exceptions import IntegrityError
 from app.logic import user as user_logic
+from app.models.songs import ScrobbleIn
+from app.models.tags import TagIn
 from app.models.users import RegisterIn
 from tests.utils import reset_db
 
@@ -90,3 +94,45 @@ def test_authenticate_user_wrong_username():
     )
     user_auth = user_logic.authenticate("usernames", "Abc@123!")
     assert user_auth is None
+
+
+@db_session
+def test_scrobble_without_date():
+    user = mixer.blend(UserDb)
+    scrobble = user_logic.scrobble(
+        user,
+        ScrobbleIn(
+            title="title",
+            length=1,
+            album="album",
+            album_artist="artist",
+            artist="artist1",
+            tags=[TagIn(tag_type="type", value="tag")],
+        ),
+    )
+    assert orm.count(s for s in SongDb) == 1
+    assert orm.count(s for s in ScrobbleDb) == 1
+    assert scrobble.date is not None
+    assert len(user.scrobbles) == 1
+
+
+@db_session
+def test_scrobble_with_date():
+    date = datetime.now()
+    user = mixer.blend(UserDb)
+    scrobble = user_logic.scrobble(
+        user,
+        ScrobbleIn(
+            title="title",
+            length=1,
+            album="album",
+            album_artist="artist",
+            artist="artist1",
+            tags=[TagIn(tag_type="type", value="tag")],
+            date=date,
+        ),
+    )
+    assert orm.count(s for s in SongDb) == 1
+    assert orm.count(s for s in ScrobbleDb) == 1
+    assert scrobble.date == date
+    assert len(user.scrobbles) == 1

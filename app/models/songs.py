@@ -1,5 +1,7 @@
-from pydantic import BaseModel, Schema
+from datetime import datetime
 from typing import List
+
+from pydantic import BaseModel, Schema
 
 
 class BaseSong(BaseModel):
@@ -14,6 +16,10 @@ class SongIn(BaseSong):
     album: str = Schema(...)
     album_artist: str = Schema(...)
     tags: List[TagIn] = Schema(None)
+
+
+class ScrobbleIn(SongIn):
+    date: datetime = Schema(datetime.now())
 
 
 class Song(BaseSong):

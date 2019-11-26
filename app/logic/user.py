@@ -1,5 +1,6 @@
-from app.db.models import UserDb
+from app.db.models import ScrobbleDb, UserDb
 from app.exceptions import IntegrityError
+from app.models.songs import ScrobbleIn, SongIn
 from app.models.users import RegisterIn
 from app.utils.security import hash_password, verify_password
 
@@ -77,3 +78,19 @@ def authenticate(username: str, password: str) -> UserDb:
         if not verify_password(password, user.password):
             return None
     return user
+
+
+def scrobble(user: UserDb, scrobble: ScrobbleIn) -> ScrobbleDb:
+    from app.logic import song as song_logic
+
+    return ScrobbleDb(
+        user=user,
+        song=song_logic.add(
+            SongIn(**scrobble.dict()), return_existing=True, update_existing=True
+        ),
+        title=scrobble.title,
+        artist=scrobble.artist,
+        album=scrobble.album,
+        album_artist=scrobble.album_artist,
+        date=scrobble.date,
+    )
