@@ -209,3 +209,44 @@ def test_recent_plays_different_page_size():
         assert scrobble.user == user
         if idx > 0:
             assert scrobbles[idx].date < scrobbles[idx - 1].date
+
+
+@db_session
+def test_top_plays():
+    user = mixer.blend(UserDb)
+    song1 = mixer.blend(SongDb)
+    song2 = mixer.blend(SongDb)
+    mixer.cycle(5).blend(ScrobbleDb, song=song1, user=user)
+    mixer.cycle(3).blend(ScrobbleDb, song=song2, user=user)
+    orm.flush()
+    songs = user_logic.top_plays_song(user)
+    assert len(songs) == 2
+    assert songs[0]["song"] == song1
+    assert songs[0]["plays"] == 5
+    assert songs[1]["song"] == song2
+    assert songs[1]["plays"] == 3
+
+
+@db_session
+def test_top_plays_multiple_users():
+    user = mixer.blend(UserDb)
+    mixer.blend(UserDb, scrobbles=mixer.cycle(10).blend(ScrobbleDb))
+    song1 = mixer.blend(SongDb)
+    song2 = mixer.blend(SongDb)
+    mixer.cycle(5).blend(ScrobbleDb, song=song1, user=user)
+    mixer.cycle(3).blend(ScrobbleDb, song=song2, user=user)
+    orm.flush()
+    songs = user_logic.top_plays_song(user)
+    assert len(songs) == 2
+    assert songs[0]["song"] == song1
+    assert songs[0]["plays"] == 5
+    assert songs[1]["song"] == song2
+    assert songs[1]["plays"] == 3
+
+
+@db_session
+def test_top_plays_no_plays():
+    user = mixer.blend(UserDb)
+    orm.flush()
+    songs = user_logic.top_plays_song(user)
+    assert len(songs) == 0

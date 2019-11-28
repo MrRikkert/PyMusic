@@ -1,8 +1,8 @@
-from typing import List
+from typing import Dict, List
 
 from pony import orm
 
-from app.db.models import ScrobbleDb, UserDb
+from app.db.models import ScrobbleDb, SongDb, UserDb
 from app.exceptions import IntegrityError
 from app.models.songs import ScrobbleIn, SongIn
 from app.models.users import RegisterIn
@@ -133,3 +133,15 @@ def recent_plays(user: UserDb, page: int = 0, page_size: int = 10) -> List[Scrob
     query = query.filter(lambda scrobble: scrobble.user == user)
     query = query.order_by(orm.desc(ScrobbleDb.date))
     return list(query.page(page, page_size))
+
+
+def top_plays_song(
+    user: UserDb, page: int = 0, page_size: int = 10
+) -> List[Dict[str, SongDb]]:
+    query = orm.select(
+        (scrobble.song, orm.count(scrobble.song.scrobbles)) for scrobble in ScrobbleDb
+    )
+    query = query.order_by(lambda song, count: orm.desc(orm.count(song.scrobbles)))
+    query = query.where(lambda scrobble: scrobble.user == user)
+    songs = list(query.page(page, page_size))
+    return [{"song": song, "plays": plays} for song, plays in songs]
