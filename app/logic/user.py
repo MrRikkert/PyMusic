@@ -85,6 +85,20 @@ def authenticate(username: str, password: str) -> UserDb:
 
 
 def scrobble(user: UserDb, scrobble: ScrobbleIn) -> ScrobbleDb:
+    """Scrobble music to the given user.
+    uses the logic/song.add() method to add songs with
+    `return_existing=True` and `update_existing=True`
+
+    ## Arguments:
+    - `user`: `UserDb`:
+        - User that is scrobbled the song
+    - `scrobble`: `ScrobbleIn`:
+        - The scrobble
+
+    ## Returns:
+    - `ScrobbleDb`:
+        - The created scrobble
+    """
     from app.logic import song as song_logic
 
     return ScrobbleDb(
@@ -101,6 +115,20 @@ def scrobble(user: UserDb, scrobble: ScrobbleIn) -> ScrobbleDb:
 
 
 def recent_plays(user: UserDb, page: int = 0, page_size: int = 10) -> List[ScrobbleDb]:
+    """Get recent plays from the given user
+
+    ## Arguments:
+    - `user`: `UserDb`:
+        - User you want the recent plays from
+    - `page`: `int`, optional:
+        - Page of plays you want. Defaults to `0`.
+    - `page_size`: `int`, optional:
+        - The size of pages you want to select. Defaults to `10`.
+
+    ## Returns:
+    - `List[ScrobbleDb]`:
+        - List of scrobbles ordered be descending date
+    """
     query = orm.select(s for s in ScrobbleDb)
     query = query.filter(lambda scrobble: scrobble.user == user)
     query = query.order_by(orm.desc(ScrobbleDb.date))
