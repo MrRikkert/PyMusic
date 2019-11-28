@@ -2,7 +2,7 @@ from typing import Dict, List
 
 from pony import orm
 
-from app.db.models import ScrobbleDb, SongDb, UserDb
+from app.db.models import ScrobbleDb, UserDb
 from app.exceptions import IntegrityError
 from app.models.songs import ScrobbleIn, SongIn
 from app.models.users import RegisterIn
@@ -127,7 +127,7 @@ def recent_plays(user: UserDb, page: int = 0, page_size: int = 10) -> List[Scrob
 
     ## Returns:
     - `List[ScrobbleDb]`:
-        - List of scrobbles ordered be descending date
+        - List of scrobbles ordered by descending date
     """
     query = orm.select(s for s in ScrobbleDb)
     query = query.filter(lambda scrobble: scrobble.user == user)
@@ -135,9 +135,23 @@ def recent_plays(user: UserDb, page: int = 0, page_size: int = 10) -> List[Scrob
     return list(query.page(page, page_size))
 
 
-def top_plays_song(
-    user: UserDb, page: int = 0, page_size: int = 10
-) -> List[Dict[str, SongDb]]:
+def top_plays_song(user: UserDb, page: int = 0, page_size: int = 10) -> List[Dict]:
+    """[summary]
+
+    ## Arguments:
+    - `user`: `UserDb`:
+        - User you want to get the top played songs from
+    - `page`: `int`, optional:
+        - Defaults to `0`.
+    - `page_size`: `int`, optional:
+        - The size of the pages you want to select. Defaults to `10`.
+
+    ## Returns:
+    - `List[Dict]`:
+        - The list of scrobbles ordered by descending plays.
+        The dict has two keys: `song` of type `SongDb` and
+        `plays` of type `int`
+    """
     query = orm.select(
         (scrobble.song, orm.count(scrobble.song.scrobbles)) for scrobble in ScrobbleDb
     )
