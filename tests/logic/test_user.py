@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import pytest
 from mixer.backend.pony import mixer
@@ -219,7 +219,7 @@ def test_top_plays():
     mixer.cycle(5).blend(ScrobbleDb, song=song1, user=user)
     mixer.cycle(3).blend(ScrobbleDb, song=song2, user=user)
     orm.flush()
-    songs = user_logic.top_plays_song(user)
+    songs = user_logic.most_played_songs(user)
     assert len(songs) == 2
     assert songs[0]["song"] == song1
     assert songs[0]["plays"] == 5
@@ -236,7 +236,7 @@ def test_top_plays_multiple_users():
     mixer.cycle(5).blend(ScrobbleDb, song=song1, user=user)
     mixer.cycle(3).blend(ScrobbleDb, song=song2, user=user)
     orm.flush()
-    songs = user_logic.top_plays_song(user)
+    songs = user_logic.most_played_songs(user)
     assert len(songs) == 2
     assert songs[0]["song"] == song1
     assert songs[0]["plays"] == 5
@@ -248,5 +248,27 @@ def test_top_plays_multiple_users():
 def test_top_plays_no_plays():
     user = mixer.blend(UserDb)
     orm.flush()
-    songs = user_logic.top_plays_song(user)
+    songs = user_logic.most_played_songs(user)
     assert len(songs) == 0
+
+
+@db_session
+def test_top_plays_min_max_date():
+    user = mixer.blend(UserDb)
+    song = mixer.blend(SongDb)
+    mixer.cycle(5).blend(ScrobbleDb, date=datetime.now(), song=song, user=user)
+    songs = mixer.cycle(5).blend(
+        ScrobbleDb, date=datetime.now() - timedelta(days=6), song=song, user=user
+    )
+    orm.flush()
+    songs = user_logic.most_played_songs(user)
+    assert len(songs) == 1
+    assert songs[0]["plays"] == 10
+
+    songs = user_logic.most_played_songs(
+        user, min_date=datetime.now() - timedelta(days=1)
+    )
+    print(db.last_sql)
+    orm.commit()
+    assert len(songs) == 1
+    assert songs[0]["plays"] == 5
