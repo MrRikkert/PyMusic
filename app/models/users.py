@@ -1,19 +1,19 @@
-from pydantic import BaseModel, EmailStr, Schema
+from pydantic import BaseModel, EmailStr, Field
 
 
 class User(BaseModel):
     id: int = None
-    username: str = Schema(...)
-    email: str = Schema(...)
-    password: str = Schema(...)
+    username: str = Field(...)
+    email: str = Field(...)
+    password: str = Field(...)
 
     class Config:
         orm_mode = True
 
 
 class RegisterBase(BaseModel):
-    username: str = Schema(..., min_length=5)
-    email: EmailStr = Schema(...)
+    username: str = Field(..., min_length=5)
+    email: EmailStr = Field(...)
 
     class Config:
         orm_mode = True
@@ -29,7 +29,7 @@ class RegisterIn(RegisterBase):
     # (?=.*[a-z]): must have atleat one lower case letter
     # (?=.*[!@#$%^&*()|\\;:.,/\-_+=]): must have atleat one special character
     # All must match atleast once
-    password: str = Schema(
+    password: str = Field(
         ...,
         min_length=8,
         regex=r"(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*()|\\;:.,/\-_+=])",

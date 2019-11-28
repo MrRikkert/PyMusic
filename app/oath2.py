@@ -6,7 +6,7 @@ from starlette.status import HTTP_401_UNAUTHORIZED
 
 from app.utils.security import decode_access_token
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="user/login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/user/login")
 
 
 @db_session
