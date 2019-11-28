@@ -1,3 +1,7 @@
+from typing import List
+
+from pony import orm
+
 from app.db.models import ScrobbleDb, UserDb
 from app.exceptions import IntegrityError
 from app.models.songs import ScrobbleIn, SongIn
@@ -94,3 +98,10 @@ def scrobble(user: UserDb, scrobble: ScrobbleIn) -> ScrobbleDb:
         album_artist=scrobble.album_artist,
         date=scrobble.date,
     )
+
+
+def recent_plays(user: UserDb, page: int = 0, page_size: int = 10) -> List[ScrobbleDb]:
+    query = orm.select(s for s in ScrobbleDb)
+    query = query.filter(lambda scrobble: scrobble.user == user)
+    query = query.order_by(orm.desc(ScrobbleDb.date))
+    return list(query.page(page, page_size))

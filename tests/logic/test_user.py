@@ -165,3 +165,47 @@ def test_scrobble_existing_song():
     assert orm.count(s for s in ScrobbleDb) == 1
     assert scrobble.date == date
     assert len(user.scrobbles) == 1
+
+
+@db_session
+def test_recent_plays():
+    user = mixer.blend(UserDb, scrobbles=mixer.cycle(30).blend(ScrobbleDb))
+    orm.flush()
+    scrobbles = user_logic.recent_plays(user)
+    assert len(scrobbles) == 10
+    for idx, scrobble in enumerate(scrobbles):
+        if idx > 0:
+            assert scrobbles[idx].date < scrobbles[idx - 1].date
+
+
+@db_session
+def test_recent_plays_multiple_users():
+    user = mixer.blend(UserDb, scrobbles=mixer.cycle(15).blend(ScrobbleDb))
+    mixer.cycle(15).blend(ScrobbleDb, user=mixer.blend(UserDb))
+    orm.flush()
+    scrobbles = user_logic.recent_plays(user)
+    assert len(scrobbles) == 10
+    for idx, scrobble in enumerate(scrobbles):
+        assert scrobble.user == user
+        if idx > 0:
+            assert scrobbles[idx].date < scrobbles[idx - 1].date
+
+
+@db_session
+def test_recent_plays_no_scrobbles():
+    user = mixer.blend(UserDb)
+    orm.flush()
+    scrobbles = user_logic.recent_plays(user)
+    assert len(scrobbles) == 0
+
+
+@db_session
+def test_recent_plays_different_page_size():
+    user = mixer.blend(UserDb, scrobbles=mixer.cycle(25).blend(ScrobbleDb))
+    orm.flush()
+    scrobbles = user_logic.recent_plays(user, page_size=20)
+    assert len(scrobbles) == 20
+    for idx, scrobble in enumerate(scrobbles):
+        assert scrobble.user == user
+        if idx > 0:
+            assert scrobbles[idx].date < scrobbles[idx - 1].date
