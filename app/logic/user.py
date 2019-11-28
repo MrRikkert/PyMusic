@@ -152,6 +152,12 @@ def most_played_songs(
         - Defaults to `0`.
     - `page_size`: `int`, optional:
         - The size of the pages you want to select. Defaults to `10`.
+    - `min_date`: `datetime`, optional:
+        - The start of data to aggregate.
+        `None` gets data from the beginning. Defaults to `None`
+    - `max_date`: `datetime`, optional:
+        - The end of data to aggregate
+        `None` gets data until the end. Defaults to `None`
 
     ## Returns:
     - `List[Dict]`:
