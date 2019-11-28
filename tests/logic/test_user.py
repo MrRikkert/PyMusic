@@ -268,7 +268,6 @@ def test_top_plays_min_max_date():
     songs = user_logic.most_played_songs(
         user, min_date=datetime.now() - timedelta(days=1)
     )
-    print(db.last_sql)
     orm.commit()
     assert len(songs) == 1
     assert songs[0]["plays"] == 5

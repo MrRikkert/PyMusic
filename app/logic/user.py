@@ -159,9 +159,7 @@ def most_played_songs(
         The dict has two keys: `song` of type `SongDb` and
         `plays` of type `int`
     """
-    query = orm.select(
-        (scrobble.song, orm.count(scrobble.song.scrobbles)) for scrobble in ScrobbleDb
-    )
+    query = orm.select((scrobble.song, orm.count(scrobble)) for scrobble in ScrobbleDb)
     query = query.order_by(lambda song, count: orm.desc(count))
     query = query.where(lambda scrobble: scrobble.user == user)
     if min_date is not None:
@@ -170,24 +168,3 @@ def most_played_songs(
         query = query.where(lambda scrobble: scrobble.date <= max_date)
     songs = list(query.page(page, page_size))
     return [{"song": song, "plays": plays} for song, plays in songs]
-
-    # TODO
-    # Generates:
-    # SELECT "scrobble"."song", COUNT(DISTINCT "scrobbledb"."id")
-    # FROM "scrobble" "scrobble"
-    #   LEFT JOIN "scrobble" "scrobbledb"
-    #       ON "scrobble"."song" = "scrobbledb"."song"
-    # WHERE "scrobble"."user" = ?
-    #   AND "scrobble"."date" >= ?
-    # GROUP BY "scrobble"."song"
-    # ORDER BY COUNT(DISTINCT "scrobbledb"."id") DESC
-    # LIMIT 10 OFFSET -10
-
-    # Should be
-    # SELECT "scrobble"."song", COUNT(DISTINCT "scrobble"."id")
-    # FROM "scrobble" "scrobble"
-    # WHERE "scrobble"."user" = 1
-    # AND "scrobble"."date" >= "2019-11-27"
-    # GROUP BY "scrobble"."song"
-    # ORDER BY COUNT(DISTINCT "scrobble"."id") DESC
-    # LIMIT 10 OFFSET -10
