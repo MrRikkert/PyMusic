@@ -155,7 +155,7 @@ def top_plays_song(user: UserDb, page: int = 0, page_size: int = 10) -> List[Dic
     query = orm.select(
         (scrobble.song, orm.count(scrobble.song.scrobbles)) for scrobble in ScrobbleDb
     )
-    query = query.order_by(lambda song, count: orm.desc(orm.count(song.scrobbles)))
+    query = query.order_by(lambda song, count: orm.desc(count))
     query = query.where(lambda scrobble: scrobble.user == user)
     songs = list(query.page(page, page_size))
     return [{"song": song, "plays": plays} for song, plays in songs]
