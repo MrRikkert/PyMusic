@@ -115,8 +115,14 @@ def scrobble(user: UserDb, scrobble: ScrobbleIn) -> ScrobbleDb:
     )
 
 
-def recent_plays(user: UserDb, page: int = 0, page_size: int = 10) -> List[ScrobbleDb]:
-    """Get recent plays from the given user
+def recent_plays(
+    user: UserDb,
+    page: int = 0,
+    page_size: int = 10,
+    min_date: datetime = None,
+    max_date: datetime = None,
+) -> List[ScrobbleDb]:
+    """Get recent plays from the given user in a given timeframe
 
     ## Arguments:
     - `user`: `UserDb`:
@@ -125,6 +131,12 @@ def recent_plays(user: UserDb, page: int = 0, page_size: int = 10) -> List[Scrob
         - Page of plays you want. Defaults to `0`.
     - `page_size`: `int`, optional:
         - The size of pages you want to select. Defaults to `10`.
+    - `min_date`: `datetime`, optional:
+        - The minimal date from which scrobbles should be fetched
+        `None` gets data from the beginning. Defaults to `None`
+    - `max_date`: `datetime`, optional:
+        - The maximum date from which scrobbles should be fetched
+        `None` gets data until the end. Defaults to `None`
 
     ## Returns:
     - `List[ScrobbleDb]`:
@@ -132,6 +144,10 @@ def recent_plays(user: UserDb, page: int = 0, page_size: int = 10) -> List[Scrob
     """
     query = orm.select(s for s in ScrobbleDb)
     query = query.filter(lambda scrobble: scrobble.user == user)
+    if min_date is not None:
+        query = query.filter(lambda scrobble: scrobble.date >= min_date)
+    if max_date is not None:
+        query = query.filter(lambda scrobble: scrobble.date <= max_date)
     query = query.order_by(orm.desc(ScrobbleDb.date))
     return list(query.page(page, page_size))
 
@@ -143,7 +159,7 @@ def most_played_songs(
     min_date: datetime = None,
     max_date: datetime = None,
 ) -> List[Dict]:
-    """[summary]
+    """Get the most played songs of a user in a given time frame
 
     ## Arguments:
     - `user`: `UserDb`:

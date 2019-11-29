@@ -212,6 +212,23 @@ def test_recent_plays_different_page_size():
 
 
 @db_session
+def test_recent_plays_min_max_date():
+    user = mixer.blend(UserDb)
+    song = mixer.blend(SongDb)
+    mixer.cycle(5).blend(ScrobbleDb, date=datetime.now(), song=song, user=user)
+    mixer.cycle(5).blend(
+        ScrobbleDb, date=datetime.now() - timedelta(days=6), song=song, user=user
+    )
+    orm.flush()
+    scrobbles = user_logic.recent_plays(
+        user, min_date=datetime.now() - timedelta(days=4)
+    )
+    assert len(scrobbles) == 5
+    for idx, scrobble in enumerate(scrobbles):
+        assert scrobble.user == user
+
+
+@db_session
 def test_top_plays():
     user = mixer.blend(UserDb)
     song1 = mixer.blend(SongDb)
