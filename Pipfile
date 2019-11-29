@@ -11,6 +11,7 @@ mixer = "*"
 flake8 = "*"
 mccabe = "*"
 requests = "*"
+pytest-xdist = "*"
 
 [packages]
 fastapi = "==0.44.0"
