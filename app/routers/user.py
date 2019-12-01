@@ -35,5 +35,8 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
         )
     access_token = create_access_token(UserTokenData(sub=user.username))
     return LoginOut(
-        access_token=access_token, token_type="bearer", username=user.username
+        token=access_token,
+        token_type="bearer",
+        username=user.username,
+        email=user.email,
     )
