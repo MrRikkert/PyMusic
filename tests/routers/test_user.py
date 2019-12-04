@@ -100,7 +100,7 @@ def test_login():
         "/user/login", data={"username": user.username, "password": "password"},
     )
     assert response.status_code == 200
-    assert response.json()["access_token"]
+    assert response.json()["token"]
 
 
 @db_session
