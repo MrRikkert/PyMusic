@@ -89,13 +89,13 @@ def test_get_user_by_name_existing():
 
 
 @db_session
-def test_get_email_by_email_non_existing():
+def test_get_user_by_email_non_existing():
     user = user_logic.get("test@test.com")
     assert user is None
 
 
 @db_session
-def test_get_email_by_email_existing():
+def test_get_user_by_email_existing():
     user_db = mixer.blend(UserDb)
     user = user_logic.get(user_db.email)
     assert user is not None

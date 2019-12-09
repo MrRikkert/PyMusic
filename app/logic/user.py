@@ -1,6 +1,7 @@
 from datetime import datetime
 from typing import Dict, List
 
+from email_validator import EmailNotValidError, validate_email
 from pony import orm
 
 from app.db.models import ScrobbleDb, UserDb
@@ -70,10 +71,12 @@ def get(value: str) -> UserDb:
     - `UserDb`:
         - The found user. Returns `None` when no user is found
     """
-    if value.find("@") == -1:
-        return UserDb.get(username=value)
-    else:
+    try:
+        # deliverability is already checked by pydantic
+        validate_email(value, check_deliverability=False)
         return UserDb.get(email=value)
+    except EmailNotValidError:
+        return UserDb.get(username=value)
 
 
 def authenticate(username: str, password: str) -> UserDb:
