@@ -65,7 +65,7 @@ def get(value: str) -> UserDb:
 
     ## Arguments:
     - `value`: `str`:
-        - Name or email of the user, if the value contains '@' it is used as an email
+        - Name or email of the user, checks for email using the email-validator library
 
     ## Returns:
     - `UserDb`:
