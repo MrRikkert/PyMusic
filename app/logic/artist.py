@@ -5,7 +5,7 @@ from app.db.models import ArtistDb
 from app.exceptions import IntegrityError
 
 
-def get(name: str) -> ArtistDb:
+def get(*, id: int = None, name: str = None) -> ArtistDb:
     """Get artist from database
 
     ## Arguments:
@@ -16,7 +16,12 @@ def get(name: str) -> ArtistDb:
     - `ArtistDb`:
         - The found artist. Returns `None` when no artist is found
     """
-    return ArtistDb.get(name=name)
+    if id is not None:
+        return ArtistDb.get(id=id)
+    elif name is not None:
+        return ArtistDb.get(name=name)
+    else:
+        raise ValueError
 
 
 def exists(name: str) -> bool:
@@ -30,7 +35,7 @@ def exists(name: str) -> bool:
     - `bool`:
         - `True` when artist exists, `False` when it doesn't
     """
-    artist = get(name)
+    artist = get(name=name)
     return True if artist is not None else False
 
 
@@ -52,7 +57,7 @@ def add(name: str, return_existing: bool = False) -> ArtistDb:
         - The created artist, or existing artist when `return_existing` is `True`
         and it already exists
     """
-    existing = get(name)
+    existing = get(name=name)
     if existing is not None:
         if not return_existing:
             raise IntegrityError("artist already exists")
