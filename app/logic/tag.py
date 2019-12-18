@@ -18,6 +18,20 @@ def get(tag_type: str, value: str) -> TagDb:
     return TagDb.get(tag_type=tag_type, value=value)
 
 
+def get_by_id(id: int) -> TagDb:
+    """Get tag from the database by id
+    
+    ## Arguments:
+    - `id`: `int`:
+        - The id in the database
+    
+    ## Returns:
+    - `TagDb`:
+        - The found tag. Return `None` when no tag is found
+    """
+    return TagDb.get(id=id)
+
+
 def exists(tag_type: str, value: str) -> bool:
     """Check if the tag already exists in the database
 

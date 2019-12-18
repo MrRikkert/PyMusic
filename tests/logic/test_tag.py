@@ -29,6 +29,20 @@ def test_get_tag_non_existing():
 
 
 @db_session
+def test_get_tag_by_id_existing():
+    tag_db = mixer.blend(TagDb)
+    orm.flush()
+    tag = tag_logic.get_by_id(tag_db.id)
+    assert tag is not None
+
+
+@db_session
+def test_get_tag_by_id_non_existing():
+    tag = tag_logic.get_by_id(id=1)
+    assert tag is None
+
+
+@db_session
 def test_tag_exists_existing():
     tag = mixer.blend(TagDb)
     exists = tag_logic.exists(tag_type=tag.tag_type, value=tag.value)
