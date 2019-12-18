@@ -102,6 +102,20 @@ def test_get_user_by_email_existing():
 
 
 @db_session
+def test_get_user_by_id_existing():
+    user_db = mixer.blend(UserDb)
+    orm.flush()
+    user = user_logic.get_by_id(user_db.id)
+    assert user is not None
+
+
+@db_session
+def test_get_user_by_id_non_existing():
+    user = user_logic.get_by_id(id=1)
+    assert user is None
+
+
+@db_session
 def test_authenticate_user_correct():
     user = user_logic.register(
         RegisterIn(username="username", email="email@email.com", password="Abc@123!")

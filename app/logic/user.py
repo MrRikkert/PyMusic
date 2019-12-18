@@ -79,6 +79,20 @@ def get(value: str) -> UserDb:
         return UserDb.get(username=value)
 
 
+def get_by_id(id: int) -> UserDb:
+    """Get user from the database by id
+
+    ## Arguments:
+    - `id`: `int`:
+        - Id in the database
+
+    ## Returns:
+    - `AlbumDb`:
+        - The found albuserum. Returns `None` when no user is found
+    """
+    return UserDb.get(id=id)
+
+
 def authenticate(username: str, password: str) -> UserDb:
     """Validat user credentials
 
