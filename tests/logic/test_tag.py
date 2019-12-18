@@ -16,7 +16,7 @@ def setup_function():
 @db_session
 def test_get_tag_existing():
     db_tag = mixer.blend(TagDb)
-    tag = tag_logic.get(tag_type=db_tag.tag_type, value=db_tag.value)
+    tag = tag_logic.get_by_values(tag_type=db_tag.tag_type, value=db_tag.value)
     assert tag is not None
     assert tag.tag_type == db_tag.tag_type
     assert tag.value == db_tag.value
@@ -24,7 +24,7 @@ def test_get_tag_existing():
 
 @db_session
 def test_get_tag_non_existing():
-    tag = tag_logic.get(tag_type="hallo", value="test")
+    tag = tag_logic.get_by_values(tag_type="hallo", value="test")
     assert tag is None
 
 
