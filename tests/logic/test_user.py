@@ -42,15 +42,36 @@ def test_register_user_username_exists():
 
 
 @db_session
+def test_register_user_email_exists():
+    user1 = mixer.blend(UserDb)
+    user2 = RegisterIn(username="testName", email=user1.email, password="Abc@123!")
+    with pytest.raises(IntegrityError, match="Email"):
+        user_logic.register(user2)
+
+
+@db_session
 def test_username_exists_non_existing():
-    exists = user_logic.exists("test")
+    exists = user_logic.username_exists("test")
     assert not exists
 
 
 @db_session
 def test_username_exists_existing():
     user = mixer.blend(UserDb)
-    exists = user_logic.exists(user.username)
+    exists = user_logic.username_exists(user.username)
+    assert exists
+
+
+@db_session
+def test_email_exists_non_existing():
+    exists = user_logic.email_exists("test")
+    assert not exists
+
+
+@db_session
+def test_email_exists_existing():
+    user = mixer.blend(UserDb)
+    exists = user_logic.email_exists(user.email)
     assert exists
 
 
@@ -65,6 +86,33 @@ def test_get_user_by_name_existing():
     user_db = mixer.blend(UserDb)
     user = user_logic.get(user_db.username)
     assert user is not None
+
+
+@db_session
+def test_get_user_by_email_non_existing():
+    user = user_logic.get("test@test.com")
+    assert user is None
+
+
+@db_session
+def test_get_user_by_email_existing():
+    user_db = mixer.blend(UserDb)
+    user = user_logic.get(user_db.email)
+    assert user is not None
+
+
+@db_session
+def test_get_user_by_id_existing():
+    user_db = mixer.blend(UserDb)
+    orm.flush()
+    user = user_logic.get_by_id(user_db.id)
+    assert user is not None
+
+
+@db_session
+def test_get_user_by_id_non_existing():
+    user = user_logic.get_by_id(id=1)
+    assert user is None
 
 
 @db_session

@@ -14,17 +14,32 @@ def setup_function():
 
 
 @db_session
-def test_get_artist_existing():
+def test_get_artist_by_name_existing():
     db_artist = mixer.blend(ArtistDb)
-    artist = artist_logic.get(db_artist.name)
+    artist = artist_logic.get_by_name(name=db_artist.name)
     assert artist is not None
     assert db_artist.name == artist.name
 
 
 @db_session
-def test_get_artist_non_existing():
-    artist = artist_logic.get("hallo")
+def test_get_artist_by_name_non_existing():
+    artist = artist_logic.get_by_name(name="hallo")
     assert artist is None
+
+
+@db_session
+def test_get_artist_by_id_non_existing():
+    artist = artist_logic.get_by_id(id=1)
+    assert artist is None
+
+
+@db_session
+def test_get_artist_by_id_existing():
+    db_artist = mixer.blend(ArtistDb)
+    orm.flush()
+    artist = artist_logic.get_by_id(id=db_artist.id)
+    assert artist is not None
+    assert db_artist.name == artist.name
 
 
 @db_session

@@ -1,6 +1,7 @@
 from datetime import datetime
 from typing import Dict, List
 
+from email_validator import EmailNotValidError, validate_email
 from pony import orm
 
 from app.db.models import ScrobbleDb, UserDb
@@ -28,12 +29,14 @@ def register(register: RegisterIn) -> UserDb:
     """
     register = register.copy(deep=True)
     register.password = hash_password(register.password)
-    if exists(register.username):
+    if username_exists(register.username):
         raise IntegrityError("Username already exists")
+    if email_exists(register.email):
+        raise IntegrityError("Email already exists")
     return UserDb(**register.dict())
 
 
-def exists(username: str) -> bool:
+def username_exists(username: str) -> bool:
     """Check if the user already exists in the database
 
     ## Arguments:
@@ -50,18 +53,44 @@ def exists(username: str) -> bool:
     return True
 
 
-def get(username: str) -> UserDb:
+def email_exists(email: str) -> bool:
+    user = get(email)
+    if user is None:
+        return False
+    return True
+
+
+def get(value: str) -> UserDb:
     """Get user from database
 
     ## Arguments:
-    - `username`: `str`:
-        - Name of the user
+    - `value`: `str`:
+        - Name or email of the user, checks for email using the email-validator library
 
     ## Returns:
     - `UserDb`:
         - The found user. Returns `None` when no user is found
     """
-    return UserDb.get(username=username)
+    try:
+        # deliverability is already checked by pydantic
+        validate_email(value, check_deliverability=False)
+        return UserDb.get(email=value)
+    except EmailNotValidError:
+        return UserDb.get(username=value)
+
+
+def get_by_id(id: int) -> UserDb:
+    """Get user from the database by id
+
+    ## Arguments:
+    - `id`: `int`:
+        - Id in the database
+
+    ## Returns:
+    - `AlbumDb`:
+        - The found albuserum. Returns `None` when no user is found
+    """
+    return UserDb.get(id=id)
 
 
 def authenticate(username: str, password: str) -> UserDb:

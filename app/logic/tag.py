@@ -2,7 +2,7 @@ from app.db.models import TagDb
 from app.exceptions import IntegrityError
 
 
-def get(tag_type: str, value: str) -> TagDb:
+def get_by_values(tag_type: str, value: str) -> TagDb:
     """Get tag from database
 
     ## Arguments:
@@ -18,6 +18,20 @@ def get(tag_type: str, value: str) -> TagDb:
     return TagDb.get(tag_type=tag_type, value=value)
 
 
+def get_by_id(id: int) -> TagDb:
+    """Get tag from the database by id
+
+    ## Arguments:
+    - `id`: `int`:
+        - The id in the database
+
+    ## Returns:
+    - `TagDb`:
+        - The found tag. Return `None` when no tag is found
+    """
+    return TagDb.get(id=id)
+
+
 def exists(tag_type: str, value: str) -> bool:
     """Check if the tag already exists in the database
 
@@ -31,7 +45,7 @@ def exists(tag_type: str, value: str) -> bool:
     - `bool`:
         - `True` when tag exists, `False` when it doesn't
     """
-    tag = get(tag_type=tag_type, value=value)
+    tag = get_by_values(tag_type=tag_type, value=value)
     return True if tag is not None else False
 
 
@@ -55,7 +69,7 @@ def add(tag_type: str, value: str, return_existing: bool = False) -> TagDb:
         - The created tag, or existing tag when `return_existing` is `True`
         and it already exists
     """
-    existing = get(tag_type=tag_type, value=value)
+    existing = get_by_values(tag_type=tag_type, value=value)
     if existing is not None:
         if not return_existing:
             raise IntegrityError("tag already exists")

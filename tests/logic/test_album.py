@@ -14,23 +14,39 @@ def setup_function():
 
 
 @db_session
-def test_get_album():
+def test_get_album_by_name():
     db_album = mixer.blend(AlbumDb, album_artist=mixer.blend(ArtistDb))
-    album = album_logic.get(name=db_album.name, artist=db_album.album_artist.name)
+    album = album_logic.get_by_name(
+        name=db_album.name, artist=db_album.album_artist.name
+    )
     assert album is not None
 
 
 @db_session
-def test_get_album_no_album_artist():
+def test_get_album_by_name_no_album_artist():
     db_album = mixer.blend(AlbumDb)
-    album = album_logic.get(name=db_album.name)
+    album = album_logic.get_by_name(name=db_album.name)
     assert album is not None
 
 
 @db_session
-def test_get_album_no_non_existing():
-    album = album_logic.get(name="hallo")
+def test_get_album_by_name_no_non_existing():
+    album = album_logic.get_by_name(name="hallo")
     assert album is None
+
+
+@db_session
+def test_get_album_by_id_non_existing():
+    album = album_logic.get_by_id(id=1)
+    assert album is None
+
+
+@db_session
+def test_get_album_by_id_existing():
+    album_db = mixer.blend(AlbumDb)
+    orm.flush()
+    album = album_logic.get_by_id(id=album_db.id)
+    assert album is not None
 
 
 @db_session
