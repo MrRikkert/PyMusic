@@ -4,7 +4,7 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-black = "*"
+black = "==18.9b0"
 pytest = "*"
 pytest-cov = "*"
 mixer = "*"
@@ -19,12 +19,16 @@ pydantic = "==1.2"
 python-multipart = "*"
 uvicorn = "*"
 pyjwt = "*"
-passlib = {extras = ["bcrypt"],version = "*"}
 pony = "*"
 email-validator = "*"
+uvloop = "*"
 
 [requires]
 python_version = "3.8"
 
 [pipenv]
 allow_prereleases = true
+
+[packages.passlib]
+extras = [ "bcrypt",]
+version = "*"
