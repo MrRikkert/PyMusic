@@ -16,7 +16,7 @@ windows:
 `cd app`  
 `uvicorn main:app --reload --loop asyncio`
 
-linux:
+linux:  
 `uvicorn main:app --reload --loop uvloop`
 
 ## Tests
