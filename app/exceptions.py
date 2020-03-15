@@ -5,3 +5,11 @@ class IntegrityError(Exception):
     - Object already exists
     - Contraint failed
     """
+
+
+class LastFmError(Exception):
+    """Raise when LastFM raises an error
+
+    ## examples:
+    - user not found
+    """
