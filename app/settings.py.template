@@ -1,3 +1,5 @@
+# TODO Make template file
+
 # DB
 DB_PARAMS = {"provider": "sqlite", "filename": "sqlite.db", "create_db": True}
 
