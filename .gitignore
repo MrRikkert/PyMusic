@@ -137,3 +137,6 @@ dmypy.json
 *.db
 *.sqlite
 *.sqlite3
+
+# only commit template
+settings.py
