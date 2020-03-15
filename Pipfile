@@ -12,6 +12,7 @@ flake8 = "*"
 mccabe = "*"
 requests = "*"
 pytest-xdist = "*"
+pytest-optional-tests = "*"
 
 [packages]
 passlib = {extras = [ "bcrypt",],version = "*"}
@@ -23,7 +24,7 @@ uvicorn = "*"
 pyjwt = "*"
 pony = "*"
 email-validator = "*"
-uvloop = {version = "*", sys_platform = "== 'linux'"}
+uvloop = {version = "*",sys_platform = "== 'linux'"}
 
 [requires]
 python_version = "3.8"

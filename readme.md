@@ -30,6 +30,10 @@ To run the tests with coverage, use:
 To also generate a coverage file for your IDE, use:  
 `pytest --cov-report xml:coverage.xml --cov`
 
+Some tests are skipped by default (like lastfm tests). to run these tests use:  
+`pytest --run-optional-tests=lastfm`  
+see the tox.ini for all optional markers
+
 ## Dev
 
 ### Linting
