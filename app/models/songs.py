@@ -3,6 +3,8 @@ from typing import List
 
 from pydantic import BaseModel, Field
 
+from app.models.artists import ArtistLastFm
+
 
 class BaseSong(BaseModel):
     title: str = Field(...)
@@ -29,3 +31,20 @@ class Song(BaseSong):
     album: str = Field(...)
     album_artist: str = Field(...)
     tags: List[TagIn] = Field(None)
+
+
+class SongLastFm(BaseModel):
+    title: str = Field(...)
+    artist: ArtistLastFm = Field(...)
+
+    class Config:
+        orm_mode = True
+
+
+class ScrobbleLastFm(BaseModel):
+    album: str = Field(None)
+    timestamp: datetime = Field(...)
+    track: SongLastFm = Field(...)
+
+    class Config:
+        orm_mode = True

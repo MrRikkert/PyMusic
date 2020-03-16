@@ -1,6 +1,7 @@
 import pylast
 
 from app.exceptions import LastFmError
+from app.models.songs import ScrobbleLastFm
 from app.settings import LASTFMKEY, LASTFMSECRET
 
 lastfm = pylast.LastFMNetwork(api_key=LASTFMKEY, api_secret=LASTFMSECRET)
@@ -8,7 +9,7 @@ lastfm = pylast.LastFMNetwork(api_key=LASTFMKEY, api_secret=LASTFMSECRET)
 
 def get_scrobbles(
     username: str, limit: int = None, time_from: str = None, time_to: str = None
-):
+) -> ScrobbleLastFm:
     """Get all scrobbles from the given LastFM user within the search criteria
 
     ## Arguments:
@@ -31,8 +32,8 @@ def get_scrobbles(
         - Raised when the given user does not exist
 
     ## Returns:
-    - `[type]`:
-        - [description]
+    - `ScrobbleLastFm`:
+        - A Scrobble model with all the information LastFM returns
     """
     if not username:
         raise ValueError("Username is required")
@@ -41,4 +42,7 @@ def get_scrobbles(
         user: pylast.User = lastfm.get_user(username)
     except pylast.WSError:
         raise LastFmError("User not found")
-    return user.get_recent_tracks(limit=limit, time_from=time_from, time_to=time_to)
+    scrobbles = user.get_recent_tracks(
+        limit=limit, time_from=time_from, time_to=time_to
+    )
+    return [ScrobbleLastFm.from_orm(scrobble) for scrobble in scrobbles]
