@@ -43,6 +43,7 @@ def test_get_scrobbles_empty_username():
         lastfm.get_scrobbles(username="", limit=1)
 
 
+@pytest.mark.lastfm
 def test_get_scrobbles_non_exisiting_user():
     with pytest.raises(WSError):
         with pytest.raises(LastFmError):
