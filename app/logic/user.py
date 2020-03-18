@@ -145,7 +145,7 @@ def scrobble(user: UserDb, scrobble: ScrobbleIn) -> ScrobbleDb:
     )
 
 
-def get_lastfm_scrobbles(user: UserDb, username: str):
+def sync_lastfm_scrobbles(user: UserDb, username: str):
     """Sync the user's LastFm scrobbles with the database.
     It will get all scrobbles if the user has never synced before.
     If the user has synced before, it will sync everything since the last sync.
