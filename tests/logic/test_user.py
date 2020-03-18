@@ -347,6 +347,8 @@ def test_get_lastfm_scrobbles():
     assert orm.count(s for s in SongDb) > 0
     assert orm.count(a for a in ArtistDb) > 0
     assert orm.count(a for a in AlbumDb) > 0
+    assert user.last_lastfm_sync is not None
+    assert user.last_lastfm_sync.timestamp() == 1584545334
 
 
 @db_session

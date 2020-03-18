@@ -164,6 +164,7 @@ def get_lastfm_scrobbles(user: UserDb, username: str):
                 title=_scrobble.track.title,
             ),
         )
+    user.last_lastfm_sync = scrobbles[0].timestamp
 
 
 def recent_plays(
