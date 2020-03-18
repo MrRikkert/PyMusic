@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List
+from typing import List, Optional
 
 from pydantic import BaseModel, Field
 
@@ -8,7 +8,7 @@ from app.models.artists import ArtistLastFm
 
 class BaseSong(BaseModel):
     title: str = Field(...)
-    length: int = Field(...)
+    length: int = Field(None)
 
 
 class SongIn(BaseSong):
@@ -16,8 +16,8 @@ class SongIn(BaseSong):
 
     artist: str = Field(...)
     album: str = Field(...)
-    album_artist: str = Field(...)
-    tags: List[TagIn] = Field(None)
+    album_artist: str = Field(None)
+    tags: Optional[List[TagIn]] = Field([])
 
 
 class ScrobbleIn(SongIn):

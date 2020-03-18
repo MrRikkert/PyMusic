@@ -1,3 +1,5 @@
+from typing import List
+
 import pylast
 
 from app.exceptions import LastFmError
@@ -9,7 +11,7 @@ lastfm = pylast.LastFMNetwork(api_key=LASTFMKEY, api_secret=LASTFMSECRET)
 
 def get_scrobbles(
     username: str, limit: int = None, time_from: str = None, time_to: str = None
-) -> ScrobbleLastFm:
+) -> List[ScrobbleLastFm]:
     """Get all scrobbles from the given LastFM user within the search criteria
 
     ## Arguments:

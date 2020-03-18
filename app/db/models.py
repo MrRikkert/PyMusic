@@ -11,6 +11,7 @@ class UserDb(db.Entity):
     username = Required(str, unique=True)
     email = Required(str, unique=True)
     password = Required(str)
+    last_lastfm_sync = Optional(datetime)
     scrobbles = Set("ScrobbleDb")
 
 

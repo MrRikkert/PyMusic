@@ -336,3 +336,36 @@ def test_top_plays_min_max_date():
     orm.commit()
     assert len(songs) == 1
     assert songs[0]["plays"] == 5
+
+
+@db_session
+@pytest.mark.lastfm
+def test_get_lastfm_scrobbles():
+    user = mixer.blend(UserDb)
+    user_logic.get_lastfm_scrobbles(user, "Arararararagi")
+    assert orm.count(s for s in ScrobbleDb) == 40
+    assert orm.count(s for s in SongDb) > 0
+    assert orm.count(a for a in ArtistDb) > 0
+    assert orm.count(a for a in AlbumDb) > 0
+
+
+@db_session
+@pytest.mark.lastfm
+def test_get_lastfm_scrobbles_since_last_sync():
+    user = mixer.blend(UserDb, last_lastfm_sync=datetime.fromtimestamp(1584543600))
+    user_logic.get_lastfm_scrobbles(user, "Arararararagi")
+    assert orm.count(s for s in ScrobbleDb) == 5
+    assert orm.count(s for s in SongDb) > 0
+    assert orm.count(a for a in ArtistDb) > 0
+    assert orm.count(a for a in AlbumDb) > 0
+
+
+@db_session
+@pytest.mark.lastfm
+def test_get_lastfm_scrobbles_since_last_sync_exact_date_time():
+    user = mixer.blend(UserDb, last_lastfm_sync=datetime.fromtimestamp(1584543120))
+    user_logic.get_lastfm_scrobbles(user, "Arararararagi")
+    assert orm.count(s for s in ScrobbleDb) == 7
+    assert orm.count(s for s in SongDb) > 0
+    assert orm.count(a for a in ArtistDb) > 0
+    assert orm.count(a for a in AlbumDb) > 0

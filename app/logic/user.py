@@ -8,6 +8,7 @@ from app.db.models import ScrobbleDb, UserDb
 from app.exceptions import IntegrityError
 from app.models.songs import ScrobbleIn, SongIn
 from app.models.users import RegisterIn
+from app.utils import lastfm
 from app.utils.security import hash_password, verify_password
 
 
@@ -139,9 +140,30 @@ def scrobble(user: UserDb, scrobble: ScrobbleIn) -> ScrobbleDb:
         title=scrobble.title,
         artist=scrobble.artist,
         album=scrobble.album,
-        album_artist=scrobble.album_artist,
+        album_artist=scrobble.album_artist if scrobble.album_artist is not None else "",
         date=scrobble.date,
     )
+
+
+def get_lastfm_scrobbles(user: UserDb, username: str):
+    scrobbles = lastfm.get_scrobbles(
+        username=username,
+        limit=None,
+        # +60 seconds to exclude the last scrobble from lastfm
+        time_from=int(user.last_lastfm_sync.timestamp()) + 60
+        if user.last_lastfm_sync is not None
+        else None,
+    )
+    for _scrobble in scrobbles:
+        scrobble(
+            user=user,
+            scrobble=ScrobbleIn(
+                date=_scrobble.timestamp,
+                artist=_scrobble.track.artist.name,
+                album=_scrobble.album,
+                title=_scrobble.track.title,
+            ),
+        )
 
 
 def recent_plays(
