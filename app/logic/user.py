@@ -146,6 +146,20 @@ def scrobble(user: UserDb, scrobble: ScrobbleIn) -> ScrobbleDb:
 
 
 def get_lastfm_scrobbles(user: UserDb, username: str):
+    """Sync the user's LastFm scrobbles with the database.
+    It will get all scrobbles if the user has never synced before.
+    If the user has synced before, it will sync everything since the last sync.
+
+    ## Arguments:
+    - `user`: `UserDb`:
+        - The user that wants to sync their LastFm data
+    - `username`: `str`:
+        - The user's LastFm username
+
+    ## Returns:
+    - `int`:
+        - The amount of scrobbles synced
+    """
     scrobbles = lastfm.get_scrobbles(
         username=username,
         limit=None,
@@ -165,6 +179,7 @@ def get_lastfm_scrobbles(user: UserDb, username: str):
             ),
         )
     user.last_lastfm_sync = scrobbles[0].timestamp
+    return len(scrobbles)
 
 
 def recent_plays(
