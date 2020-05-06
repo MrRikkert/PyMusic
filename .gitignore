@@ -139,4 +139,3 @@ dmypy.json
 *.sqlite3
 
 # only commit template
-settings.py

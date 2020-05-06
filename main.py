@@ -1,3 +1,4 @@
+import dotenv
 import uvicorn
 
 from app import settings
@@ -9,6 +10,7 @@ db.generate_mapping(create_tables=True)
 
 # Used for the docker container
 app = app
+dotenv.load_dotenv()
 
 
 if __name__ == "__main__":

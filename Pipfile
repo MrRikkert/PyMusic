@@ -13,6 +13,8 @@ mccabe = "*"
 requests = "*"
 pytest-xdist = "*"
 pytest-optional-tests = "*"
+python-dotenv = "*"
+pytest-dotenv = "*"
 
 [packages]
 passlib = {extras = [ "bcrypt",],version = "*"}

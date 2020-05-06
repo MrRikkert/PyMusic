@@ -54,6 +54,10 @@ Some tests are skipped by default (like lastfm tests). to run these tests use:
 `pytest --run-optional-tests=lastfm`  
 see the tox.ini for all optional markers
 
+To run the LastFM tests you need to copy the `.env.template` file and remove the `.template` extension.
+You then need to fill the `LASTFM_KEY` and `LASTFM_SECRET` with your own API keys. You can get a LastFM API key
+[here](https://www.last.fm/api/account/create)
+
 ## Dev
 
 ### Linting
