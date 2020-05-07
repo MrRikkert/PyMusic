@@ -1,0 +1,9 @@
+kind: pipeline
+name: default
+
+steps:
+  - name: test
+    image: python
+    commands:
+      - pipenv install --system --deploy --ignore-pipfile
+      - pytest
