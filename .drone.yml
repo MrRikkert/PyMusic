@@ -11,4 +11,3 @@ steps:
       - pip install pipenv
       - pipenv install --system --deploy --dev --ignore-pipfile
       - pytest
-      - echo hallo
