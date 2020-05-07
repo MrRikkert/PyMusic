@@ -7,4 +7,4 @@ steps:
     commands:
       - pip install pipenv
       - pipenv install --system --deploy --dev --ignore-pipfile
-      - pytest
+      - pytest --run-optional-tests=lastfm
