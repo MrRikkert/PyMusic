@@ -2,9 +2,18 @@ kind: pipeline
 name: default
 
 steps:
+  # - name: set-commit-status-pending
+  #   image: gboo/github-status
+
   - name: test
     image: python
     commands:
       - pip install pipenv
       - pipenv install --system --deploy --dev --ignore-pipfile
-      - pytest --run-optional-tests=lastfm
+      - pytest
+
+  - name: bot-review
+    image: peterdavehello/drone-github-status-report-bot:latest
+    when:
+      event: [pull_request, push]
+      status: [success, failure]
