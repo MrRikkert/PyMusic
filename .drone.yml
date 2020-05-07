@@ -6,5 +6,5 @@ steps:
     image: python
     commands:
       - pip install pipenv
-      - pipenv install --system --deploy --ignore-pipfile
+      - pipenv install --system --deploy --dev --ignore-pipfile
       - pytest
