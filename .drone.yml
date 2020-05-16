@@ -1,10 +1,8 @@
 kind: pipeline
+type: docker
 name: default
 
 steps:
-  # - name: set-commit-status-pending
-  #   image: gboo/github-status
-
   - name: test
     image: python
     commands:
