@@ -35,6 +35,10 @@ steps:
       - service: mrrikkert/pymusic
       - confirm: true
 
-branch: master
+trigger:
+  branch:
+    - master
+  event:
+    - push
 depends_on:
   - test
