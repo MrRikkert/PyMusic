@@ -34,8 +34,6 @@ steps:
         from_secret: HEROKU_EMAIL
       password:
         from_secret: HEROKU_PASSWORD
-      email:
-        from_secret: HEROKU_EMAIL
 
 trigger:
   branch:
