@@ -26,17 +26,16 @@ steps:
       repo: mrrikkert/pymusic
       tags: latest
 
-  - name: rancher
-    image: peloton/drone-rancher
+  - name: heroku
+    image: plugins/docker
     settings:
-      url: https://rancher.kn01.fhict.nl/k8s/clusters/local
-      access_key:
-        from_secret: RANCHER_ACCESS_KEY
-      secret_key:
-        from_secret: RANCHER_SECRET_KEY
-      docker_image: mrrikkert/pymusic
-      service: fhict/pymusic
-      confirm: true
+      registry: registry.heroku.com
+      username:
+        from_secret: HEROKU_EMAIL
+      password:
+        from_secret: HEROKU_PASSWORD
+      email:
+        from_secret: HEROKU_EMAIL
 
 trigger:
   branch:
