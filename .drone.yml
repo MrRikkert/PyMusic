@@ -34,11 +34,5 @@ steps:
       - docker_image: mrrikkert/pymusic
       - service: mrrikkert/pymusic
       - confirm: true
-
-trigger:
-  branch:
-    - master
-  event:
-    - push
 depends_on:
   - test
