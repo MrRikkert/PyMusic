@@ -29,7 +29,7 @@ steps:
   - name: rancher
     image: peloton/drone-rancher
     settings:
-      url: https://rancher.kn01.fhict.nl/v3
+      url: https://rancher.kn01.fhict.nl/k8s/clusters/local
       access_key:
         from_secret: RANCHER_ACCESS_KEY
       secret_key:
