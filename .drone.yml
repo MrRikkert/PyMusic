@@ -25,14 +25,23 @@ steps:
         from_secret: DOCKER_PASSWORD
       repo: mrrikkert/pymusic
       tags: latest
+
   - name: rancher
     image: peloton/drone-rancher
     settings:
-      - url: https://rancher.kn01.fhict.nl/v3
-      - access_key: ${RANCHER_ACCESS_KEY}
-      - secret_key: ${RANCHER_SECRET_KEY}
-      - docker_image: mrrikkert/pymusic
-      - service: mrrikkert/pymusic
-      - confirm: true
+      url: https://rancher.kn01.fhict.nl/v3
+      access_key:
+        from_secret: RANCHER_ACCESS_KEY
+      secret_key:
+        from_secret: RANCHER_SECRET_KEY
+      docker_image: mrrikkert/pymusic
+      service: mrrikkert/pymusic
+      confirm: true
+
+trigger:
+  branch:
+    - master
+  event:
+    - push
 depends_on:
   - test
