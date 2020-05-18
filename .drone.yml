@@ -28,8 +28,14 @@ steps:
       when:
         branch: master
         event: push
-    commands:
-      -
+  - name: rancher
+    image: peloton/drone-rancher
+    url: https://rancher.kn01.fhict.nl/v3
+    access_key: ${RANCHER_ACCESS_KEY}
+    secret_key: ${RANCHER_SECRET_KEY}
+    docker_image: mrrikkert/pymusic
+    service: mrrikkert/pymusic
+    confirm: true
 
 depends_on:
   - test
