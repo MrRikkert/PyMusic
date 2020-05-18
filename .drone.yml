@@ -35,7 +35,7 @@ steps:
       secret_key:
         from_secret: RANCHER_SECRET_KEY
       docker_image: mrrikkert/pymusic
-      service: mrrikkert/pymusic
+      service: fhict/pymusic
       confirm: true
 
 trigger:
