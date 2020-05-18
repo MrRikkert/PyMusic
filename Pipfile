@@ -13,7 +13,6 @@ mccabe = "*"
 requests = "*"
 pytest-xdist = "*"
 pytest-optional-tests = "*"
-python-dotenv = "*"
 pytest-dotenv = "*"
 
 [packages]
@@ -26,6 +25,7 @@ uvicorn = "*"
 pyjwt = "*"
 pony = "*"
 email-validator = "*"
+python-dotenv = "*"
 uvloop = {version = "*",sys_platform = "== 'linux'"}
 
 [requires]
