@@ -19,6 +19,8 @@ steps:
     commands:
       - pip install pipenv
       - pipenv install --system --deploy --dev --ignore-pipfile
+      - export LASTFM_KEY=$LASTFM_KEY
+      - export LASTFM_SECRET=$LASTFM_SECRET
       - pytest --run-optional-tests=lastfm
     environment:
       LASTFM_KEY:
