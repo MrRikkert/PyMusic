@@ -26,16 +26,6 @@ steps:
       repo: mrrikkert/pymusic
       tags: latest
 
-  - name: heroku
-    image: plugins/docker
-    settings:
-      registry: registry.heroku.com
-      username:
-        from_secret: HEROKU_EMAIL
-      password:
-        from_secret: HEROKU_PASSWORD
-      insecure: true
-
 trigger:
   branch:
     - master
