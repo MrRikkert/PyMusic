@@ -3,12 +3,31 @@ type: docker
 name: test
 
 steps:
-  - name: test
+  - name: test commit
     image: python:3.8
     commands:
       - pip install pipenv
       - pipenv install --system --deploy --dev --ignore-pipfile
       - pytest
+    when:
+      branch:
+        exclude:
+          - master
+
+  - name: test full
+    image: python:3.8
+    commands:
+      - pip install pipenv
+      - pipenv install --system --deploy --dev --ignore-pipfile
+      - pytest --run-optional-tests=lastfm
+    when:
+      branch:
+        - master
+
+trigger:
+  event:
+    - push
+    - pull_request
 
 ---
 kind: pipeline
