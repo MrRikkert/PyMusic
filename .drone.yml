@@ -3,12 +3,38 @@ type: docker
 name: test
 
 steps:
-  - name: test
+  - name: test commit
     image: python:3.8
     commands:
       - pip install pipenv
       - pipenv install --system --deploy --dev --ignore-pipfile
       - pytest
+    when:
+      branch:
+        exclude:
+          - master
+
+  - name: test full
+    image: python:3.8
+    environment:
+      LASTFM_KEY:
+        from_secret: LASTFM_KEY
+      LASTFM_SECRET:
+        from_secret: LASTFM_SECRET
+    commands:
+      - pip install pipenv
+      - pipenv install --system --deploy --dev --ignore-pipfile
+      - export LASTFM_KEY=$LASTFM_KEY
+      - export LASTFM_SECRET=$LASTFM_SECRET
+      - pytest --run-optional-tests=lastfm
+    when:
+      branch:
+        - master
+
+trigger:
+  event:
+    - push
+    - pull_request
 
 ---
 kind: pipeline
