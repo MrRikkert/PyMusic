@@ -20,6 +20,11 @@ steps:
       - pip install pipenv
       - pipenv install --system --deploy --dev --ignore-pipfile
       - pytest --run-optional-tests=lastfm
+    environment:
+      LASTFM_KEY:
+        from_secret: LASTFM_KEY
+      LASTFM_SECRET:
+        from_secret: LASTFM_SECRET
     when:
       branch:
         - master
