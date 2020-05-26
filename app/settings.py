@@ -37,10 +37,13 @@ if os.getenv("DB_PROVIDER"):
             "create_db": os.getenv("DB_SQLITE_CREATE_DB"),
         }
     elif provider == "postgres":
-        DB_PARAMS = {
-            "provider": "postgres",
-            "user": os.getenv("DB_POSTGRES_USER"),
-            "password": os.getenv("DB_POSTGRES_PASSWORD"),
-            "host": os.getenv("DB_POSTGRES_HOST"),
-            "database": os.getenv("DB_POSTGRES_DATABASE"),
-        }
+        if os.getenv("DATABASE_URL"):
+            DB_PARAMS = {"provider": "postgres", "dsn": os.getenv("DATABASE_URL")}
+        else:
+            DB_PARAMS = {
+                "provider": "postgres",
+                "user": os.getenv("DB_POSTGRES_USER"),
+                "password": os.getenv("DB_POSTGRES_PASSWORD"),
+                "host": os.getenv("DB_POSTGRES_HOST"),
+                "database": os.getenv("DB_POSTGRES_DATABASE"),
+            }
