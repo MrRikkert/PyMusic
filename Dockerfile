@@ -5,7 +5,9 @@ RUN pip install pipenv
 COPY Pipfile.lock .
 COPY Pipfile .
 
+RUN apt-get update && apt-get install -y libpq-dev gcc
 RUN pipenv install --system --deploy --ignore-pipfile
+RUN apt-get autoremove -y gcc
 
 ENV JWT_SECRET_KEY=
 ENV JWT_ALGORITHM=
