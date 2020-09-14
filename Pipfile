@@ -29,6 +29,7 @@ email-validator = "*"
 python-dotenv = "*"
 uvloop = {version = "*",sys_platform = "== 'linux'"}
 psycopg2 = "*"
+pypiwin32 = "*"
 
 [requires]
 python_version = "3.8"
