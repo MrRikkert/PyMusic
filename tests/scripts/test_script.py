@@ -7,15 +7,17 @@ from pony.orm import db_session
 from app.db.base import db
 from app.db.models import AlbumDb, ArtistDb, SongDb
 from app.models.songs import SongIn
-from local import musicbeeipc
 from tests.logic.test_song import song_logic
 from tests.utils import reset_db
-
-mbipc = musicbeeipc.MusicBeeIPC()
 
 
 if not sys.platform.startswith("win"):
     pytest.skip("skipping windows-only tests", allow_module_level=True)
+else:
+    from local import musicbeeipc
+
+
+mbipc = musicbeeipc.MusicBeeIPC()  # type: ignore
 
 
 def setup_function():
