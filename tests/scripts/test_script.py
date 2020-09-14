@@ -1,10 +1,10 @@
+import pytest
 from pony import orm
 from pony.orm import db_session
 
 from app.db.base import db
 from app.db.models import AlbumDb, ArtistDb, SongDb
-from app.logic import artist
-from app.models.songs import Song, SongIn
+from app.models.songs import SongIn
 from local import musicbeeipc
 from tests.logic.test_song import song_logic
 from tests.utils import reset_db
@@ -17,6 +17,7 @@ def setup_function():
 
 
 @db_session
+@pytest.mark.mb
 def test():
     paths = mbipc.library_search(query="")[:50]
     for path in paths:
