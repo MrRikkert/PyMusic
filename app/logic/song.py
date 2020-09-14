@@ -11,7 +11,10 @@ from app.models.songs import SongIn
 
 
 def add(
-    song: SongIn, return_existing: bool = False, update_existing: bool = False
+    song: SongIn,
+    return_existing: bool = False,
+    update_existing: bool = False,
+    replace_existing_tags: bool = False,
 ) -> SongDb:
     """Add song to the database
 
@@ -24,6 +27,10 @@ def add(
         - Update the existing song when found or not.
         Only updates the `albums` and `tags` properties
         `return_existing` also needs to be `True` for this to work.
+        Defaults to `False`.
+    - `replace_existing_tags`: `bool`, optional:
+        - Remove all `tag` relationships from the song and the new ones.  
+        `update_existing` also need to be `True` for this to work.
         Defaults to `False`.
 
     ## Raises:
@@ -40,12 +47,15 @@ def add(
     if existing is not None:
         if not return_existing:
             raise IntegrityError("Song already exists")
-        if update_existing:
+        elif update_existing:
             existing.albums.add(
                 album_logic.add(
                     name=song.album, artist=song.album_artist, return_existing=True
                 )
             )
+            if replace_existing_tags:
+                existing.tags.clear()
+
             for tag in song.tags:
                 existing.tags.add(
                     tag_logic.add(
