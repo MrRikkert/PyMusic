@@ -1,3 +1,5 @@
+import sys
+
 import pytest
 from pony import orm
 from pony.orm import db_session
@@ -10,6 +12,10 @@ from tests.logic.test_song import song_logic
 from tests.utils import reset_db
 
 mbipc = musicbeeipc.MusicBeeIPC()
+
+
+if not sys.platform.startswith("win"):
+    pytest.skip("skipping windows-only tests", allow_module_level=True)
 
 
 def setup_function():
