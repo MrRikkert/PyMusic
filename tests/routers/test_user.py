@@ -39,7 +39,8 @@ def test_register_invalid_email():
         },
     )
     assert response.status_code == 422
-    assert response.json()["detail"][0]["loc"] == ["body", "register", "email"]
+    test = response.json()
+    assert response.json()["detail"][0]["loc"] == ["body", "email"]
 
 
 def test_register_invalid_password():
@@ -52,7 +53,7 @@ def test_register_invalid_password():
         },
     )
     assert response.status_code == 422
-    assert response.json()["detail"][0]["loc"] == ["body", "register", "password"]
+    assert response.json()["detail"][0]["loc"] == ["body", "password"]
 
 
 def test_register_invalid_username():
@@ -61,7 +62,7 @@ def test_register_invalid_username():
         json={"username": "", "email": "email@email.com", "password": "Abc123!67"},
     )
     assert response.status_code == 422
-    assert response.json()["detail"][0]["loc"] == ["body", "register", "username"]
+    assert response.json()["detail"][0]["loc"] == ["body", "username"]
 
 
 def test_register_invalid_combined():
@@ -74,8 +75,8 @@ def test_register_invalid_combined():
         },
     )
     assert response.status_code == 422
-    assert response.json()["detail"][0]["loc"] == ["body", "register", "email"]
-    assert response.json()["detail"][1]["loc"] == ["body", "register", "password"]
+    assert response.json()["detail"][0]["loc"] == ["body", "email"]
+    assert response.json()["detail"][1]["loc"] == ["body", "password"]
 
 
 @db_session
@@ -97,7 +98,7 @@ def test_register_existing():
 def test_login():
     user = mixer.blend(UserDb, password=hash_password("password"))
     response = client.post(
-        "/user/login", data={"username": user.username, "password": "password"},
+        "/user/login", data={"username": user.username, "password": "password"}
     )
     assert response.status_code == 200
     assert response.json()["token"]
@@ -107,6 +108,6 @@ def test_login():
 def test_login_invalid_credentials():
     user = mixer.blend(UserDb, password=hash_password("password"))
     response = client.post(
-        "/user/login", data={"username": user.username, "password": "password2"},
+        "/user/login", data={"username": user.username, "password": "password2"}
     )
     assert response.status_code == 401
