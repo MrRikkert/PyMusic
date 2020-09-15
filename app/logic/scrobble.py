@@ -4,118 +4,12 @@ from typing import Dict, List
 from email_validator import EmailNotValidError, validate_email
 from pony import orm
 
-from app.db.models import ScrobbleDb, UserDb
-from app.exceptions import IntegrityError
+from app.db.models import ScrobbleDb
 from app.models.songs import ScrobbleIn, SongIn
-from app.models.users import RegisterIn
 from app.utils import lastfm
-from app.utils.security import hash_password, verify_password
 
 
-def register(register: RegisterIn) -> UserDb:
-    """Register a user by adding him/her to the database.
-    Also hashes the password.
-
-    ## Arguments:
-    - `register`: `RegisterIn`:
-        - De user you want to register
-
-    ## Raises:
-    - `IntegrityError`:
-        - Raised when the username and/or email already exists
-
-    ## Returns:
-    - `UserDb`:
-        - The created user
-    """
-    register = register.copy(deep=True)
-    register.password = hash_password(register.password)
-    if username_exists(register.username):
-        raise IntegrityError("Username already exists")
-    if email_exists(register.email):
-        raise IntegrityError("Email already exists")
-    return UserDb(**register.dict())
-
-
-def username_exists(username: str) -> bool:
-    """Check if the user already exists in the database
-
-    ## Arguments:
-    - `username`: `str`:
-        - Name of the user
-
-    ## Returns:
-    - `bool`:
-        - `True` when user exists, `False` when it doesn't
-    """
-    user = get(username)
-    if user is None:
-        return False
-    return True
-
-
-def email_exists(email: str) -> bool:
-    user = get(email)
-    if user is None:
-        return False
-    return True
-
-
-def get(value: str) -> UserDb:
-    """Get user from database
-
-    ## Arguments:
-    - `value`: `str`:
-        - Name or email of the user, checks for email using the email-validator library
-
-    ## Returns:
-    - `UserDb`:
-        - The found user. Returns `None` when no user is found
-    """
-    try:
-        # deliverability is already checked by pydantic
-        validate_email(value, check_deliverability=False)
-        return UserDb.get(email=value)
-    except EmailNotValidError:
-        return UserDb.get(username=value)
-
-
-def get_by_id(id: int) -> UserDb:
-    """Get user from the database by id
-
-    ## Arguments:
-    - `id`: `int`:
-        - Id in the database
-
-    ## Returns:
-    - `AlbumDb`:
-        - The found albuserum. Returns `None` when no user is found
-    """
-    return UserDb.get(id=id)
-
-
-def authenticate(username: str, password: str) -> UserDb:
-    """Validat user credentials
-
-    ## Arguments:
-    - `username`: `str`:
-        - Name of the user
-    - `password`: `str`:
-        - Password of the user (non hashed)
-
-    ## Returns:
-    - `UserDb`:
-        - Return the user if the credentials are correct.
-        Returns `None` if the credentials are wrong.
-    """
-    user = get(username)
-    if user is not None:
-        if not verify_password(password, user.password):
-            return None
-    return user
-
-
-def scrobble(user: UserDb, scrobble: ScrobbleIn) -> ScrobbleDb:
+def scrobble(scrobble: ScrobbleIn) -> ScrobbleDb:
     """Scrobble music to the given user.
     uses the logic/song.add() method to add songs with
     `return_existing=True` and `update_existing=True`
@@ -133,7 +27,6 @@ def scrobble(user: UserDb, scrobble: ScrobbleIn) -> ScrobbleDb:
     from app.logic import song as song_logic
 
     return ScrobbleDb(
-        user=user,
         song=song_logic.add(
             SongIn(**scrobble.dict()), return_existing=True, update_existing=True
         ),
@@ -145,14 +38,12 @@ def scrobble(user: UserDb, scrobble: ScrobbleIn) -> ScrobbleDb:
     )
 
 
-def sync_lastfm_scrobbles(user: UserDb, username: str):
+def sync_lastfm_scrobbles(username: str):
     """Sync the user's LastFm scrobbles with the database.
     It will get all scrobbles if the user has never synced before.
     If the user has synced before, it will sync everything since the last sync.
 
     ## Arguments:
-    - `user`: `UserDb`:
-        - The user that wants to sync their LastFm data
     - `username`: `str`:
         - The user's LastFm username
 
@@ -170,20 +61,18 @@ def sync_lastfm_scrobbles(user: UserDb, username: str):
     )
     for _scrobble in scrobbles:
         scrobble(
-            user=user,
             scrobble=ScrobbleIn(
                 date=_scrobble.timestamp,
                 artist=_scrobble.track.artist.name,
                 album=_scrobble.album,
                 title=_scrobble.track.title,
-            ),
+            )
         )
     user.last_lastfm_sync = scrobbles[0].timestamp
     return len(scrobbles)
 
 
 def recent_plays(
-    user: UserDb,
     page: int = 0,
     page_size: int = 10,
     min_date: datetime = None,
@@ -210,7 +99,6 @@ def recent_plays(
         - List of scrobbles ordered by descending date
     """
     query = orm.select(s for s in ScrobbleDb)
-    query = query.filter(lambda scrobble: scrobble.user == user)
     if min_date is not None:
         query = query.filter(lambda scrobble: scrobble.date >= min_date)
     if max_date is not None:
@@ -220,7 +108,6 @@ def recent_plays(
 
 
 def most_played_songs(
-    user: UserDb,
     page: int = 0,
     page_size: int = 10,
     min_date: datetime = None,
@@ -229,8 +116,6 @@ def most_played_songs(
     """Get the most played songs of a user in a given time frame
 
     ## Arguments:
-    - `user`: `UserDb`:
-        - User you want to get the top played songs from
     - `page`: `int`, optional:
         - Defaults to `0`.
     - `page_size`: `int`, optional:
@@ -250,7 +135,6 @@ def most_played_songs(
     """
     query = orm.select((scrobble.song, orm.count(scrobble)) for scrobble in ScrobbleDb)
     query = query.order_by(lambda song, count: orm.desc(count))
-    query = query.where(lambda scrobble: scrobble.user == user)
     if min_date is not None:
         query = query.where(lambda scrobble: scrobble.date >= min_date)
     if max_date is not None:
