@@ -101,7 +101,6 @@ def test_recent_plays_no_scrobbles():
 
 @db_session
 def test_recent_plays_different_page_size():
-
     mixer.cycle(30).blend(ScrobbleDb)
     orm.flush()
     scrobbles = scrobble_logic.recent_plays(page_size=20)
@@ -174,6 +173,20 @@ def test_top_plays_min_max_date():
     orm.commit()
     assert len(songs) == 1
     assert songs[0]["plays"] == 5
+
+
+def test_get_last_scrobble():
+    date1 = datetime.now()
+    date2 = date1 + timedelta(days=1)
+    mixer.blend(ScrobbleDb, date=date1)
+    mixer.blend(ScrobbleDb, date=date2)
+    last = scrobble_logic.get_last_scrobble()
+    assert last.date == date2
+
+
+def test_get_last_scrobble_no_scrobbles():
+    last = scrobble_logic.get_last_scrobble()
+    assert last == None
 
 
 @db_session

@@ -38,6 +38,12 @@ def scrobble(scrobble: ScrobbleIn) -> ScrobbleDb:
     )
 
 
+def get_last_scrobble():
+    query = orm.select(s for s in ScrobbleDb)
+    query = query.order_by(orm.desc(ScrobbleDb.date))
+    return query.first()
+
+
 def sync_lastfm_scrobbles(username: str):
     """Sync the user's LastFm scrobbles with the database.
     It will get all scrobbles if the user has never synced before.
