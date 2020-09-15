@@ -1,8 +1,8 @@
-import re
 from typing import List
 
 from app.db.models import ArtistDb
 from app.exceptions import IntegrityError
+from app.utils.clean import split_artists
 
 
 def get_by_name(name: str) -> ArtistDb:
@@ -87,6 +87,6 @@ def split(name: str) -> List[str]:
     - `List[str]`:
         - List of artist names
     """
-    artists = re.split(";|,|feat.|×|vs|&", name)
+    artists = split_artists(name)
     artists = map(lambda x: x.strip(), artists)
     return list(artists)

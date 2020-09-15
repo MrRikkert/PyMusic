@@ -3,6 +3,7 @@ from pony import orm
 from app.db.models import AlbumDb
 from app.exceptions import IntegrityError
 from app.logic import artist as artist_logic
+from app.utils.clean import clean_album
 
 
 def get_by_name(name: str, artist: str = None) -> AlbumDb:
@@ -84,6 +85,7 @@ def add(name: str, artist: str = None, return_existing: bool = False) -> AlbumDb
         return existing
     return AlbumDb(
         name=name,
+        name_alt=clean_album(name),
         album_artist=artist_logic.add(artist, return_existing=True)
         if artist is not None
         else None,
