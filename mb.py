@@ -35,7 +35,7 @@ def get_tags(path):
         tags_str = mbipc.library_get_file_tag(path, tag_types[tag_type])
         for tag in tags_str.split(";"):
             if tag:
-                tags.append(TagIn(tag_type=tag_type, value=tag))
+                tags.append(TagIn(tag_type=tag_type.strip(), value=tag.strip()))
     return tags
 
 
@@ -66,6 +66,6 @@ if __name__ == "__main__":
             song = get_song(path)
             try:
                 song_logic.add(song, return_existing=True, update_existing=True)
-            except:
+            except Exception as ex:
                 print(song)
             print(f"{idx + 1}/{total}")
