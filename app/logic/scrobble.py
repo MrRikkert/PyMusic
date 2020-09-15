@@ -38,7 +38,7 @@ def scrobble(scrobble: ScrobbleIn) -> ScrobbleDb:
     )
 
 
-def get_last_scrobble():
+def get_last_scrobble() -> ScrobbleDb:
     query = orm.select(s for s in ScrobbleDb)
     query = query.order_by(orm.desc(ScrobbleDb.date))
     return query.first()
@@ -57,13 +57,13 @@ def sync_lastfm_scrobbles(username: str):
     - `int`:
         - The amount of scrobbles synced
     """
+    last_scrobble = get_last_scrobble()
+    last_date = last_scrobble.date if last_scrobble is not None else 0
     scrobbles = lastfm.get_scrobbles(
         username=username,
         limit=None,
         # +60 seconds to exclude the last scrobble from lastfm
-        time_from=int(user.last_lastfm_sync.timestamp()) + 60
-        if user.last_lastfm_sync is not None
-        else None,
+        time_from=int(last_date.timestamp()) + 60 if last_date is not None else None,
     )
     for _scrobble in scrobbles:
         scrobble(
@@ -74,7 +74,6 @@ def sync_lastfm_scrobbles(username: str):
                 title=_scrobble.track.title,
             )
         )
-    user.last_lastfm_sync = scrobbles[0].timestamp
     return len(scrobbles)
 
 
