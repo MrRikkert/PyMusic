@@ -10,13 +10,11 @@ from app.utils import lastfm
 
 
 def scrobble(scrobble: ScrobbleIn) -> ScrobbleDb:
-    """Scrobble music to the given user.
+    """Add scrobbles to the database.
     uses the logic/song.add() method to add songs with
     `return_existing=True` and `update_existing=True`
 
     ## Arguments:
-    - `user`: `UserDb`:
-        - User that is scrobbled the song
     - `scrobble`: `ScrobbleIn`:
         - The scrobble
 
@@ -86,8 +84,6 @@ def recent_plays(
     """Get recent plays from the given user in a given timeframe
 
     ## Arguments:
-    - `user`: `UserDb`:
-        - User you want the recent plays from
     - `page`: `int`, optional:
         - Page of plays you want. Defaults to `0`.
     - `page_size`: `int`, optional:

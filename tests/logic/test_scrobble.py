@@ -5,13 +5,10 @@ from mixer.backend.pony import mixer
 from pony import orm
 from pony.orm import db_session
 
-from app.db.base import db
 from app.db.models import AlbumDb, ArtistDb, ScrobbleDb, SongDb, TagDb
-from app.exceptions import IntegrityError
 from app.logic import scrobble as scrobble_logic
 from app.models.songs import ScrobbleIn
 from app.models.tags import TagIn
-from app.models.users import RegisterIn
 from tests.utils import reset_db
 
 
