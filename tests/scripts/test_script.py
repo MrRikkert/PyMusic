@@ -6,10 +6,9 @@ from pony.orm import db_session
 
 from app.db.base import db
 from app.db.models import AlbumDb, ArtistDb, SongDb
+from app.logic import song as song_logic
 from app.models.songs import SongIn
-from tests.logic.test_song import song_logic
 from tests.utils import reset_db
-
 
 if not sys.platform.startswith("win"):
     pytest.skip("skipping windows-only tests", allow_module_level=True)
