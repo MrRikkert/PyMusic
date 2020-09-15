@@ -5,20 +5,9 @@ from pony.orm import Optional, PrimaryKey, Required, Set, composite_key
 from app.db.base import db
 
 
-class UserDb(db.Entity):
-    _table_ = "user"
-    id = PrimaryKey(int, auto=True)
-    username = Required(str, unique=True)
-    email = Required(str, unique=True)
-    password = Required(str)
-    last_lastfm_sync = Optional(datetime)
-    scrobbles = Set("ScrobbleDb")
-
-
 class ScrobbleDb(db.Entity):
     _table_ = "scrobble"
     id = PrimaryKey(int, auto=True)
-    user = Required(UserDb)
     song = Required("SongDb")
     title = Required(str)
     artist = Required(str)
@@ -42,6 +31,7 @@ class AlbumDb(db.Entity):
     _table_ = "album"
     id = PrimaryKey(int, auto=True)
     name = Required(str)
+    name_alt = Required(str)
     songs = Set(SongDb)
     album_artist = Optional("ArtistDb")
 

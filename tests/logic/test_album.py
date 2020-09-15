@@ -69,6 +69,13 @@ def test_add_album_without_artist():
 
 
 @db_session
+def test_add_album_correct_alt_name():
+    album = album_logic.add(name="album disc 1")
+    assert orm.count(a for a in AlbumDb) == 1
+    assert album.name_alt == "album"
+
+
+@db_session
 def test_add_album_with_artist():
     album_logic.add(name="album", artist="artist")
     assert orm.count(a for a in AlbumDb) == 1

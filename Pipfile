@@ -18,16 +18,13 @@ pytest-dotenv = "*"
 [packages]
 bcrypt = "==3.2.0"
 passlib = "*"
-fastapi = "==0.61.0"
 pylast = "*"
 pydantic = "==1.6.1"
 python-multipart = "*"
-uvicorn = "*"
 pyjwt = "*"
 pony = "*"
 email-validator = "*"
 python-dotenv = "*"
-uvloop = {version = "*", sys_platform = "== 'linux'"}
 psycopg2 = "*"
 pypiwin32 = {version = "*", sys_platform = "== 'win32'"}
 pywin32 = {version = "*", sys_platform = "== 'win32'"}

@@ -10,35 +10,6 @@ this creates a new virtual environment and installs all needed dependencies and 
 To run most of the commands mentioned you need to have activated the virtual environment. To do this run:  
 `pipenv shell`
 
-## Running app
-
-windows:  
-`cd app`  
-`uvicorn main:app --reload --loop asyncio`
-
-linux:  
-`uvicorn main:app --reload --loop uvloop`
-
-## Docker
-
-build the image:  
-`docker build -t pymusic .`
-
-create/run the container:  
-`docker run -d --name pymusic -p 7000:80 pymusic`
-
-to run an already created image:  
-`docker start pymusic`
-
-to update the current container:
-
-- Build a new image:
-  - `docker build -t pymusic .`
-- remove the current container:
-  - `docker rm pymusic`
-- recreate the container:
-  - `docker run -d --name pymusic -p 7000:80 pymusic`
-
 ## Tests
 
 Tests are run using pytest. To run all tests use:  
