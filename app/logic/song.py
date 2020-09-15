@@ -78,7 +78,7 @@ def add(
 
 
 def get(title: str, artists: List[str]) -> SongDb:
-    """Get song from database
+    """Get song from database. Case insensitive
 
     ## Arguments:
     - `title`: `str`:
@@ -90,9 +90,11 @@ def get(title: str, artists: List[str]) -> SongDb:
     - `SongDb`:
         - The song, Returns `None` when no album is found
     """
-    query = orm.select(s for s in SongDb if s.title == title)
+    query = orm.select(s for s in SongDb if s.title.lower() == title.lower())
     for artist in artists:
-        query = query.filter(lambda s: artist in s.artists.name)
+        query = query.filter(
+            lambda s: artist.lower() in (a.name.lower() for a in s.artists)
+        )
     query = query.filter(lambda s: orm.count(s.artists) == len(artists))
     return query.first()
 

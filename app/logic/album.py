@@ -7,7 +7,7 @@ from app.utils.clean import clean_album
 
 
 def get_by_name(name: str, artist: str = None) -> AlbumDb:
-    """Get album from database
+    """Get album from database. Case insensitive
 
     ## Arguments:
     - `name`: `str`:
@@ -19,9 +19,11 @@ def get_by_name(name: str, artist: str = None) -> AlbumDb:
     - `AlbumDb`:
         - The album. Returns `None` when no album is found
     """
-    album = orm.select(a for a in AlbumDb if a.name == name)
+    album = orm.select(a for a in AlbumDb if a.name.lower() == name.lower())
     if artist is not None:
-        return album.filter(lambda a: a.album_artist.name == artist).first()
+        return album.filter(
+            lambda a: a.album_artist.name.lower() == artist.lower()
+        ).first()
     return album.first()
 
 

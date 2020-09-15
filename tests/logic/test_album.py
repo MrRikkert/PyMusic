@@ -23,6 +23,15 @@ def test_get_album_by_name():
 
 
 @db_session
+def test_get_album_by_name_case_difference():
+    db_album = mixer.blend(
+        AlbumDb, album_artist=mixer.blend(ArtistDb, name="Artist"), name="Album"
+    )
+    album = album_logic.get_by_name(name="album", artist="artist")
+    assert album is not None
+
+
+@db_session
 def test_get_album_by_name_no_album_artist():
     db_album = mixer.blend(AlbumDb)
     album = album_logic.get_by_name(name=db_album.name)

@@ -3,7 +3,7 @@ from app.exceptions import IntegrityError
 
 
 def get_by_values(tag_type: str, value: str) -> TagDb:
-    """Get tag from database
+    """Get tag from database. Case insensitive
 
     ## Arguments:
     - `tag_type`: `str`:
@@ -15,7 +15,10 @@ def get_by_values(tag_type: str, value: str) -> TagDb:
     - `TagDb`:
         - The found tag. Returns `None` when no tag is found
     """
-    return TagDb.get(tag_type=tag_type, value=value)
+    return TagDb.get(
+        lambda t: t.tag_type.lower() == tag_type.lower()
+        and t.value.lower() == value.lower()
+    )
 
 
 def get_by_id(id: int) -> TagDb:

@@ -6,7 +6,7 @@ from app.utils.clean import split_artists
 
 
 def get_by_name(name: str) -> ArtistDb:
-    """Get artist from database
+    """Get artist from database. Case insensitive
 
     ## Arguments:
     - `name`: `str`:
@@ -16,7 +16,7 @@ def get_by_name(name: str) -> ArtistDb:
     - `ArtistDb`:
         - The found artist. Returns `None` when no artist is found
     """
-    return ArtistDb.get(name=name)
+    return ArtistDb.get(lambda a: a.name.lower() == name.lower())
 
 
 def get_by_id(id: int) -> ArtistDb:

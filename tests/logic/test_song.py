@@ -219,6 +219,16 @@ def test_get_song_multiple_artists():
 
 
 @db_session
+def test_get_song_multiple_artists_case_difference():
+    db_song = mixer.blend(SongDb, title="Title", artists=mixer.cycle(2).blend(ArtistDb))
+    artists = [a.name.lower() for a in db_song.artists]
+    song = song_logic.get(title="title", artists=artists)
+    assert song is not None
+    assert song.title == db_song.title
+    assert len(song.artists) == 2
+
+
+@db_session
 def test_get_song_multiple_artists_get_with_one():
     db_song = mixer.blend(SongDb, artists=mixer.cycle(2).blend(ArtistDb))
     artists = [a.name for a in db_song.artists]
