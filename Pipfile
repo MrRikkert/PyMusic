@@ -14,16 +14,13 @@ requests = "*"
 pytest-xdist = "*"
 pytest-optional-tests = "*"
 pytest-dotenv = "*"
+wcwidth = "*"
 
 [packages]
-bcrypt = "==3.2.0"
-passlib = "*"
 pylast = "*"
 pydantic = "==1.6.1"
 python-multipart = "*"
-pyjwt = "*"
 pony = "*"
-email-validator = "*"
 python-dotenv = "*"
 psycopg2 = "*"
 pypiwin32 = {version = "*",sys_platform = "== 'win32'"}
