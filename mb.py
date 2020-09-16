@@ -2,7 +2,7 @@ from pony.orm import db_session
 
 import musicbeeipc
 from app import settings
-from app.db.base import db
+from app.db.base import db, init_db
 from app.logic import song as song_logic
 from app.models.songs import SongIn
 from app.models.tags import TagIn
@@ -55,8 +55,7 @@ def get_song(path: str) -> SongIn:
 
 
 if __name__ == "__main__":
-    db.bind(**settings.DB_PARAMS)
-    db.generate_mapping(create_tables=True)
+    init_db()
 
     paths = get_paths()
     total = len(paths)
