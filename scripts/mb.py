@@ -1,8 +1,6 @@
 from pony.orm import db_session
 
 import musicbeeipc
-from app import settings
-from app.db.base import db, init_db
 from app.logic import song as song_logic
 from app.models.songs import SongIn
 from app.models.tags import TagIn
@@ -54,9 +52,7 @@ def get_song(path: str) -> SongIn:
     )
 
 
-if __name__ == "__main__":
-    init_db()
-
+def sync_data(print_progress: bool = False, replace_existing: bool = False):
     paths = get_paths()
     total = len(paths)
 
@@ -64,7 +60,14 @@ if __name__ == "__main__":
         for idx, path in enumerate(paths):
             song = get_song(path)
             try:
-                song_logic.add(song, return_existing=True, update_existing=True)
+                song_logic.add(
+                    song,
+                    return_existing=True,
+                    update_existing=True,
+                    replace_existing_tags=replace_existing,
+                )
             except Exception as ex:
-                print(song)
-            print(f"{idx + 1}/{total}")
+                print(ex)
+                print(f"{song.title} - {song.artist}")
+            if print_progress:
+                print(f"{idx + 1}/{total}")

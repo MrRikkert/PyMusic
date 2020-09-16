@@ -26,8 +26,9 @@ pony = "*"
 email-validator = "*"
 python-dotenv = "*"
 psycopg2 = "*"
-pypiwin32 = {version = "*", sys_platform = "== 'win32'"}
-pywin32 = {version = "*", sys_platform = "== 'win32'"}
+pypiwin32 = {version = "*",sys_platform = "== 'win32'"}
+pywin32 = {version = "*",sys_platform = "== 'win32'"}
+click = "*"
 
 [requires]
 python_version = "3.8"
