@@ -22,6 +22,14 @@ def test_get_artist_by_name_existing():
 
 
 @db_session
+def test_get_artist_by_name_cleaned_name():
+    db_artist = mixer.blend(ArtistDb, name="test")
+    artist = artist_logic.get_by_name(name="test (cv. test1)")
+    assert artist is not None
+    assert db_artist.name == artist.name
+
+
+@db_session
 def test_get_artist_by_name_case_difference():
     db_artist = mixer.blend(ArtistDb, name="Artist")
     artist = artist_logic.get_by_name(name="artist")
@@ -67,6 +75,13 @@ def test_artist_exists_non_existing():
 def test_add_artist():
     artist_logic.add("hallo")
     assert orm.count(a for a in ArtistDb) == 1
+
+
+@db_session
+def test_add_artist_cleaned_name():
+    artist = artist_logic.add("hallo (cv. test)")
+    assert orm.count(a for a in ArtistDb) == 1
+    assert artist.name == "hallo"
 
 
 @db_session

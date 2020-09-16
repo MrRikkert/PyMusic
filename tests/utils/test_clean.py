@@ -1,4 +1,4 @@
-from app.utils.clean import split_artists, clean_album
+from app.utils.clean import clean_album, clean_artist, split_artists
 from tests.utils import reset_db
 
 
@@ -13,6 +13,12 @@ def test_split_artist():
     assert len(split_artists("Benjamin & mpi, Laco")) == 3
     assert len(split_artists("庭師D vs T.Ihashi")) == 2
     assert len(split_artists("Maozon vs. Primal Beast")) == 2
+
+
+def test_clean_artist():
+    assert clean_artist("Nishikino Maki (CV. Pile)") == "Nishikino Maki"
+    assert clean_artist("Cocoa [CV. Ayane Sakura]") == "Cocoa"
+    assert clean_artist("BNSI [中西哲一]") == "BNSI [中西哲一]"
 
 
 def test_clean_album():

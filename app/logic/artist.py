@@ -2,7 +2,7 @@ from typing import List
 
 from app.db.models import ArtistDb
 from app.exceptions import IntegrityError
-from app.utils.clean import split_artists
+from app.utils.clean import clean_artist, split_artists
 
 
 def get_by_name(name: str) -> ArtistDb:
@@ -16,7 +16,7 @@ def get_by_name(name: str) -> ArtistDb:
     - `ArtistDb`:
         - The found artist. Returns `None` when no artist is found
     """
-    return ArtistDb.get(lambda a: a.name.lower() == name.lower())
+    return ArtistDb.get(lambda a: a.name.lower() == clean_artist(name).lower())
 
 
 def get_by_id(id: int) -> ArtistDb:
@@ -71,7 +71,7 @@ def add(name: str, return_existing: bool = False) -> ArtistDb:
         if not return_existing:
             raise IntegrityError("artist already exists")
         return existing
-    return ArtistDb(name=name)
+    return ArtistDb(name=clean_artist(name))
 
 
 def split(name: str) -> List[str]:

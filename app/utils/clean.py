@@ -7,6 +7,11 @@ def split_artists(artist: str) -> List[str]:
     return re.split(";|,|feat.|×|vs\.?|&", artist)
 
 
+def clean_artist(artist: str) -> str:
+    # https://regex101.com/r/lthmZQ/1
+    return re.sub(r"[\(\[](cv[.:])+.*?[\)\]]", "", artist, flags=re.IGNORECASE).strip()
+
+
 def clean_album(album: str) -> str:
     # https://regex101.com/r/hjgeTD/4
     return re.sub(
