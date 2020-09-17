@@ -12,12 +12,6 @@ def cli():
 
 @cli.command()
 @click.option(
-    "--no-progress",
-    is_flag=True,
-    default=True,
-    help="Dont print progress of the sync, may result in speedup",
-)
-@click.option(
     "--replace",
     is_flag=True,
     default=False,
@@ -37,16 +31,11 @@ def cli():
     Use multiple times to select multiple fields.
     """,
 )
-def sync_mb(no_progress, replace, query, field):
+def sync_mb(replace, query, field):
     """Sync MusicBee data to the database"""
     init_db()
     with db_session:
-        mb.sync_data(
-            print_progress=no_progress,
-            replace_existing=replace,
-            query=query,
-            fields=field,
-        )
+        mb.sync_data(replace_existing=replace, query=query, fields=field)
 
 
 if __name__ == "__main__":

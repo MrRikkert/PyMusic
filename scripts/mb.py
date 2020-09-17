@@ -52,7 +52,6 @@ def get_song(path: str) -> SongIn:
 
 
 def sync_data(
-    print_progress: bool = False,
     replace_existing: bool = False,
     query: str = "",
     fields=["ArtistPeople", "Title", "Album"],
