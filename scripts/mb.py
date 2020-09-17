@@ -1,5 +1,4 @@
-from pony.orm import db_session
-
+import click
 import musicbeeipc
 from app.logic import song as song_logic
 from app.models.songs import SongIn
@@ -19,8 +18,8 @@ tag_types = {
 }
 
 
-def get_paths():
-    return mbipc.library_search(query="")
+def get_paths(query: str = "", fields=["ArtistPeople", "Title", "Album"]):
+    return mbipc.library_search(query=query, fields=fields)
 
 
 def mb_duration_to_seconds(duration: str) -> int:
@@ -52,12 +51,16 @@ def get_song(path: str) -> SongIn:
     )
 
 
-def sync_data(print_progress: bool = False, replace_existing: bool = False):
-    paths = get_paths()
-    total = len(paths)
+def sync_data(
+    print_progress: bool = False,
+    replace_existing: bool = False,
+    query: str = "",
+    fields=["ArtistPeople", "Title", "Album"],
+):
+    paths = get_paths(query=query, fields=fields)
 
-    with db_session:
-        for idx, path in enumerate(paths):
+    with click.progressbar(paths) as click_paths:
+        for path in click_paths:
             song = get_song(path)
             try:
                 song_logic.add(
@@ -69,5 +72,3 @@ def sync_data(print_progress: bool = False, replace_existing: bool = False):
             except Exception as ex:
                 print(ex)
                 print(f"{song.title} - {song.artist}")
-            if print_progress:
-                print(f"{idx + 1}/{total}")

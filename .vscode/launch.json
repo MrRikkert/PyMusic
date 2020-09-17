@@ -5,11 +5,12 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Debug Musicbee script",
+      "name": "Debug CLI",
       "type": "python",
       "request": "launch",
-      "program": "${workspaceFolder}/mb.py",
-      "console": "integratedTerminal"
+      "program": "${workspaceFolder}/main.py",
+      "console": "integratedTerminal",
+      "args": ["sync-mb"]
     },
     {
       "name": "Python: Current File",

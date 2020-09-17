@@ -4,7 +4,10 @@ from typing import List
 
 def split_artists(artist: str) -> List[str]:
     # https://regex101.com/r/Aot9px/1
-    return re.split(";|,|feat.|×|vs\.?|&", artist)
+    artists = re.split(";|,|feat.|×|vs\.?|&", artist)
+    # Due to Musicbee problems, an artist is sometimes an empty/whitespace string
+    # This removes these artists
+    return [a for a in artists if a.strip()]
 
 
 def clean_artist(artist: str) -> str:
