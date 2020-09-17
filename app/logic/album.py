@@ -6,7 +6,7 @@ from app.logic import artist as artist_logic
 from app.utils.clean import clean_album
 
 
-def get_by_name(name: str, artist: str = None) -> AlbumDb:
+def get_by_name(name: str) -> AlbumDb:
     """Get album from database. Case insensitive
 
     ## Arguments:
@@ -20,10 +20,6 @@ def get_by_name(name: str, artist: str = None) -> AlbumDb:
         - The album. Returns `None` when no album is found
     """
     album = orm.select(a for a in AlbumDb if a.name.lower() == name.lower())
-    if artist is not None:
-        return album.filter(
-            lambda a: a.album_artist.name.lower() == artist.lower()
-        ).first()
     return album.first()
 
 
@@ -41,7 +37,7 @@ def get_by_id(id: int) -> AlbumDb:
     return AlbumDb.get(id=id)
 
 
-def exists(name: str, artist: str = None) -> bool:
+def exists(name: str) -> bool:
     """Checks if an album exists in the database
 
     ## Arguments:
@@ -54,7 +50,7 @@ def exists(name: str, artist: str = None) -> bool:
     - `bool`:
         - `True` if the album exists and `false` if it doesn't exists
     """
-    album = get_by_name(name, artist)
+    album = get_by_name(name)
     return True if album is not None else False
 
 
@@ -80,7 +76,7 @@ def add(name: str, artist: str = None, return_existing: bool = False) -> AlbumDb
         - The created album, or existing album when `return_existing` is `True`
         and it already exists
     """
-    existing = get_by_name(name=name, artist=artist)
+    existing = get_by_name(name=name)
     if existing is not None:
         if not return_existing:
             raise IntegrityError("album already exists")
