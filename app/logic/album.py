@@ -73,9 +73,13 @@ def add(name: str, artist: str = None, return_existing: bool = False) -> AlbumDb
         and it already exists
     """
     existing = get_by_name(name=name)
+
     if existing is not None:
         if not return_existing:
             raise IntegrityError("album already exists")
+        if not existing.album_artist and artist:
+            existing.album_artist = artist_logic.add(artist, return_existing=True)
+
         return existing
     return AlbumDb(
         name=name,

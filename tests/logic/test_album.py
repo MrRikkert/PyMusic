@@ -109,3 +109,14 @@ def test_add_album_existing_album_with_return_existing():
     assert orm.count(a for a in AlbumDb) == 1
     assert album is not None
     assert db_album.id == album.id
+
+
+@db_session
+def test_add_album_existing_with_new_album_artist():
+    db_album = mixer.blend(AlbumDb, album_artist=None)
+    assert not db_album.album_artist
+    album = album_logic.add(name=db_album.name, artist="test", return_existing=True)
+    assert orm.count(a for a in AlbumDb) == 1
+    assert album is not None
+    assert db_album.id == album.id
+    assert db_album.album_artist.name == "test"
