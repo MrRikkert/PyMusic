@@ -12,7 +12,6 @@ class ScrobbleDb(db.Entity):
     title = Required(str)
     artist = Required(str)
     album = Required(str)
-    album_artist = Optional(str)
     date = Required(datetime)
 
 

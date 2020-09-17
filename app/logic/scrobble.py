@@ -30,7 +30,6 @@ def scrobble(scrobble: ScrobbleIn) -> ScrobbleDb:
         title=scrobble.title,
         artist=scrobble.artist,
         album=scrobble.album,
-        album_artist=scrobble.album_artist if scrobble.album_artist is not None else "",
         date=scrobble.date,
     )
 

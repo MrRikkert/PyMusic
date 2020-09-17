@@ -23,7 +23,6 @@ def test_scrobble_without_date():
             title="title",
             length=1,
             album="album",
-            album_artist="artist",
             artist="artist1",
             tags=[TagIn(tag_type="type", value="tag")],
         )
@@ -41,7 +40,6 @@ def test_scrobble_with_date():
             title="title",
             length=1,
             album="album",
-            album_artist="artist",
             artist="artist1",
             tags=[TagIn(tag_type="type", value="tag")],
             date=date,
@@ -67,7 +65,6 @@ def test_scrobble_existing_song():
             title="title",
             length=1,
             album="album",
-            album_artist="artist",
             artist="artist",
             tags=[TagIn(tag_type="type", value="value")],
             date=date,
