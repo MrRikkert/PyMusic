@@ -55,12 +55,12 @@ def sync_lastfm_scrobbles(username: str):
         - The amount of scrobbles synced
     """
     last_scrobble = get_last_scrobble()
-    last_date = last_scrobble.date if last_scrobble is not None else 0
+    last_date = int(last_scrobble.date.timestamp()) if last_scrobble else 0
     scrobbles = lastfm.get_scrobbles(
         username=username,
         limit=None,
         # +60 seconds to exclude the last scrobble from lastfm
-        time_from=int(last_date.timestamp()) + 60 if last_date is not None else None,
+        time_from=last_date + 60 if last_date is not None else None,
     )
     for _scrobble in scrobbles:
         scrobble(
