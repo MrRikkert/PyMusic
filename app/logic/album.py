@@ -12,8 +12,6 @@ def get_by_name(name: str) -> AlbumDb:
     ## Arguments:
     - `name`: `str`:
         - Name of the album
-    - `artist`: `str`, optional:
-        - Album artist. Defaults to `None`.
 
     ## Returns:
     - `AlbumDb`:
@@ -43,8 +41,6 @@ def exists(name: str) -> bool:
     ## Arguments:
     - `name`: `str`:
         - Name of the album
-    - `artist`: `str`, optional:
-        - Album artist. Defaults to `None`.
 
     ## Returns:
     - `bool`:
