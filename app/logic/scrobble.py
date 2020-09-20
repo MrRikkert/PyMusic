@@ -1,5 +1,7 @@
-from datetime import datetime
+from datetime import datetime, timezone, tzinfo
 from typing import Dict, List
+import pytz
+import tzlocal
 
 from pony import orm
 
@@ -54,7 +56,14 @@ def sync_lastfm_scrobbles(username: str):
         - The amount of scrobbles synced
     """
     last_scrobble = get_last_scrobble()
-    last_date = int(last_scrobble.date.timestamp()) if last_scrobble else 0
+    last_date = 0
+    if last_scrobble:
+        # Make timestamp timezone aware. All timestamps are stored as UTC,
+        # but python interprets all datetimes without timezones as local.
+        # So when making a timestamp it first converts the datetime to UTC,
+        # even though it was alreadu UTC.
+        last_date = pytz.utc.localize(last_scrobble.date)
+        last_date = int(last_date.timestamp())
     scrobbles = lastfm.get_scrobbles(
         username=username,
         limit=None,
@@ -62,9 +71,10 @@ def sync_lastfm_scrobbles(username: str):
         time_from=last_date + 60 if last_date is not None else None,
     )
     for _scrobble in scrobbles:
+        timestamp = _scrobble.timestamp  # + timedelta(hours=1)
         scrobble(
             scrobble=ScrobbleIn(
-                date=_scrobble.timestamp,
+                date=timestamp,
                 artist=_scrobble.track.artist.name,
                 album=_scrobble.album,
                 title=_scrobble.track.title,
