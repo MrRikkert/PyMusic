@@ -53,9 +53,12 @@ def add(
                     name=song.album, artist=song.album_artist, return_existing=True
                 )
             )
+
+            if not existing.length and song.length:
+                existing.length = song.length
+
             if replace_existing_tags:
                 existing.tags.clear()
-
             for tag in song.tags:
                 existing.tags.add(
                     tag_logic.add(

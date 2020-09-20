@@ -168,6 +168,23 @@ def test_add_song_existing_with_update():
 
 
 @db_session
+def test_add_song_existing_add_length():
+    db_song = mixer.blend(
+        SongDb, length=None, title="title", artists=mixer.blend(ArtistDb, name="artist")
+    )
+    song = song_logic.add(
+        SongIn(title="title", artist="artist", length=250, album="album2"),
+        return_existing=True,
+        update_existing=True,
+    )
+    db.flush()
+
+    assert db_song.id == song.id
+    assert orm.count(s for s in SongDb) == 1
+    assert db_song.length == song.length
+
+
+@db_session
 def test_add_song_existing_with_replace_exisiting_tags():
     db_song = mixer.blend(
         SongDb,
