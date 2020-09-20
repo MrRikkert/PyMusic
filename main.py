@@ -72,5 +72,20 @@ def export(path):
         scrobbles.export_scrobbles(path)
 
 
+@cli.command("import")
+@click.option(
+    "--path",
+    "-p",
+    default="scrobbles.csv",
+    help="sync scrobbles from a local csv file",
+    show_default=True,
+)
+def import_csv(path):
+    """Import scrobbles from a csv file"""
+    init_db()
+    with db_session:
+        scrobbles.import_scrobbles(path)
+
+
 if __name__ == "__main__":
     cli()

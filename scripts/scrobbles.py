@@ -1,3 +1,5 @@
+from app.logic import artist
+from app.models.songs import ScrobbleIn
 import csv
 
 import pytz
@@ -25,3 +27,14 @@ def export_scrobbles(path: str):
                 "date": date,
             }
             writer.writerow(flat_scrobble)
+
+
+def import_scrobbles(path: str):
+    with open(path, "r", encoding="utf-8") as file:
+        reader = csv.reader(file, delimiter=",")
+        # skip header
+        next(reader)
+        for row in reader:
+            scrobble.scrobble(
+                ScrobbleIn(title=row[0], artist=row[1], album=row[2], date=row[3])
+            )
