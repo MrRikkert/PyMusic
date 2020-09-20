@@ -45,7 +45,7 @@ def sync_mb(replace, query, field):
 )
 @click.option(
     "--csv",
-    default="'scrobbles.csv'",
+    default="scrobbles.csv",
     help="sync scrobbles from a local csv file",
     show_default=True,
 )
@@ -55,6 +55,21 @@ def sync_scrobbles(lastfm: str, csv: str):
     with db_session:
         if lastfm:
             scrobbles.sync_lastfm_scrobbles(lastfm)
+
+
+@cli.command()
+@click.option(
+    "--path",
+    "-p",
+    default="scrobbles.csv",
+    help="sync scrobbles from a local csv file",
+    show_default=True,
+)
+def export(path):
+    """Export scrobbles to a csv file"""
+    init_db()
+    with db_session:
+        scrobbles.export_scrobbles(path)
 
 
 if __name__ == "__main__":

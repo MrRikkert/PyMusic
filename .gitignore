@@ -137,5 +137,6 @@ dmypy.json
 *.db
 *.sqlite
 *.sqlite3
+*.csv
 
 # only commit template

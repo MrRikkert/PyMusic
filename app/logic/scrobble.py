@@ -1,9 +1,10 @@
 from datetime import datetime, timezone, tzinfo
 from typing import Dict, List
+
 import pytz
 import tzlocal
-
 from pony import orm
+from pony.orm.core import Query
 
 from app.db.models import ScrobbleDb
 from app.models.songs import ScrobbleIn, SongIn
@@ -84,18 +85,11 @@ def sync_lastfm_scrobbles(username: str):
 
 
 def recent_plays(
-    page: int = 0,
-    page_size: int = 10,
-    min_date: datetime = None,
-    max_date: datetime = None,
+    min_date: datetime = None, max_date: datetime = None
 ) -> List[ScrobbleDb]:
     """Get recent plays from the given user in a given timeframe
 
     ## Arguments:
-    - `page`: `int`, optional:
-        - Page of plays you want. Defaults to `0`.
-    - `page_size`: `int`, optional:
-        - The size of pages you want to select. Defaults to `10`.
     - `min_date`: `datetime`, optional:
         - The minimal date from which scrobbles should be fetched
         `None` gets data from the beginning. Defaults to `None`
@@ -113,7 +107,7 @@ def recent_plays(
     if max_date is not None:
         query = query.filter(lambda scrobble: scrobble.date <= max_date)
     query = query.order_by(orm.desc(ScrobbleDb.date))
-    return list(query.page(page, page_size))
+    return query
 
 
 def most_played_songs(

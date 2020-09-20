@@ -10,7 +10,7 @@
       "request": "launch",
       "program": "${workspaceFolder}/main.py",
       "console": "integratedTerminal",
-      "args": ["sync-scrobbles", "--lastfm", "Arararararagi"]
+      "args": ["export"]
     },
     {
       "name": "Python: Current File",
