@@ -46,7 +46,7 @@ def get_song(path: str) -> SongIn:
         ),
         album=mbipc.library_get_file_tag(path, musicbeeipc.MBMD_Album),
         album_artist=None if not album_artist else album_artist,
-        artist=mbipc.library_get_file_tag(path, musicbeeipc.MBMD_Artists),
+        artist=mbipc.library_get_file_tag(path, musicbeeipc.MBMD_Artist),
         tags=get_tags(path),
     )
 
