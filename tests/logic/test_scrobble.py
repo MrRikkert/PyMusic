@@ -79,8 +79,8 @@ def test_scrobble_existing_song():
 def test_recent_plays():
     mixer.cycle(30).blend(ScrobbleDb)
     orm.flush()
-    scrobbles = scrobble_logic.recent_plays()
-    assert len(scrobbles) == 10
+    scrobbles = list(scrobble_logic.recent_plays())
+    assert len(scrobbles) == 30
     for idx, scrobble in enumerate(scrobbles):
         if idx > 0:
             assert scrobbles[idx].date < scrobbles[idx - 1].date
@@ -91,17 +91,6 @@ def test_recent_plays_no_scrobbles():
     orm.flush()
     scrobbles = scrobble_logic.recent_plays()
     assert len(scrobbles) == 0
-
-
-@db_session
-def test_recent_plays_different_page_size():
-    mixer.cycle(30).blend(ScrobbleDb)
-    orm.flush()
-    scrobbles = scrobble_logic.recent_plays(page_size=20)
-    assert len(scrobbles) == 20
-    for idx, scrobble in enumerate(scrobbles):
-        if idx > 0:
-            assert scrobbles[idx].date < scrobbles[idx - 1].date
 
 
 @db_session
