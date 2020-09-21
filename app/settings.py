@@ -1,8 +1,10 @@
 import os
 
 import dotenv
+import logging
 
 dotenv.load_dotenv()
+logging.basicConfig(level=logging.DEBUG, filename="debug.log")
 
 # DB
 DB_PARAMS = {"provider": "sqlite", "filename": "sqlite.db", "create_db": True}

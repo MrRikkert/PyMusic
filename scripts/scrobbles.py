@@ -1,4 +1,5 @@
 import csv
+import logging
 import time
 
 import click
@@ -51,7 +52,7 @@ def import_scrobbles(path: str):
                         )
                     )
                 except:
-                    pass
+                    logging.error(f"IMPORT: {row[1]} - {row[0]}")
                 if idx % 500 == 0:
                     db.commit()
     print(time.time() - start)

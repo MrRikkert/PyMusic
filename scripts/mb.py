@@ -1,3 +1,4 @@
+import logging
 import click
 
 import musicbeeipc
@@ -73,5 +74,6 @@ def sync_data(
             except Exception as ex:
                 print(ex)
                 print(f"{song.title} - {song.artist}")
+                logging.error(f"MB: {song.artist} - {song.title}")
             if idx % 500 == 0:
                 db.commit()
