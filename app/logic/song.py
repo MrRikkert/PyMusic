@@ -8,6 +8,7 @@ from app.logic import album as album_logic
 from app.logic import artist as artist_logic
 from app.logic import tag as tag_logic
 from app.models.songs import SongIn
+from app.utils.clean import clean_artist
 
 
 def add(
@@ -96,7 +97,8 @@ def get(title: str, artists: List[str]) -> SongDb:
     query = orm.select(s for s in SongDb if s.title.lower() == title.lower())
     for artist in artists:
         query = query.filter(
-            lambda s: artist.lower() in (a.name.lower() for a in s.artists)
+            lambda s: clean_artist(artist.lower())
+            in (a.name.lower() for a in s.artists)
         )
     query = query.filter(lambda s: orm.count(s.artists) == len(artists))
     return query.first()

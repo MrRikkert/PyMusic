@@ -136,6 +136,29 @@ def test_add_song_existing_with_return_existing():
 
 
 @db_session
+def test_add_song_existing_with_return_existing_cleaned_artist():
+    db_song = mixer.blend(
+        SongDb,
+        title="title",
+        albums=mixer.blend(AlbumDb, name="album"),
+        artists=mixer.blend(ArtistDb, name="artist"),
+        tags=mixer.blend(TagDb, tag_type="type", value="value"),
+    )
+    song = song_logic.add(
+        SongIn(
+            title="title",
+            length=1,
+            album="album",
+            album_artist="artist",
+            artist="artist (cv. hallo)",
+            tags=[TagIn(tag_type="type", value="value")],
+        ),
+        return_existing=True,
+    )
+    assert db_song.id == song.id
+
+
+@db_session
 def test_add_song_existing_with_update():
     db_song = mixer.blend(
         SongDb,

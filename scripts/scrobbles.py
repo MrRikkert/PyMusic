@@ -1,10 +1,12 @@
-from app.logic import artist
-from app.models.songs import ScrobbleIn
 import csv
+import time
 
+import click
 import pytz
 
+from app.db.base import db
 from app.logic import scrobble
+from app.models.songs import ScrobbleIn
 
 
 def sync_lastfm_scrobbles(username: str):
@@ -30,11 +32,26 @@ def export_scrobbles(path: str):
 
 
 def import_scrobbles(path: str):
+    start = time.time()
+    with open(path, "r", encoding="utf-8") as file:
+        reader = csv.reader(file, delimiter=",")
+        rows = sum(1 for row in reader)
+
     with open(path, "r", encoding="utf-8") as file:
         reader = csv.reader(file, delimiter=",")
         # skip header
+        print(rows)
         next(reader)
-        for row in reader:
-            scrobble.scrobble(
-                ScrobbleIn(title=row[0], artist=row[1], album=row[2], date=row[3])
-            )
+        with click.progressbar(reader, length=rows) as click_paths:
+            for idx, row in enumerate(click_paths):
+                try:
+                    scrobble.scrobble(
+                        ScrobbleIn(
+                            title=row[0], artist=row[1], album=row[2], date=row[3]
+                        )
+                    )
+                except:
+                    pass
+                if idx % 500 == 0:
+                    db.commit()
+    print(time.time() - start)
