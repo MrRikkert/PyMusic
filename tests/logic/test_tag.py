@@ -23,6 +23,15 @@ def test_get_tag_existing():
 
 
 @db_session
+def test_get_tag_existing_case_difference():
+    db_tag = mixer.blend(TagDb, tag_type="Type", value="Value")
+    tag = tag_logic.get_by_values(tag_type="type", value="value")
+    assert tag is not None
+    assert tag.tag_type == db_tag.tag_type
+    assert tag.value == db_tag.value
+
+
+@db_session
 def test_get_tag_non_existing():
     tag = tag_logic.get_by_values(tag_type="hallo", value="test")
     assert tag is None

@@ -8,10 +8,14 @@ from app.logic import album as album_logic
 from app.logic import artist as artist_logic
 from app.logic import tag as tag_logic
 from app.models.songs import SongIn
+from app.utils.clean import clean_artist
 
 
 def add(
-    song: SongIn, return_existing: bool = False, update_existing: bool = False
+    song: SongIn,
+    return_existing: bool = False,
+    update_existing: bool = False,
+    replace_existing_tags: bool = False,
 ) -> SongDb:
     """Add song to the database
 
@@ -25,6 +29,10 @@ def add(
         Only updates the `albums` and `tags` properties
         `return_existing` also needs to be `True` for this to work.
         Defaults to `False`.
+    - `replace_existing_tags`: `bool`, optional:
+        - Remove all `tag` relationships from the song and the new ones.  
+        `update_existing` also need to be `True` for this to work.
+        Defaults to `False`.
 
     ## Raises:
     - `IntegrityError`:
@@ -34,18 +42,25 @@ def add(
     - `SongDb`:
         - The created song, or existing song when `return_existing` is `true`
     """
-    artists = artist_logic.split(song.artist)
+    artists = clean_artist(song.artist)
+    artists = artist_logic.split(artists)
     existing = get(title=song.title, artists=artists)
 
     if existing is not None:
         if not return_existing:
             raise IntegrityError("Song already exists")
-        if update_existing:
+        elif update_existing:
             existing.albums.add(
                 album_logic.add(
                     name=song.album, artist=song.album_artist, return_existing=True
                 )
             )
+
+            if not existing.length and song.length:
+                existing.length = song.length
+
+            if replace_existing_tags:
+                existing.tags.clear()
             for tag in song.tags:
                 existing.tags.add(
                     tag_logic.add(
@@ -68,7 +83,7 @@ def add(
 
 
 def get(title: str, artists: List[str]) -> SongDb:
-    """Get song from database
+    """Get song from database. Case insensitive
 
     ## Arguments:
     - `title`: `str`:
@@ -80,9 +95,12 @@ def get(title: str, artists: List[str]) -> SongDb:
     - `SongDb`:
         - The song, Returns `None` when no album is found
     """
-    query = orm.select(s for s in SongDb if s.title == title)
+    query = orm.select(s for s in SongDb if s.title.lower() == title.lower())
     for artist in artists:
-        query = query.filter(lambda s: artist in s.artists.name)
+        query = query.filter(
+            lambda s: clean_artist(artist.lower())
+            in (a.name.lower() for a in s.artists)
+        )
     query = query.filter(lambda s: orm.count(s.artists) == len(artists))
     return query.first()
 

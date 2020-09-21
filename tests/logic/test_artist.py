@@ -22,9 +22,33 @@ def test_get_artist_by_name_existing():
 
 
 @db_session
+def test_get_artist_by_name_cleaned_name():
+    db_artist = mixer.blend(ArtistDb, name="test")
+    artist = artist_logic.get_by_name(name="test (cv. test1)")
+    assert artist is not None
+    assert db_artist.name == artist.name
+
+
+@db_session
+def test_get_artist_by_name_case_difference():
+    db_artist = mixer.blend(ArtistDb, name="Artist")
+    artist = artist_logic.get_by_name(name="artist")
+    assert artist is not None
+    assert db_artist.name == artist.name
+
+
+@db_session
 def test_get_artist_by_name_non_existing():
     artist = artist_logic.get_by_name(name="hallo")
     assert artist is None
+
+
+@db_session
+def test_get_artist_by_name_existing_reversed():
+    db_artist = mixer.blend(ArtistDb, name="first second")
+    artist = artist_logic.get_by_name(name="second first")
+    assert artist is not None
+    assert db_artist.name == artist.name
 
 
 @db_session
@@ -62,6 +86,13 @@ def test_add_artist():
 
 
 @db_session
+def test_add_artist_cleaned_name():
+    artist = artist_logic.add("hallo (cv. test)")
+    assert orm.count(a for a in ArtistDb) == 1
+    assert artist.name == "hallo"
+
+
+@db_session
 def test_add_artist_existing():
     db_artist = mixer.blend(ArtistDb)
     with pytest.raises(IntegrityError):
@@ -79,6 +110,13 @@ def test_add_artist_existing_with_return_existing():
 
 @db_session
 def test_split_artist():
-    artist = "artist, artist & artist ; artist vs artist & artist feat. artist"
+    artist = "artist1, artist2 & artist3 ; artist4 vs artist5 & artist6 feat. artist7"
     artists = artist_logic.split(artist)
     assert len(artists) == 7
+
+
+@db_session
+def test_split_artist_same_name():
+    artist = "artist, artist & artist ; artist vs artist & artist feat. artist"
+    artists = artist_logic.split(artist)
+    assert len(artists) == 1

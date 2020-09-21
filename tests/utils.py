@@ -11,6 +11,7 @@ def reset_db():
     """
     try:
         db.bind(provider="sqlite", filename=":memory:")
+        # db.bind(provider="sqlite", filename="test.sqlite", create_db=True)
     except orm.core.BindingError:
         pass
     else:

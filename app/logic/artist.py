@@ -1,12 +1,13 @@
-import re
 from typing import List
 
 from app.db.models import ArtistDb
 from app.exceptions import IntegrityError
+from app.utils.clean import clean_artist, reverse_artist, split_artists
 
 
 def get_by_name(name: str) -> ArtistDb:
-    """Get artist from database
+    """Get artist from database. Case insensitive. Also checks if the reverse exists
+    ("Keiichi Okabe" and "Okabe Keiichi")
 
     ## Arguments:
     - `name`: `str`:
@@ -16,7 +17,13 @@ def get_by_name(name: str) -> ArtistDb:
     - `ArtistDb`:
         - The found artist. Returns `None` when no artist is found
     """
-    return ArtistDb.get(name=name)
+    reversed_artist = reverse_artist(name)
+    if reversed_artist:
+        return ArtistDb.get(
+            lambda a: a.name.lower() == clean_artist(name).lower()
+            or a.name.lower() == clean_artist(reversed_artist).lower()
+        )
+    return ArtistDb.get(lambda a: a.name.lower() == clean_artist(name).lower())
 
 
 def get_by_id(id: int) -> ArtistDb:
@@ -71,7 +78,7 @@ def add(name: str, return_existing: bool = False) -> ArtistDb:
         if not return_existing:
             raise IntegrityError("artist already exists")
         return existing
-    return ArtistDb(name=name)
+    return ArtistDb(name=clean_artist(name))
 
 
 def split(name: str) -> List[str]:
@@ -87,6 +94,6 @@ def split(name: str) -> List[str]:
     - `List[str]`:
         - List of artist names
     """
-    artists = re.split(";|,|feat.|×|vs|&", name)
+    artists = split_artists(name)
     artists = map(lambda x: x.strip(), artists)
-    return list(artists)
+    return set(artists)

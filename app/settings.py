@@ -1,5 +1,11 @@
 import os
 
+import dotenv
+import logging
+
+dotenv.load_dotenv()
+logging.basicConfig(level=logging.DEBUG, filename="debug.log")
+
 # DB
 DB_PARAMS = {"provider": "sqlite", "filename": "sqlite.db", "create_db": True}
 
@@ -45,5 +51,6 @@ if os.getenv("DB_PROVIDER"):
                 "user": os.getenv("DB_POSTGRES_USER"),
                 "password": os.getenv("DB_POSTGRES_PASSWORD"),
                 "host": os.getenv("DB_POSTGRES_HOST"),
+                "port": os.getenv("DB_POSTGRES_PORT"),
                 "database": os.getenv("DB_POSTGRES_DATABASE"),
             }
