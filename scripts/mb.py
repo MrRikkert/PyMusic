@@ -1,4 +1,6 @@
 import logging
+import time
+
 import click
 
 import musicbeeipc
@@ -59,6 +61,7 @@ def sync_data(
     query: str = "",
     fields=["ArtistPeople", "Title", "Album"],
 ):
+    start = time.time()
     paths = get_paths(query=query, fields=fields)
 
     with click.progressbar(paths) as click_paths:
@@ -77,3 +80,4 @@ def sync_data(
                 logging.error(f"MB: {song.artist} - {song.title}")
             if idx % 500 == 0:
                 db.commit()
+    print(time.time() - start)

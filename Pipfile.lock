@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "e22c2107cc72b3be82843beb1ee1e37cb66df9ca54ec692a743374a9293190e2"
+            "sha256": "0bc6447cf29012749bb9da43686fde8f90e196bd164c273ff978de2aa3f5d191"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -24,12 +24,32 @@
             "index": "pypi",
             "version": "==7.1.2"
         },
+        "dill": {
+            "hashes": [
+                "sha256:456ff996e22b4286cad858c2ca330b1845701a4b64248b50b6c2104ef2463e3e",
+                "sha256:6e12da0d8e49c220e8d6e97ee8882002e624f1160289ce85ec2cc0a5246b3a2e"
+            ],
+            "version": "==0.3.2"
+        },
+        "klepto": {
+            "hashes": [
+                "sha256:48a0b34938671e14b6be29454c94d5b57cb8934d4fff0970a96bad548bc48c9c"
+            ],
+            "version": "==0.1.9"
+        },
         "pony": {
             "hashes": [
                 "sha256:8a9e7339fe7a5182566c83047dbae8053aa1cf458bff0f21f1ae1b106a210cbb"
             ],
             "index": "pypi",
             "version": "==0.7.13"
+        },
+        "pox": {
+            "hashes": [
+                "sha256:621f3a912531d0c5c71f7d5fd4815b15bf5d0db5b4cea352df14f2ff6bc7c615",
+                "sha256:aa1af0ab15bdfd1483cc129ffa7e4d26f947f1e108cb0a289c60b088e246b742"
+            ],
+            "version": "==0.2.8"
         },
         "psycopg2": {
             "hashes": [
@@ -72,6 +92,14 @@
             ],
             "index": "pypi",
             "version": "==1.6.1"
+        },
+        "pykakasi": {
+            "hashes": [
+                "sha256:892ae012f563845687b8ed93c6cc595d31758765b5fa1871b310a8af5a1da3a3",
+                "sha256:f9d25e93a1fa76354e77c16f150e782399a508dfba3a95ad9840918eb6a3cc01"
+            ],
+            "index": "pypi",
+            "version": "==2.0.1"
         },
         "pylast": {
             "hashes": [

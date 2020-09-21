@@ -1,4 +1,10 @@
-from app.utils.clean import clean_album, clean_artist, split_artists, reverse_artist
+from app.utils.clean import (
+    clean_album,
+    clean_artist,
+    reverse_artist,
+    romanise_text,
+    split_artists,
+)
 from tests.utils import reset_db
 
 
@@ -57,3 +63,8 @@ def test_clean_album():
         == "Super Eurobeat Vol. 221 - Extended Version"
     )
     assert clean_album("Super Eurobeat Vol. 92") == "Super Eurobeat Vol. 92"
+
+
+def test_romanise_text():
+    assert romanise_text("岡部啓一") == "okabe keiichi"
+    assert romanise_text("John Doe") == "John Doe"
