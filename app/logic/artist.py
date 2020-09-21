@@ -89,4 +89,4 @@ def split(name: str) -> List[str]:
     """
     artists = split_artists(name)
     artists = map(lambda x: x.strip(), artists)
-    return list(artists)
+    return set(artists)
