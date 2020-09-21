@@ -1,4 +1,4 @@
-from app.utils.clean import clean_album, clean_artist, split_artists
+from app.utils.clean import clean_album, clean_artist, split_artists, reverse_artist
 from tests.utils import reset_db
 
 
@@ -19,6 +19,12 @@ def test_clean_artist():
     assert clean_artist("Nishikino Maki (CV. Pile)") == "Nishikino Maki"
     assert clean_artist("Cocoa [CV. Ayane Sakura]") == "Cocoa"
     assert clean_artist("BNSI [中西哲一]") == "BNSI"
+
+
+def test_reverse_artist():
+    assert reverse_artist("Keiichi Okabe") == "Okabe Keiichi"
+    assert reverse_artist("first second third") is None
+    assert reverse_artist("first") is None
 
 
 def test_clean_album():

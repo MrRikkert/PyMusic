@@ -18,6 +18,14 @@ def clean_artist(artist: str) -> str:
     return re.sub(r"[\(\[].*?[\)\]]", "", artist, flags=re.IGNORECASE).strip()
 
 
+def reverse_artist(artist: str) -> str:
+    names = artist.split(" ")
+    if not len(names) == 2:
+        return None
+
+    return " ".join(reversed(names)).strip()
+
+
 def clean_album(album: str) -> str:
     # https://regex101.com/r/hjgeTD/4
     return re.sub(
