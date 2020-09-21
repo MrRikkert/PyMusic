@@ -2,11 +2,12 @@ from typing import List
 
 from app.db.models import ArtistDb
 from app.exceptions import IntegrityError
-from app.utils.clean import clean_artist, split_artists
+from app.utils.clean import clean_artist, reverse_artist, split_artists
 
 
 def get_by_name(name: str) -> ArtistDb:
-    """Get artist from database. Case insensitive
+    """Get artist from database. Case insensitive. Also checks if the reverse exists
+    ("Keiichi Okabe" and "Okabe Keiichi")
 
     ## Arguments:
     - `name`: `str`:
@@ -16,6 +17,12 @@ def get_by_name(name: str) -> ArtistDb:
     - `ArtistDb`:
         - The found artist. Returns `None` when no artist is found
     """
+    reversed_artist = reverse_artist(name)
+    if reversed_artist:
+        return ArtistDb.get(
+            lambda a: a.name.lower() == clean_artist(name).lower()
+            or a.name.lower() == clean_artist(reversed_artist).lower()
+        )
     return ArtistDb.get(lambda a: a.name.lower() == clean_artist(name).lower())
 
 
