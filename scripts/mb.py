@@ -1,5 +1,7 @@
 import click
+
 import musicbeeipc
+from app.db.base import db
 from app.logic import song as song_logic
 from app.models.songs import SongIn
 from app.models.tags import TagIn
@@ -59,7 +61,7 @@ def sync_data(
     paths = get_paths(query=query, fields=fields)
 
     with click.progressbar(paths) as click_paths:
-        for path in click_paths:
+        for idx, path in enumerate(click_paths):
             song = get_song(path)
             try:
                 song_logic.add(
@@ -71,3 +73,5 @@ def sync_data(
             except Exception as ex:
                 print(ex)
                 print(f"{song.title} - {song.artist}")
+            if idx % 500 == 0:
+                db.commit()
