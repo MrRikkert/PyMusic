@@ -102,6 +102,13 @@ def test_add_artist_existing_with_return_existing():
 
 @db_session
 def test_split_artist():
-    artist = "artist, artist & artist ; artist vs artist & artist feat. artist"
+    artist = "artist1, artist2 & artist3 ; artist4 vs artist5 & artist6 feat. artist7"
     artists = artist_logic.split(artist)
     assert len(artists) == 7
+
+
+@db_session
+def test_split_artist_same_name():
+    artist = "artist, artist & artist ; artist vs artist & artist feat. artist"
+    artists = artist_logic.split(artist)
+    assert len(artists) == 1
