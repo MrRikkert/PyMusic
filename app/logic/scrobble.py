@@ -1,10 +1,8 @@
-from datetime import datetime, timezone, tzinfo
+from datetime import datetime
 from typing import Dict, List
 
 import pytz
-import tzlocal
 from pony import orm
-from pony.orm.core import Query
 
 from app.db.models import ScrobbleDb
 from app.models.songs import ScrobbleIn, SongIn
