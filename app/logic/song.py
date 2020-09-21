@@ -42,7 +42,8 @@ def add(
     - `SongDb`:
         - The created song, or existing song when `return_existing` is `true`
     """
-    artists = artist_logic.split(song.artist)
+    artists = clean_artist(song.artist)
+    artists = artist_logic.split(artists)
     existing = get(title=song.title, artists=artists)
 
     if existing is not None:

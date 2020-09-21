@@ -18,7 +18,7 @@ def test_split_artist():
 def test_clean_artist():
     assert clean_artist("Nishikino Maki (CV. Pile)") == "Nishikino Maki"
     assert clean_artist("Cocoa [CV. Ayane Sakura]") == "Cocoa"
-    assert clean_artist("BNSI [中西哲一]") == "BNSI [中西哲一]"
+    assert clean_artist("BNSI [中西哲一]") == "BNSI"
 
 
 def test_clean_album():
