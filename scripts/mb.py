@@ -1,5 +1,6 @@
 import logging
 import time
+from datetime import datetime
 
 import click
 
@@ -62,6 +63,7 @@ def sync_data(
     fields=["ArtistPeople", "Title", "Album"],
 ):
     start = time.time()
+    print(datetime.now().time())
     paths = get_paths(query=query, fields=fields)
 
     with click.progressbar(paths) as click_paths:

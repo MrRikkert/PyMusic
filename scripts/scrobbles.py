@@ -1,6 +1,7 @@
 import csv
 import logging
 import time
+from datetime import datetime
 
 import click
 import pytz
@@ -34,6 +35,7 @@ def export_scrobbles(path: str):
 
 def import_scrobbles(path: str):
     start = time.time()
+    print(datetime.now().time())
     with open(path, "r", encoding="utf-8") as file:
         reader = csv.reader(file, delimiter=",")
         rows = sum(1 for row in reader)
@@ -51,7 +53,8 @@ def import_scrobbles(path: str):
                             title=row[0], artist=row[1], album=row[2], date=row[3]
                         )
                     )
-                except:
+                except Exception as e:
+                    logging.error(e)
                     logging.error(f"IMPORT: {row[1]} - {row[0]}")
                 if idx % 500 == 0:
                     db.commit()

@@ -24,7 +24,7 @@ def setup_function():
 
 
 @db_session
-# @pytest.mark.mb
+@pytest.mark.mb
 def test():
     paths = mbipc.library_search(query="")[:50]
     for path in paths:
