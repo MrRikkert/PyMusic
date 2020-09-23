@@ -1,7 +1,7 @@
 import click
 from pony.orm import db_session
 
-from app.db.base import init_db
+from app.db.base import init_db, db
 from scripts import mb, scrobbles
 
 
@@ -85,6 +85,29 @@ def import_csv(path):
     init_db()
     with db_session:
         scrobbles.import_scrobbles(path)
+
+
+@cli.command()
+def renew():
+    """Re-creates the database. Creates a backup of your scrobbles and restores them"""
+    click.confirm("Are you sure you want to delete everything?")
+    init_db()
+    with db_session:
+        click.echo("Start backing-up scrobbles")
+        scrobbles.export_scrobbles("backup.csv")
+
+    click.echo("Dropping all tables")
+    db.drop_all_tables(with_all_data=True)
+
+    click.echo("Creating tables")
+    db.create_tables()
+
+    with db_session:
+        click.echo("Importing scrobbles")
+        scrobbles.import_scrobbles("backup.csv")
+
+        click.echo("Retrieving MusicBee data")
+        mb.sync_data()
 
 
 if __name__ == "__main__":
