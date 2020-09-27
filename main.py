@@ -2,7 +2,7 @@ import click
 from pony.orm import db_session
 
 from app.db.base import init_db, db
-from scripts import mb, scrobbles
+from cli import mb, scrobbles
 
 
 @click.group()

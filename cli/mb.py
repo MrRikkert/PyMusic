@@ -4,7 +4,7 @@ from datetime import datetime
 
 import click
 
-import musicbeeipc
+from cli import musicbeeipc
 from app.db.base import db
 from app.logic import song as song_logic
 from app.models.songs import SongIn
