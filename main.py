@@ -41,7 +41,7 @@ def sync_mb(replace, query, field):
 @cli.command()
 @click.option("--name", "-n", help="Your LastFM username", required=True)
 def sync_scrobbles(lastfm: str):
-    """Sync scrobbles from LastFM to the database"""
+    """Syncs all scrobbles from LastFM to the database"""
     init_db()
     with db_session:
         if lastfm:
@@ -80,7 +80,13 @@ def import_csv(path):
 
 @cli.command()
 def renew():
-    """Re-creates the database. Creates a backup of your scrobbles and restores them"""
+    """Re-creates the database.
+    1. Backup scrobbles
+    2. Delete all tables
+    3. Create tables
+    4. Restore scrobbles
+    5. Import music from musicbee
+    """
     click.confirm("Are you sure you want to delete everything?")
     init_db()
     with db_session:
