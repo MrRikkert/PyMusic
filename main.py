@@ -39,18 +39,9 @@ def sync_mb(replace, query, field):
 
 
 @cli.command()
-@click.option(
-    "--lastfm",
-    help="Sync scrobbles from lastfm. will continue from the last recorded scrobble. Enter your username as argument",
-)
-@click.option(
-    "--csv",
-    default="scrobbles.csv",
-    help="sync scrobbles from a local csv file",
-    show_default=True,
-)
-def sync_scrobbles(lastfm: str, csv: str):
-    """Sync scrobbles to the database, either from lastfm or a csv"""
+@click.option("--name", "-n", help="Your LastFM username", required=True)
+def sync_scrobbles(lastfm: str):
+    """Sync scrobbles from LastFM to the database"""
     init_db()
     with db_session:
         if lastfm:
