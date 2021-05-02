@@ -24,10 +24,21 @@ def scrobble(scrobble: ScrobbleIn) -> ScrobbleDb:
     """
     from app.logic import song as song_logic
 
-    return ScrobbleDb(
-        song=song_logic.add(
+    query = orm.select(s for s in ScrobbleDb)
+    query = query.filter(lambda s: s.title.lower() == scrobble.title.lower())
+    query = query.filter(lambda s: s.artist.lower() == scrobble.artist.lower())
+    query = query.filter(lambda s: s.album.lower() == scrobble.album.lower())
+    db_song = query.first()
+
+    if db_song is None:
+        song = song_logic.add(
             SongIn(**scrobble.dict()), return_existing=True, update_existing=True
-        ),
+        )
+    else:
+        song = db_song.song
+
+    return ScrobbleDb(
+        song=song,
         title=scrobble.title,
         artist=scrobble.artist,
         album=scrobble.album,
