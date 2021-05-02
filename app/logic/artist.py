@@ -17,13 +17,13 @@ def get_by_name(name: str) -> ArtistDb:
     - `ArtistDb`:
         - The found artist. Returns `None` when no artist is found
     """
+    name = clean_artist(name).lower()
     reversed_artist = reverse_artist(name)
     if reversed_artist:
         return ArtistDb.get(
-            lambda a: a.name.lower() == clean_artist(name).lower()
-            or a.name.lower() == clean_artist(reversed_artist).lower()
+            lambda a: a.name.lower() == name or a.name.lower() == reversed_artist
         )
-    return ArtistDb.get(lambda a: a.name.lower() == clean_artist(name).lower())
+    return ArtistDb.get(lambda a: a.name.lower() == name)
 
 
 def get_by_id(id: int) -> ArtistDb:
