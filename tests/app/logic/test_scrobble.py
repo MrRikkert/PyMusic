@@ -185,7 +185,7 @@ def test_sync_lastfm_scrobbles():
 @db_session
 @pytest.mark.lastfm
 def test_sync_lastfm_scrobbles_since_last_sync():
-    mixer.blend(ScrobbleDb, date=datetime.fromtimestamp(1584543600))
+    mixer.blend(ScrobbleDb, date=datetime.utcfromtimestamp(1584543600))
     scrobble_logic.sync_lastfm_scrobbles("Arararararagi")
     assert orm.count(s for s in ScrobbleDb) == 6
     assert orm.count(s for s in SongDb) > 0
@@ -196,7 +196,7 @@ def test_sync_lastfm_scrobbles_since_last_sync():
 @db_session
 @pytest.mark.lastfm
 def test_sync_lastfm_scrobbles_since_last_sync_exact_date_time():
-    mixer.blend(ScrobbleDb, date=datetime.fromtimestamp(1584543120))
+    mixer.blend(ScrobbleDb, date=datetime.utcfromtimestamp(1584543120))
     scrobble_logic.sync_lastfm_scrobbles("Arararararagi")
     assert orm.count(s for s in ScrobbleDb) == 8
     assert orm.count(s for s in SongDb) > 0
