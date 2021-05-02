@@ -12,7 +12,7 @@ class ScrobbleDb(db.Entity):
     title = Required(str)
     artist = Required(str)
     album = Required(str)
-    date = Required(datetime)
+    date = Required(datetime, volatile=True)
 
 
 class SongDb(db.Entity):
