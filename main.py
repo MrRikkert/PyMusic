@@ -39,7 +39,7 @@ def sync_mb(replace, query, field):
 
 
 @cli.command()
-@click.option("--name", "-n", help="Your LastFM username", required=True)
+@click.option("--name", "-n", "lastfm", help="Your LastFM username", required=True)
 def sync_scrobbles(lastfm: str):
     """Syncs all scrobbles from LastFM to the database"""
     init_db()
