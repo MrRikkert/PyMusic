@@ -4,7 +4,20 @@ import dotenv
 import logging
 
 dotenv.load_dotenv()
-logging.basicConfig(level=logging.DEBUG, filename="debug.log")
+
+logger = logging.getLogger()
+logger.setLevel(logging.DEBUG)
+
+handler = logging.FileHandler("debug.log", encoding="utf-8")
+handler.setLevel(logging.DEBUG)
+formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(name)s - %(message)s")
+handler.setFormatter(formatter)
+logger.addHandler(handler)
+
+pylast_logger = logging.getLogger("pylast")
+pylast_logger.setLevel(logging.ERROR)
+
+# logging.basicConfig(level=logging.DEBUG, filename="debug.log", encoding="utf-8")
 
 # DB
 DB_PARAMS = {"provider": "sqlite", "filename": "sqlite.db", "create_db": True}

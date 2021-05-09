@@ -1,12 +1,14 @@
+import logging
 from datetime import datetime
 from typing import Dict, List
 
 import pytz
-from pony import orm
-
 from app.db.models import ScrobbleDb
 from app.models.songs import ScrobbleIn, SongIn
 from app.utils import lastfm
+from pony import orm
+
+logger = logging.getLogger()
 
 
 def scrobble(scrobble: ScrobbleIn) -> ScrobbleDb:
@@ -82,14 +84,18 @@ def sync_lastfm_scrobbles(username: str):
     )
     for _scrobble in scrobbles:
         timestamp = _scrobble.timestamp  # + timedelta(hours=1)
-        scrobble(
-            scrobble=ScrobbleIn(
-                date=timestamp,
-                artist=_scrobble.track.artist.name,
-                album=_scrobble.album,
-                title=_scrobble.track.title,
+        try:
+            scrobble(
+                scrobble=ScrobbleIn(
+                    date=timestamp,
+                    artist=_scrobble.track.artist.name,
+                    album=_scrobble.album,
+                    title=_scrobble.track.title,
+                )
             )
-        )
+        except Exception as e:
+            logger.debug(repr(e))
+            logger.debug(_scrobble)
     return len(scrobbles)
 
 

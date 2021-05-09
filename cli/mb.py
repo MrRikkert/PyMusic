@@ -3,12 +3,14 @@ import time
 from datetime import datetime
 
 import click
-
-from cli import musicbeeipc
 from app.db.base import db
 from app.logic import song as song_logic
 from app.models.songs import SongIn
 from app.models.tags import TagIn
+
+from cli import musicbeeipc
+
+logger = logging.getLogger()
 
 mbipc = musicbeeipc.MusicBeeIPC()
 tag_types = {
@@ -79,7 +81,7 @@ def sync_data(
             except Exception as ex:
                 print(ex)
                 print(f"{song.title} - {song.artist}")
-                logging.error(f"MB: {song.artist} - {song.title}")
+                logger.error(f"MB: {song.artist} - {song.title}")
             if idx % 500 == 0:
                 db.commit()
     print(time.time() - start)

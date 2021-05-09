@@ -1,3 +1,4 @@
+from app import settings  # Import settings before anything else
 import click
 from pony.orm import db_session
 
