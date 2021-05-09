@@ -1,9 +1,13 @@
-from app import settings  # Import settings before anything else
+import logging
+
 import click
 from pony.orm import db_session
 
-from app.db.base import init_db, db
+from app import settings  # Import settings before anything else
+from app.db.base import db, init_db
 from cli import mb, scrobbles
+
+logger = logging.getLogger()
 
 
 @click.group()
@@ -34,6 +38,7 @@ def cli():
 )
 def sync_mb(replace, query, field):
     """Sync MusicBee data to the database"""
+    logger.info(f"Syncing musicbee library, params: {locals()}")
     init_db()
     with db_session:
         mb.sync_data(replace_existing=replace, query=query, fields=field)
@@ -43,6 +48,7 @@ def sync_mb(replace, query, field):
 @click.option("--name", "-n", "lastfm", help="Your LastFM username", required=True)
 def sync_scrobbles(lastfm: str):
     """Syncs all scrobbles from LastFM to the database"""
+    logger.info(f"Syncing scorbbles from '{lastfm}'")
     init_db()
     with db_session:
         if lastfm:
@@ -59,6 +65,7 @@ def sync_scrobbles(lastfm: str):
 )
 def export(path):
     """Export scrobbles to a csv file"""
+    logging.info(f"Exporting scrobbles to: {path}")
     init_db()
     with db_session:
         scrobbles.export_scrobbles(path)
@@ -74,6 +81,7 @@ def export(path):
 )
 def import_csv(path):
     """Import scrobbles from a csv file"""
+    logging.info(f"Importing scrobbles from: {path}")
     init_db()
     with db_session:
         scrobbles.import_scrobbles(path)
@@ -88,24 +96,31 @@ def renew():
     4. Restore scrobbles
     5. Import music from musicbee
     """
-    click.confirm("Are you sure you want to delete everything?")
-    init_db()
-    with db_session:
-        click.echo("Start backing-up scrobbles")
-        scrobbles.export_scrobbles("backup.csv")
+    logger.info("Started renew process")
+    try:
+        click.confirm("Are you sure you want to delete everything?")
+        init_db()
+        with db_session:
+            click.echo("Start backing-up scrobbles")
+            scrobbles.export_scrobbles("backup.csv")
 
-    click.echo("Dropping all tables")
-    db.drop_all_tables(with_all_data=True)
+        click.echo("Dropping all tables")
+        db.drop_all_tables(with_all_data=True)
 
-    click.echo("Creating tables")
-    db.create_tables()
+        click.echo("Creating tables")
+        db.create_tables()
 
-    with db_session:
-        click.echo("Importing scrobbles")
-        scrobbles.import_scrobbles("backup.csv")
+        with db_session:
+            click.echo("Importing scrobbles")
+            scrobbles.import_scrobbles("backup.csv")
 
-        click.echo("Retrieving MusicBee data")
-        mb.sync_data()
+            click.echo("Retrieving MusicBee data")
+            mb.sync_data()
+    except click.Abort as e:
+        logging.info(f"Renew aborted")
+    except Exception as e:
+        print(e)
+        logging.error(e)
 
 
 if __name__ == "__main__":
