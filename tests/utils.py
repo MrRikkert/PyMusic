@@ -5,11 +5,12 @@ from app.db.base import db
 from mixer.backend.pony import Mixer
 from mixer.factory import GenFactory
 from mixer.main import faker
+import re
 
 
 class MyFactory(GenFactory):
     fakers = {
-        ("name", str): lambda: faker.name().lower(),
+        ("name", str): lambda: faker.name().lower().replace(".", ""),
         ("title", str): lambda: faker.title().lower(),
     }
 
