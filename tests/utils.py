@@ -1,11 +1,9 @@
-from pony import orm
-
-from app.db.base import db
-
 from mixer.backend.pony import Mixer
 from mixer.factory import GenFactory
 from mixer.main import faker
-import re
+from pony import orm
+
+from app.db.base import db
 
 
 class MyFactory(GenFactory):
