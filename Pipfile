@@ -29,6 +29,7 @@ click = "*"
 pytz = "*"
 pykakasi = "*"
 mixer = "==7.0.6"
+loguru = "*"
 
 [requires]
 python_version = "3.8"
