@@ -12,7 +12,6 @@ from app.models.songs import ScrobbleIn
 
 
 def sync_lastfm_scrobbles(username: str):
-    # TODO LOG
     scrobble.sync_lastfm_scrobbles(username)
 
 
