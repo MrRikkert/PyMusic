@@ -17,7 +17,7 @@ pytest-dotenv = "*"
 wcwidth = "*"
 
 [packages]
-pylast = "*"
+pylast = "==4.2.1"
 pydantic = "*"
 python-multipart = "*"
 pony = "*"

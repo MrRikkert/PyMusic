@@ -1,5 +1,5 @@
 import pytest
-from pylast import WSError
+from pylast import PyLastError
 
 from app.exceptions import LastFmError
 from app.utils import lastfm
@@ -45,6 +45,6 @@ def test_get_scrobbles_empty_username():
 
 @pytest.mark.lastfm
 def test_get_scrobbles_non_exisiting_user():
-    with pytest.raises(WSError):
+    with pytest.raises(PyLastError):
         with pytest.raises(LastFmError):
             lastfm.get_scrobbles(username="fgdfgsdgdgfdgfgf3t345gfd", limit=1)
