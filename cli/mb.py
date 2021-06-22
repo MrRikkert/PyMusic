@@ -1,4 +1,3 @@
-import logging
 import time
 from datetime import datetime
 
@@ -9,8 +8,6 @@ from app.models.songs import SongIn
 from app.models.tags import TagIn
 
 from cli import musicbeeipc
-
-logger = logging.getLogger()
 
 mbipc = musicbeeipc.MusicBeeIPC()
 tag_types = {
@@ -79,9 +76,8 @@ def sync_data(
                     replace_existing_tags=replace_existing,
                 )
             except Exception as ex:
-                print(ex)
-                print(f"{song.title} - {song.artist}")
-                logger.error(f"MB: {song.artist} - {song.title}")
+                # TODO LOG
+                pass
             if idx % 500 == 0:
                 db.commit()
     print(time.time() - start)

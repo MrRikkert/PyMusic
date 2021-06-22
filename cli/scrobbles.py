@@ -1,5 +1,4 @@
 import csv
-import logging
 import time
 from datetime import datetime
 
@@ -10,11 +9,9 @@ from app.db.base import db
 from app.logic import scrobble
 from app.models.songs import ScrobbleIn
 
-logger = logging.getLogger()
-
 
 def sync_lastfm_scrobbles(username: str):
-    logger.debug(f"Syncing '{username}'")
+    # TODO LOG
     scrobble.sync_lastfm_scrobbles(username)
 
 
@@ -57,8 +54,8 @@ def import_scrobbles(path: str):
                         )
                     )
                 except Exception as e:
-                    logger.error(e)
-                    logger.error(f"IMPORT: {row[1]} - {row[0]}")
+                    # TODO LOG
+                    pass
                 if idx % 500 == 0:
                     db.commit()
     print(time.time() - start)
