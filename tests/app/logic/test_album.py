@@ -1,11 +1,10 @@
 import pytest
-from mixer.backend.pony import mixer
 from pony import orm
 from pony.orm import db_session
 
 from app.logic import album as album_logic
 from app.db.models import AlbumDb, ArtistDb
-from tests.utils import reset_db
+from tests.utils import reset_db, mixer
 from app.exceptions import IntegrityError
 
 
@@ -22,7 +21,7 @@ def test_get_album_by_name():
 
 @db_session
 def test_get_album_by_name_case_difference():
-    mixer.blend(AlbumDb, name="Album")
+    album_logic.add(name="album", artist="artist")
     album = album_logic.get_by_name(name="album")
     assert album is not None
 
