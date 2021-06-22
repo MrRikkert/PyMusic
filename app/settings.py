@@ -17,6 +17,9 @@ logger.addHandler(handler)
 pylast_logger = logging.getLogger("pylast")
 pylast_logger.setLevel(logging.ERROR)
 
+faker_logger = logging.getLogger("faker")
+faker_logger.setLevel(logging.ERROR)
+
 # logging.basicConfig(level=logging.DEBUG, filename="debug.log", encoding="utf-8")
 
 # DB
