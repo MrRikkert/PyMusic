@@ -8,7 +8,7 @@ from app.logic import album as album_logic
 from app.logic import artist as artist_logic
 from app.logic import tag as tag_logic
 from app.models.songs import SongIn
-from app.utils.clean import clean_artist
+from app.utils.clean import clean_artist, reverse_artist
 
 
 def add(
@@ -69,7 +69,8 @@ def add(
                 )
         return existing
     return SongDb(
-        title=song.title,
+        title=song.title.lower(),
+        title_alt=song.title,
         length=song.length,
         tags=[
             tag_logic.add(tag.tag_type, tag.value, return_existing=True)
@@ -95,12 +96,11 @@ def get(title: str, artists: List[str]) -> SongDb:
     - `SongDb`:
         - The song, Returns `None` when no album is found
     """
-    query = orm.select(s for s in SongDb if s.title.lower() == title.lower())
+    query = orm.select(s for s in SongDb if s.title == title.lower())
     for artist in artists:
-        query = query.filter(
-            lambda s: clean_artist(artist.lower())
-            in (a.name.lower() for a in s.artists)
-        )
+        _artist = artist_logic.get_by_name(artist)
+        if _artist:
+            query = query.filter(lambda s: _artist in s.artists)
     query = query.filter(lambda s: orm.count(s.artists) == len(artists))
     return query.first()
 

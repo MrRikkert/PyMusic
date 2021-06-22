@@ -1,5 +1,4 @@
 import pytest
-from mixer.backend.pony import mixer
 from pony import orm
 from pony.orm import db_session
 
@@ -9,7 +8,7 @@ from app.exceptions import IntegrityError
 from app.logic import song as song_logic
 from app.models.songs import SongIn
 from app.models.tags import TagIn
-from tests.utils import reset_db
+from tests.utils import reset_db, mixer
 
 
 def setup_function():
@@ -32,6 +31,26 @@ def test_add_song_correct():
     assert orm.count(t for t in TagDb) == 1
     assert orm.count(a for a in ArtistDb) == 2
     assert orm.count(a for a in AlbumDb) == 1
+
+
+@db_session
+def test_add_song_cased_alt_title():
+    song = song_logic.add(
+        SongIn(
+            title="Title",
+            length=1,
+            album="album",
+            album_artist="artist",
+            artist="artist1",
+            tags=[TagIn(tag_type="type", value="tag")],
+        )
+    )
+    assert orm.count(s for s in SongDb) == 1
+    assert orm.count(t for t in TagDb) == 1
+    assert orm.count(a for a in ArtistDb) == 2
+    assert orm.count(a for a in AlbumDb) == 1
+    assert song.title == "title"
+    assert song.title_alt == "Title"
 
 
 @db_session
@@ -260,7 +279,9 @@ def test_get_song_multiple_artists():
 
 @db_session
 def test_get_song_multiple_artists_case_difference():
-    db_song = mixer.blend(SongDb, title="Title", artists=mixer.cycle(2).blend(ArtistDb))
+    db_song = song_logic.add(
+        SongIn(title="Title", album="Album", length=180, artist="Artist1, Artist2")
+    )
     artists = [a.name.lower() for a in db_song.artists]
     song = song_logic.get(title="title", artists=artists)
     assert song is not None

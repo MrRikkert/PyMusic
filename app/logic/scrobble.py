@@ -1,12 +1,14 @@
+import logging
 from datetime import datetime
 from typing import Dict, List
 
 import pytz
-from pony import orm
-
 from app.db.models import ScrobbleDb
 from app.models.songs import ScrobbleIn, SongIn
 from app.utils import lastfm
+from pony import orm
+
+logger = logging.getLogger()
 
 
 def scrobble(scrobble: ScrobbleIn) -> ScrobbleDb:
@@ -24,10 +26,21 @@ def scrobble(scrobble: ScrobbleIn) -> ScrobbleDb:
     """
     from app.logic import song as song_logic
 
-    return ScrobbleDb(
-        song=song_logic.add(
+    query = orm.select(s for s in ScrobbleDb)
+    query = query.filter(lambda s: s.title == scrobble.title.lower())
+    query = query.filter(lambda s: s.artist == scrobble.artist.lower())
+    query = query.filter(lambda s: s.album == scrobble.album.lower())
+    db_song = query.first()
+
+    if db_song is None:
+        song = song_logic.add(
             SongIn(**scrobble.dict()), return_existing=True, update_existing=True
-        ),
+        )
+    else:
+        song = db_song.song
+
+    return ScrobbleDb(
+        song=song,
         title=scrobble.title,
         artist=scrobble.artist,
         album=scrobble.album,
@@ -71,14 +84,18 @@ def sync_lastfm_scrobbles(username: str):
     )
     for _scrobble in scrobbles:
         timestamp = _scrobble.timestamp  # + timedelta(hours=1)
-        scrobble(
-            scrobble=ScrobbleIn(
-                date=timestamp,
-                artist=_scrobble.track.artist.name,
-                album=_scrobble.album,
-                title=_scrobble.track.title,
+        try:
+            scrobble(
+                scrobble=ScrobbleIn(
+                    date=timestamp,
+                    artist=_scrobble.track.artist.name.lower(),
+                    album=_scrobble.album.lower(),
+                    title=_scrobble.track.title.lower(),
+                )
             )
-        )
+        except Exception as e:
+            logger.debug(repr(e))
+            logger.debug(_scrobble)
     return len(scrobbles)
 
 

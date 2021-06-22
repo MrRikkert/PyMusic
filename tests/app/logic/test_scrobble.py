@@ -1,7 +1,6 @@
 from datetime import datetime, timedelta
 
 import pytest
-from mixer.backend.pony import mixer
 from pony import orm
 from pony.orm import db_session
 
@@ -9,7 +8,7 @@ from app.db.models import AlbumDb, ArtistDb, ScrobbleDb, SongDb, TagDb
 from app.logic import scrobble as scrobble_logic
 from app.models.songs import ScrobbleIn
 from app.models.tags import TagIn
-from tests.utils import reset_db
+from tests.utils import reset_db, mixer
 
 
 def setup_function():
@@ -185,7 +184,7 @@ def test_sync_lastfm_scrobbles():
 @db_session
 @pytest.mark.lastfm
 def test_sync_lastfm_scrobbles_since_last_sync():
-    mixer.blend(ScrobbleDb, date=datetime.fromtimestamp(1584543600))
+    mixer.blend(ScrobbleDb, date=datetime.utcfromtimestamp(1584543600))
     scrobble_logic.sync_lastfm_scrobbles("Arararararagi")
     assert orm.count(s for s in ScrobbleDb) == 6
     assert orm.count(s for s in SongDb) > 0
@@ -196,7 +195,7 @@ def test_sync_lastfm_scrobbles_since_last_sync():
 @db_session
 @pytest.mark.lastfm
 def test_sync_lastfm_scrobbles_since_last_sync_exact_date_time():
-    mixer.blend(ScrobbleDb, date=datetime.fromtimestamp(1584543120))
+    mixer.blend(ScrobbleDb, date=datetime.utcfromtimestamp(1584543120))
     scrobble_logic.sync_lastfm_scrobbles("Arararararagi")
     assert orm.count(s for s in ScrobbleDb) == 8
     assert orm.count(s for s in SongDb) > 0

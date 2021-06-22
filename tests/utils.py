@@ -1,6 +1,19 @@
+from mixer.backend.pony import Mixer
+from mixer.factory import GenFactory
+from mixer.main import faker
 from pony import orm
 
 from app.db.base import db
+
+
+class MyFactory(GenFactory):
+    fakers = {
+        ("name", str): lambda: faker.name().lower().replace(".", ""),
+        ("title", str): lambda: faker.title().lower(),
+    }
+
+
+mixer = Mixer(factory=MyFactory)
 
 
 def reset_db():

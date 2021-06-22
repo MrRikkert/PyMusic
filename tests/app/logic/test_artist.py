@@ -1,11 +1,12 @@
 import pytest
-from mixer.backend.pony import mixer
+
+
 from pony import orm
 from pony.orm import db_session
 
 from app.logic import artist as artist_logic
 from app.db.models import ArtistDb
-from tests.utils import reset_db
+from tests.utils import reset_db, mixer
 from app.exceptions import IntegrityError
 
 
@@ -31,7 +32,7 @@ def test_get_artist_by_name_cleaned_name():
 
 @db_session
 def test_get_artist_by_name_case_difference():
-    db_artist = mixer.blend(ArtistDb, name="Artist")
+    db_artist = artist_logic.add("Artist")
     artist = artist_logic.get_by_name(name="artist")
     assert artist is not None
     assert db_artist.name == artist.name
@@ -83,6 +84,14 @@ def test_artist_exists_non_existing():
 def test_add_artist():
     artist_logic.add("hallo")
     assert orm.count(a for a in ArtistDb) == 1
+
+
+@db_session
+def test_add_artist_cased_alt_name():
+    artist = artist_logic.add("Hallo")
+    assert orm.count(a for a in ArtistDb) == 1
+    assert artist.name == "hallo"
+    assert artist.name_alt == "Hallo"
 
 
 @db_session

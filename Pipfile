@@ -7,7 +7,7 @@ verify_ssl = true
 black = "==18.9b0"
 pytest = "*"
 pytest-cov = "*"
-mixer = "*"
+mixer = "==7.0.6"
 flake8 = "*"
 mccabe = "*"
 requests = "*"
@@ -17,8 +17,8 @@ pytest-dotenv = "*"
 wcwidth = "*"
 
 [packages]
-pylast = "*"
-pydantic = "==1.6.1"
+pylast = "==4.2.1"
+pydantic = "*"
 python-multipart = "*"
 pony = "*"
 python-dotenv = "*"
@@ -28,6 +28,7 @@ pywin32 = {version = "*",sys_platform = "== 'win32'"}
 click = "*"
 pytz = "*"
 pykakasi = "*"
+mixer = "==7.0.6"
 
 [requires]
 python_version = "3.8"
