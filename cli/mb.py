@@ -2,6 +2,7 @@ import time
 from datetime import datetime
 
 import click
+from loguru import logger
 from app.db.base import db
 from app.logic import song as song_logic
 from app.models.songs import SongIn
@@ -76,8 +77,7 @@ def sync_data(
                     replace_existing_tags=replace_existing,
                 )
             except Exception as ex:
-                # TODO LOG
-                pass
+                logger.exception("Something went wrong")
             if idx % 500 == 0:
                 db.commit()
     print(time.time() - start)

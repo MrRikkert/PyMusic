@@ -1,10 +1,10 @@
 from typing import List
 
 import pylast
-
 from app.exceptions import LastFmError
 from app.models.songs import ScrobbleLastFm
 from app.settings import LASTFMKEY, LASTFMSECRET
+from loguru import logger
 
 lastfm = pylast.LastFMNetwork(api_key=LASTFMKEY, api_secret=LASTFMSECRET)
 
@@ -43,6 +43,7 @@ def get_scrobbles(
     try:
         user: pylast.User = lastfm.get_user(username)
     except pylast.PyLastError:
+        logger.exception("User not found")
         raise LastFmError("User not found")
     scrobbles = user.get_recent_tracks(
         limit=limit, time_from=time_from, time_to=time_to

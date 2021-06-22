@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "6179d901288eff2833c5ae021fda2d80bb76aa27402d04abb7dec63f34ac546f"
+            "sha256": "e5e564e1a82af22245d010028dbb9ec3e262496e7df8a9f1f5446261844a479a"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -16,6 +16,15 @@
         ]
     },
     "default": {
+        "better-exceptions": {
+            "hashes": [
+                "sha256:9c70b1c61d5a179b84cd2c9d62c3324b667d74286207343645ed4306fdaad976",
+                "sha256:bf111d0c9994ac1123f29c24907362bed2320a86809c85f0d858396000667ce2",
+                "sha256:e4e6bc18444d5f04e6e894b10381e5e921d3d544240418162c7db57e9eb3453b"
+            ],
+            "index": "pypi",
+            "version": "==0.3.3"
+        },
         "click": {
             "hashes": [
                 "sha256:8c04c11192119b1ef78ea049e0a6f0463e4c48ef00a30160c704337586f3ad7a",
@@ -29,7 +38,7 @@
                 "sha256:5941b2b48a20143d2267e95b1c2a7603ce057ee39fd88e7329b0c292aa16869b",
                 "sha256:9f47eda37229f68eee03b24b9748937c7dc3868f906e8ba69fbcbdd3bc5dc3e2"
             ],
-            "markers": "sys_platform == 'win32' and platform_system == 'Windows'",
+            "markers": "sys_platform == 'win32' and platform_system == 'Windows' and sys_platform == 'win32'",
             "version": "==0.4.4"
         },
         "deprecated": {
@@ -291,7 +300,7 @@
                 "sha256:5941b2b48a20143d2267e95b1c2a7603ce057ee39fd88e7329b0c292aa16869b",
                 "sha256:9f47eda37229f68eee03b24b9748937c7dc3868f906e8ba69fbcbdd3bc5dc3e2"
             ],
-            "markers": "sys_platform == 'win32' and platform_system == 'Windows'",
+            "markers": "sys_platform == 'win32' and platform_system == 'Windows' and sys_platform == 'win32'",
             "version": "==0.4.4"
         },
         "coverage": {

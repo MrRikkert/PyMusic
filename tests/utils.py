@@ -26,6 +26,7 @@ def reset_db():
         db.bind(provider="sqlite", filename=":memory:")
         # db.bind(provider="sqlite", filename="test.sqlite", create_db=True)
     except orm.core.BindingError:
+        # Logging not needed
         pass
     else:
         db.generate_mapping(check_tables=False)

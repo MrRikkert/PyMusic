@@ -5,6 +5,7 @@ import pytz
 from app.db.models import ScrobbleDb
 from app.models.songs import ScrobbleIn, SongIn
 from app.utils import lastfm
+from loguru import logger
 from pony import orm
 
 
@@ -91,7 +92,7 @@ def sync_lastfm_scrobbles(username: str):
                 )
             )
         except Exception as e:
-            # TODO LOG
+            logger.exception("Something went wrong")
             pass
     return len(scrobbles)
 

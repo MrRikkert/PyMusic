@@ -30,6 +30,7 @@ pytz = "*"
 pykakasi = "*"
 mixer = "==7.0.6"
 loguru = "*"
+better-exceptions = "*"
 
 [requires]
 python_version = "3.8"

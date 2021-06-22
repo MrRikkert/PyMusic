@@ -1,4 +1,5 @@
 import click
+from loguru import logger
 from pony.orm import db_session
 
 from app import settings  # Import settings before anything else
@@ -12,6 +13,7 @@ def cli():
 
 
 @cli.command()
+@logger.catch()
 @click.option(
     "--replace",
     is_flag=True,
@@ -34,18 +36,18 @@ def cli():
 )
 def sync_mb(replace, query, field):
     """Sync MusicBee data to the database"""
-    # TODO LOG
-    # logger.info(f"Syncing musicbee library, params: {locals()}")
+    logger.info(f"Syncing musicbee library, params: {locals()}")
     init_db()
     with db_session:
         mb.sync_data(replace_existing=replace, query=query, fields=field)
 
 
 @cli.command()
+@logger.catch()
 @click.option("--name", "-n", "lastfm", help="Your LastFM username", required=True)
 def sync_scrobbles(lastfm: str):
     """Syncs all scrobbles from LastFM to the database"""
-    # TODO LOG
+    logger.info(f"Syncing LastFm scrobbles: {lastfm}")
     init_db()
     with db_session:
         if lastfm:
@@ -53,6 +55,7 @@ def sync_scrobbles(lastfm: str):
 
 
 @cli.command()
+@logger.catch()
 @click.option(
     "--path",
     "-p",
@@ -62,13 +65,14 @@ def sync_scrobbles(lastfm: str):
 )
 def export(path):
     """Export scrobbles to a csv file"""
-    # TODO LOG
+    logger.info("Exporting scrobbles to: {path}")
     init_db()
     with db_session:
         scrobbles.export_scrobbles(path)
 
 
 @cli.command("import")
+@logger.catch()
 @click.option(
     "--path",
     "-p",
@@ -78,13 +82,14 @@ def export(path):
 )
 def import_csv(path):
     """Import scrobbles from a csv file"""
-    # TODO LOG
+    logger.info("Importing scrobbles from: {path}")
     init_db()
     with db_session:
         scrobbles.import_scrobbles(path)
 
 
 @cli.command()
+@logger.catch()
 def renew():
     """Re-creates the database.
     1. Backup scrobbles
@@ -93,7 +98,7 @@ def renew():
     4. Restore scrobbles
     5. Import music from musicbee
     """
-    # TODO LOG
+    logger.info("Re creating database")
     try:
         click.confirm("Are you sure you want to delete everything?")
         init_db()
@@ -114,10 +119,10 @@ def renew():
             click.echo("Retrieving MusicBee data")
             mb.sync_data()
     except click.Abort as e:
-        # TODO LOG
+        logger.info("User aborted the renew proces")
         pass
     except Exception as e:
-        # TODO LOG
+        logger.exception("Something went wrong")
         pass
 
 

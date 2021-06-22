@@ -3,6 +3,7 @@ import time
 from datetime import datetime
 
 import click
+from loguru import logger
 import pytz
 
 from app.db.base import db
@@ -54,8 +55,7 @@ def import_scrobbles(path: str):
                         )
                     )
                 except Exception as e:
-                    # TODO LOG
-                    pass
+                    logger.exception("Something went wrong")
                 if idx % 500 == 0:
                     db.commit()
     print(time.time() - start)
