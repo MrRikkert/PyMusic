@@ -32,7 +32,6 @@ def test_get_artist_by_name_cleaned_name():
 
 @db_session
 def test_get_artist_by_name_case_difference():
-    # db_artist = mixer.blend(ArtistDb, name="Artist")
     db_artist = artist_logic.add("Artist")
     artist = artist_logic.get_by_name(name="artist")
     assert artist is not None
