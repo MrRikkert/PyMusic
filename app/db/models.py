@@ -13,6 +13,7 @@ class ScrobbleDb(db.Entity):
     artist = Required(str)
     album = Required(str)
     date = Required(datetime, volatile=True)
+    composite_key(title, artist, album)
 
 
 class SongDb(db.Entity):
