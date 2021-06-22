@@ -27,9 +27,9 @@ def scrobble(scrobble: ScrobbleIn) -> ScrobbleDb:
     from app.logic import song as song_logic
 
     query = orm.select(s for s in ScrobbleDb)
-    query = query.filter(lambda s: s.title.lower() == scrobble.title.lower())
-    query = query.filter(lambda s: s.artist.lower() == scrobble.artist.lower())
-    query = query.filter(lambda s: s.album.lower() == scrobble.album.lower())
+    query = query.filter(lambda s: s.title == scrobble.title.lower())
+    query = query.filter(lambda s: s.artist == scrobble.artist.lower())
+    query = query.filter(lambda s: s.album == scrobble.album.lower())
     db_song = query.first()
 
     if db_song is None:
@@ -88,9 +88,9 @@ def sync_lastfm_scrobbles(username: str):
             scrobble(
                 scrobble=ScrobbleIn(
                     date=timestamp,
-                    artist=_scrobble.track.artist.name,
-                    album=_scrobble.album,
-                    title=_scrobble.track.title,
+                    artist=_scrobble.track.artist.name.lower(),
+                    album=_scrobble.album.lower(),
+                    title=_scrobble.track.title.lower(),
                 )
             )
         except Exception as e:

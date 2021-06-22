@@ -20,10 +20,8 @@ def get_by_name(name: str) -> ArtistDb:
     name = clean_artist(name).lower()
     reversed_artist = reverse_artist(name)
     if reversed_artist:
-        return ArtistDb.get(
-            lambda a: a.name.lower() == name or a.name.lower() == reversed_artist
-        )
-    return ArtistDb.get(lambda a: a.name.lower() == name)
+        return ArtistDb.get(lambda a: a.name == name or a.name == reversed_artist)
+    return ArtistDb.get(lambda a: a.name == name)
 
 
 def get_by_id(id: int) -> ArtistDb:
@@ -78,7 +76,8 @@ def add(name: str, return_existing: bool = False) -> ArtistDb:
         if not return_existing:
             raise IntegrityError("artist already exists")
         return existing
-    return ArtistDb(name=clean_artist(name))
+    name = clean_artist(name)
+    return ArtistDb(name=name.lower(), name_alt=name)
 
 
 def split(name: str) -> List[str]:
