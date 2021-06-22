@@ -34,6 +34,26 @@ def test_add_song_correct():
 
 
 @db_session
+def test_add_song_cased_alt_title():
+    song = song_logic.add(
+        SongIn(
+            title="Title",
+            length=1,
+            album="album",
+            album_artist="artist",
+            artist="artist1",
+            tags=[TagIn(tag_type="type", value="tag")],
+        )
+    )
+    assert orm.count(s for s in SongDb) == 1
+    assert orm.count(t for t in TagDb) == 1
+    assert orm.count(a for a in ArtistDb) == 2
+    assert orm.count(a for a in AlbumDb) == 1
+    assert song.title == "title"
+    assert song.title_alt == "Title"
+
+
+@db_session
 def test_add_song_multiple_artists():
     song_logic.add(
         SongIn(
