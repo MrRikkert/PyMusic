@@ -9,7 +9,7 @@ dotenv.load_dotenv()
 config = {
     "handlers": [
         {
-            "sink": "logs/{time}.log",
+            "sink": "logs/{time:YYYY-MM-DD}.log",
             "rotation": "1 day",
             "retention": "7 days",
             "format": "{time:YYYY-MM-DD HH:mm:ss} | {level: <8} | {file}:{function}:{line} | {message}",
