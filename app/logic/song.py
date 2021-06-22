@@ -98,9 +98,11 @@ def get(title: str, artists: List[str]) -> SongDb:
     """
     query = orm.select(s for s in SongDb if s.title == title.lower())
     for artist in artists:
-        _artist = artist_logic.get_by_name(artist)
-        if _artist:
-            query = query.filter(lambda s: _artist in s.artists)
+        _artist = clean_artist(artist).lower()
+        query.filter(
+            lambda s: _artist in s.artists.name
+            or reverse_artist(_artist) in s.artists.name
+        )
     query = query.filter(lambda s: orm.count(s.artists) == len(artists))
     return query.first()
 
