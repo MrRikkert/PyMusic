@@ -1,4 +1,5 @@
 import os
+import sys
 
 import dotenv
 from loguru import logger
@@ -15,7 +16,21 @@ config = {
             "format": "{time:YYYY-MM-DD HH:mm:ss} | {level: <8} | {file}:{function}:{line} | {message}",
             "backtrace": True,
             "diagnose": True,
-        }
+        },
+        {
+            "sink": sys.stderr,
+            "format": "{time:YYYY-MM-DD HH:mm:ss} | {level} | {message} | Check the logs for more details",
+            "backtrace": False,
+            "diagnose": False,
+            "level": "ERROR",
+        },
+        {
+            "sink": sys.stderr,
+            "format": "{time:YYYY-MM-DD HH:mm:ss} | {level} | {message} ",
+            "backtrace": False,
+            "diagnose": False,
+            "level": "INFO",
+        },
     ]
 }
 logger.configure(**config)
