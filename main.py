@@ -126,5 +126,14 @@ def renew():
         pass
 
 
+@cli.command()
+@logger.catch()
+def save_art():
+    try:
+        mb.get_albums()
+    except:
+        logger.exception("Something went wrong")
+
+
 if __name__ == "__main__":
     cli()

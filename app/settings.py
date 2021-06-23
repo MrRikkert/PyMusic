@@ -69,3 +69,5 @@ if os.getenv("DB_PROVIDER"):
                 "port": os.getenv("DB_POSTGRES_PORT"),
                 "database": os.getenv("DB_POSTGRES_DATABASE"),
             }
+if os.getenv("ALBUM_ART_PATH"):
+    ALBUM_ART_PATH = os.getenv("ALBUM_ART_PATH")

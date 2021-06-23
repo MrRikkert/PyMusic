@@ -1,3 +1,5 @@
+from hashlib import md5
+import os
 from pony import orm
 
 from app.db.models import AlbumDb
@@ -81,10 +83,12 @@ def add(name: str, artist: str = None, return_existing: bool = False) -> AlbumDb
             existing.album_artist = artist_logic.add(artist, return_existing=True)
 
         return existing
+    album_hash = md5(name.lower().encode("utf-8")).hexdigest()
     return AlbumDb(
         name=name.lower(),
         name_alt=clean_album(name),
         album_artist=artist_logic.add(artist, return_existing=True)
         if artist is not None
         else None,
+        art=os.path.join(album_hash[0:2], album_hash + ".png"),
     )

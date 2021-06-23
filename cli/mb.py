@@ -1,12 +1,16 @@
+import base64
+import os
 import time
 from datetime import datetime
+from hashlib import md5
 
 import click
-from loguru import logger
 from app.db.base import db
 from app.logic import song as song_logic
 from app.models.songs import SongIn
 from app.models.tags import TagIn
+from app.settings import ALBUM_ART_PATH
+from loguru import logger
 
 from cli import musicbeeipc
 
@@ -55,6 +59,38 @@ def get_song(path: str) -> SongIn:
         artist=mbipc.library_get_file_tag(path, musicbeeipc.MBMD_Artist),
         tags=get_tags(path),
     )
+
+
+def get_albums():
+    logger.info("Getting albums from musicbee")
+    paths = get_paths()
+    albums = [
+        mbipc.library_get_file_tag(path, musicbeeipc.MBMD_Album).lower()
+        for path in paths
+    ]
+    _albums = []
+    _paths = []
+
+    logger.info("Filtering albums")
+    for path, album in zip(paths, albums):
+        if not album in _albums:
+            _albums.append(album)
+            _paths.append(path)
+
+    with click.progressbar(zip(_paths, _albums), length=len(_albums)) as click_iter:
+        for path, album in click_iter:
+            save_album_art(album, path)
+
+
+def save_album_art(album: str, path: str):
+    album_hash = md5(album.lower().encode("utf-8")).hexdigest()
+    art_path = os.path.join(ALBUM_ART_PATH, album_hash[0:2], album_hash + ".png")
+    art = mbipc.library_get_artwork(path, 0)
+
+    if not os.path.exists(art_path):
+        os.makedirs(os.path.dirname(art_path), exist_ok=True)
+        with open(art_path, "wb") as fh:
+            fh.write(base64.decodebytes(str.encode(art)))
 
 
 def sync_data(

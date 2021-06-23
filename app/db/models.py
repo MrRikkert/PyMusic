@@ -33,6 +33,7 @@ class AlbumDb(db.Entity):
     id = PrimaryKey(int, auto=True)
     name = Required(str, index=True)
     name_alt = Required(str)
+    art = Optional(str)
     songs = Set(SongDb)
     album_artist = Optional("ArtistDb")
 
