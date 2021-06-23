@@ -72,7 +72,7 @@ def sync_scrobbles(lastfm: str):
 )
 def export(path):
     """Export scrobbles to a csv file"""
-    logger.info("Exporting scrobbles to: {path}")
+    logger.info(f"Exporting scrobbles to: {path}")
     init_db()
     with db_session:
         scrobbles.export_scrobbles(path)
