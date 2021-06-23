@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from pony.orm import Optional, PrimaryKey, Required, Set, composite_key
+from pony.orm import Optional, PrimaryKey, Required, Set, composite_key, composite_index
 
 from app.db.base import db
 
@@ -13,7 +13,7 @@ class ScrobbleDb(db.Entity):
     artist = Required(str)
     album = Required(str)
     date = Required(datetime, volatile=True)
-    composite_key(title, artist, album)
+    composite_index(title, artist, album)
 
 
 class SongDb(db.Entity):
