@@ -43,7 +43,7 @@ def get_scrobbles(
     try:
         user: pylast.User = lastfm.get_user(username)
     except pylast.PyLastError:
-        logger.exception("User not found")
+        logger.exception(f"User not found: '{username}'")
         raise LastFmError("User not found")
     scrobbles = user.get_recent_tracks(
         limit=limit, time_from=time_from, time_to=time_to

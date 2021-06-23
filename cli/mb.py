@@ -113,7 +113,9 @@ def sync_data(
                     replace_existing_tags=replace_existing,
                 )
             except Exception as ex:
-                logger.exception("Something went wrong")
+                logger.exception(
+                    f"Something went wrong while adding a song with data: {song.dict()}"
+                )
             if idx % 500 == 0:
                 db.commit()
     print(time.time() - start)
