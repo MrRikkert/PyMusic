@@ -19,17 +19,21 @@ config = {
         },
         {
             "sink": sys.stderr,
-            "format": "{time:YYYY-MM-DD HH:mm:ss} | {level} | {message} | Check the logs for more details",
+            # lambda to prevent loguru from appending the exception message
+            "format": lambda record: "{time:YYYY-MM-DD HH:mm:ss} | {level} | {message} | Check the logs for more details\n",
             "backtrace": False,
             "diagnose": False,
             "level": "ERROR",
+            "filter": lambda record: record["level"].name == "ERROR",
         },
         {
             "sink": sys.stderr,
-            "format": "{time:YYYY-MM-DD HH:mm:ss} | {level} | {message} ",
+            # lambda to prevent loguru from appending the exception message
+            "format": lambda record: "{time:YYYY-MM-DD HH:mm:ss} | {level} | {message}\n",
             "backtrace": False,
             "diagnose": False,
             "level": "INFO",
+            "filter": lambda record: record["level"].name == "INFO",
         },
     ]
 }

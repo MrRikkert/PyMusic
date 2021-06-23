@@ -12,8 +12,17 @@ def cli():
     pass
 
 
-@cli.command()
 @logger.catch()
+def wrap_cli():
+    try:
+        cli(standalone_mode=False)
+    except (KeyboardInterrupt, click.Abort):
+        logger.warning("User cancelled operation")
+    except Exception:
+        logger.exception("An unexpected error occured")
+
+
+@cli.command()
 @click.option(
     "--replace",
     is_flag=True,
@@ -43,7 +52,6 @@ def sync_mb(replace, query, field):
 
 
 @cli.command()
-@logger.catch()
 @click.option("--name", "-n", "lastfm", help="Your LastFM username", required=True)
 def sync_scrobbles(lastfm: str):
     """Syncs all scrobbles from LastFM to the database"""
@@ -55,7 +63,6 @@ def sync_scrobbles(lastfm: str):
 
 
 @cli.command()
-@logger.catch()
 @click.option(
     "--path",
     "-p",
@@ -72,7 +79,6 @@ def export(path):
 
 
 @cli.command("import")
-@logger.catch()
 @click.option(
     "--path",
     "-p",
@@ -89,7 +95,6 @@ def import_csv(path):
 
 
 @cli.command()
-@logger.catch()
 def renew():
     """Re-creates the database.
     1. Backup scrobbles
@@ -99,41 +104,30 @@ def renew():
     5. Import music from musicbee
     """
     logger.info("Re creating database")
-    try:
-        click.confirm("Are you sure you want to delete everything?")
-        init_db()
-        with db_session:
-            click.echo("Start backing-up scrobbles")
-            scrobbles.export_scrobbles("backup.csv")
+    click.confirm("Are you sure you want to delete everything?")
+    init_db()
+    with db_session:
+        click.echo("Start backing-up scrobbles")
+        scrobbles.export_scrobbles("backup.csv")
 
-        click.echo("Dropping all tables")
-        db.drop_all_tables(with_all_data=True)
+    click.echo("Dropping all tables")
+    db.drop_all_tables(with_all_data=True)
 
-        click.echo("Creating tables")
-        db.create_tables()
+    click.echo("Creating tables")
+    db.create_tables()
 
-        with db_session:
-            click.echo("Importing scrobbles")
-            scrobbles.import_scrobbles("backup.csv")
+    with db_session:
+        click.echo("Importing scrobbles")
+        scrobbles.import_scrobbles("backup.csv")
 
-            click.echo("Retrieving MusicBee data")
-            mb.sync_data()
-    except click.Abort as e:
-        logger.info("User aborted the renew proces")
-        pass
-    except Exception as e:
-        logger.exception("Something went wrong")
-        pass
+        click.echo("Retrieving MusicBee data")
+        mb.sync_data()
 
 
 @cli.command()
-@logger.catch()
 def save_art():
-    try:
-        mb.get_albums()
-    except:
-        logger.exception("Something went wrong")
+    mb.get_albums()
 
 
 if __name__ == "__main__":
-    cli()
+    wrap_cli()
