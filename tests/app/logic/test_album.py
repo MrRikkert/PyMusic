@@ -127,3 +127,15 @@ def test_add_album_existing_with_new_album_artist():
     assert album is not None
     assert db_album.id == album.id
     assert db_album.album_artist.name == "test"
+
+
+@db_session
+def test_add_album_correct_hash():
+    album = album_logic.add(name="album disc 1")
+    assert album.art == "87\\8777347537b94cf98aa05b2310877a81.png"
+
+    album = album_logic.add(name="Album2")
+    assert album.art == "f8\\f8d7bd28b526864cf358256ca7b041c6.png"
+
+    album = album_logic.add(name="Test Album (Disc 1)")
+    assert album.art == "64\\6403be228e301a5fa973392207537642.png"
