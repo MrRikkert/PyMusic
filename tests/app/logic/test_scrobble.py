@@ -29,6 +29,8 @@ def test_scrobble_without_date():
     assert orm.count(s for s in SongDb) == 1
     assert orm.count(s for s in ScrobbleDb) == 1
     assert scrobble.date is not None
+    assert scrobble.album is not None
+    assert scrobble.album.album_artist is None
 
 
 @db_session
@@ -47,6 +49,8 @@ def test_scrobble_with_date():
     assert orm.count(s for s in SongDb) == 1
     assert orm.count(s for s in ScrobbleDb) == 1
     assert scrobble.date == date
+    assert scrobble.album is not None
+    assert scrobble.album.album_artist is None
 
 
 @db_session
@@ -72,6 +76,36 @@ def test_scrobble_existing_song():
     assert orm.count(s for s in SongDb) == 1
     assert orm.count(s for s in ScrobbleDb) == 1
     assert scrobble.date == date
+    assert scrobble.album is not None
+    assert scrobble.album.album_artist is None
+
+
+@db_session
+def test_scrobble_existing_song_album_artist():
+    date = datetime.now()
+    artist = mixer.blend(ArtistDb, name="artist")
+    mixer.blend(
+        SongDb,
+        title="title",
+        albums=mixer.blend(AlbumDb, name="album", album_artist=artist),
+        artists=artist,
+        tags=mixer.blend(TagDb, tag_type="type", value="value"),
+    )
+    scrobble = scrobble_logic.scrobble(
+        ScrobbleIn(
+            title="title",
+            length=1,
+            album="album",
+            artist="artist",
+            tags=[TagIn(tag_type="type", value="value")],
+            date=date,
+        )
+    )
+    assert orm.count(s for s in SongDb) == 1
+    assert orm.count(s for s in ScrobbleDb) == 1
+    assert scrobble.date == date
+    assert scrobble.album is not None
+    assert scrobble.album.album_artist.name == "artist"
 
 
 @db_session

@@ -22,12 +22,12 @@ def scrobble(scrobble: ScrobbleIn) -> ScrobbleDb:
     - `ScrobbleDb`:
         - The created scrobble
     """
-    from app.logic import song as song_logic
+    from app.logic import song as song_logic, album as album_logic
 
     query = orm.select(s for s in ScrobbleDb)
     query = query.filter(lambda s: s.title == scrobble.title.lower())
     query = query.filter(lambda s: s.artist == scrobble.artist.lower())
-    query = query.filter(lambda s: s.album == scrobble.album.lower())
+    query = query.filter(lambda s: s.album_name == scrobble.album.lower())
     db_song = query.first()
 
     if db_song is None:
@@ -37,11 +37,14 @@ def scrobble(scrobble: ScrobbleIn) -> ScrobbleDb:
     else:
         song = db_song.song
 
+    album = album_logic.get_by_name(scrobble.album)
+
     return ScrobbleDb(
         song=song,
+        album=album,
         title=scrobble.title,
         artist=scrobble.artist,
-        album=scrobble.album,
+        album_name=scrobble.album,
         date=scrobble.date,
     )
 
