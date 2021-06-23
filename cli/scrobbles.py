@@ -54,9 +54,9 @@ def import_scrobbles(path: str):
                         )
                     )
                 except Exception as e:
-                    logger.exception(
-                        f"Something went wrong while adding a scrobble with data: title={row[0]}, artist={row[1]}, album={row[2]}, date={row[3]}"
-                    )
+                    logger.bind(
+                        scrobble=f"title={row[0]}, artist={row[1]}, album={row[2]}, date={row[3]}"
+                    ).exception(f"Something went wrong while adding a scrobble")
                 if idx % 500 == 0:
                     db.commit()
     print(time.time() - start)

@@ -45,7 +45,7 @@ def wrap_cli():
 )
 def sync_mb(replace, query, field):
     """Sync MusicBee data to the database"""
-    logger.info(f"Syncing musicbee library, params: {locals()}")
+    logger.bind(params=locals()).info(f"Syncing musicbee library")
     init_db()
     with db_session:
         mb.sync_data(replace_existing=replace, query=query, fields=field)
@@ -88,7 +88,7 @@ def export(path):
 )
 def import_csv(path):
     """Import scrobbles from a csv file"""
-    logger.info("Importing scrobbles from: {path}")
+    logger.bind(path=path).info("Importing scrobbles")
     init_db()
     with db_session:
         scrobbles.import_scrobbles(path)
