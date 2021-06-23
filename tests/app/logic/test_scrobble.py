@@ -75,6 +75,39 @@ def test_scrobble_existing_song():
 
 
 @db_session
+def test_scrobble_multiple_scrobbles_of_one_sone():
+    mixer.blend(
+        SongDb,
+        title="title",
+        albums=mixer.blend(AlbumDb, name="album"),
+        artists=mixer.blend(ArtistDb, name="artist"),
+        tags=mixer.blend(TagDb, tag_type="type", value="value"),
+    )
+    scrobble = scrobble_logic.scrobble(
+        ScrobbleIn(
+            title="title",
+            length=1,
+            album="album",
+            artist="artist",
+            tags=[TagIn(tag_type="type", value="value")],
+            date=datetime.now(),
+        )
+    )
+    scrobble = scrobble_logic.scrobble(
+        ScrobbleIn(
+            title="title",
+            length=1,
+            album="album",
+            artist="artist",
+            tags=[TagIn(tag_type="type", value="value")],
+            date=datetime.now(),
+        )
+    )
+    assert orm.count(s for s in SongDb) == 1
+    assert orm.count(s for s in ScrobbleDb) == 2
+
+
+@db_session
 def test_recent_plays():
     mixer.cycle(30).blend(ScrobbleDb)
     orm.flush()
