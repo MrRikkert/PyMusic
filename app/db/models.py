@@ -6,8 +6,8 @@ from app.db.base import db
 
 
 class ScrobbleDb(db.Entity):
-    def __init__(self):
-        self.super().__init__()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
     _table_ = "scrobble"
     id = PrimaryKey(int, auto=True)
@@ -24,8 +24,8 @@ class ScrobbleDb(db.Entity):
 
 
 class SongDb(db.Entity):
-    def __init__(self):
-        self.super().__init__()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
     _table_ = "song"
     id = PrimaryKey(int, auto=True)
@@ -42,8 +42,8 @@ class SongDb(db.Entity):
 
 
 class AlbumDb(db.Entity):
-    def __init__(self):
-        self.super().__init__()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
     _table_ = "album"
     id = PrimaryKey(int, auto=True)
@@ -59,8 +59,8 @@ class AlbumDb(db.Entity):
 
 
 class ArtistDb(db.Entity):
-    def __init__(self):
-        self.super().__init__()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
     _table_ = "artist"
     id = PrimaryKey(int, auto=True)
@@ -74,8 +74,8 @@ class ArtistDb(db.Entity):
 
 
 class TagDb(db.Entity):
-    def __init__(self):
-        self.super().__init__()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
     _table_ = "tag"
     id = PrimaryKey(int, auto=True)
