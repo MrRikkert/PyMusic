@@ -18,8 +18,8 @@ mbipc = musicbeeipc.MusicBeeIPC()
 tag_types = {
     "genre": musicbeeipc.MBMD_Genre,
     "vocals?": musicbeeipc.MBMD_Custom1,
-    "subseries": musicbeeipc.MBMD_Custom2,
-    "series": musicbeeipc.MBMD_Custom3,
+    "series": musicbeeipc.MBMD_Custom2,
+    "franchise": musicbeeipc.MBMD_Custom3,
     "op_ed": musicbeeipc.MBMD_Custom4,
     "season": musicbeeipc.MBMD_Custom5,
     "alternate": musicbeeipc.MBMD_Custom6,
