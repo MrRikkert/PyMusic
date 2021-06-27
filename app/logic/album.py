@@ -19,6 +19,7 @@ def get_by_name(name: str) -> AlbumDb:
     - `AlbumDb`:
         - The album. Returns `None` when no album is found
     """
+    name = clean_album(name)
     album = orm.select(a for a in AlbumDb if a.name == name.lower())
     return album.first()
 
@@ -84,9 +85,10 @@ def add(name: str, artist: str = None, return_existing: bool = False) -> AlbumDb
 
         return existing
     album_hash = md5(name.lower().encode("utf-8")).hexdigest()
+    name = clean_album(name)
     return AlbumDb(
         name=name.lower(),
-        name_alt=clean_album(name),
+        name_alt=name,
         album_artist=artist_logic.add(artist, return_existing=True)
         if artist is not None
         else None,
