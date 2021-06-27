@@ -1,11 +1,12 @@
+import os
+
 import pytest
+from app.db.models import AlbumDb, ArtistDb
+from app.exceptions import IntegrityError
+from app.logic import album as album_logic
 from pony import orm
 from pony.orm import db_session
-
-from app.logic import album as album_logic
-from app.db.models import AlbumDb, ArtistDb
-from tests.utils import reset_db, mixer
-from app.exceptions import IntegrityError
+from tests.utils import mixer, reset_db
 
 
 def setup_function():
@@ -132,10 +133,10 @@ def test_add_album_existing_with_new_album_artist():
 @db_session
 def test_add_album_correct_hash():
     album = album_logic.add(name="album disc 1")
-    assert album.art == "87\\8777347537b94cf98aa05b2310877a81.png"
+    assert album.art == os.path.join("87", "8777347537b94cf98aa05b2310877a81.png")
 
     album = album_logic.add(name="Album2")
-    assert album.art == "f8\\f8d7bd28b526864cf358256ca7b041c6.png"
+    assert album.art == os.path.join("f8", "f8d7bd28b526864cf358256ca7b041c6.png")
 
     album = album_logic.add(name="Test Album (Disc 1)")
-    assert album.art == "64\\6403be228e301a5fa973392207537642.png"
+    assert album.art == os.path.join("64", "6403be228e301a5fa973392207537642.png")
