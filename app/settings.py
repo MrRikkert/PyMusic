@@ -90,3 +90,5 @@ if os.getenv("DB_PROVIDER"):
             }
 if os.getenv("ALBUM_ART_PATH"):
     ALBUM_ART_PATH = os.getenv("ALBUM_ART_PATH")
+if os.getenv("IMG_URL"):
+    IMG_URL = os.getenv("IMG_URL")
