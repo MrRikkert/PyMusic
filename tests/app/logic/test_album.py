@@ -85,7 +85,7 @@ def test_add_album_correct_cased_alt_name():
     album = album_logic.add(name="Album disc 1")
     assert orm.count(a for a in AlbumDb) == 1
     assert album.name_alt == "Album"
-    assert album.name == "album disc 1"
+    assert album.name == "album"
 
 
 @db_session
