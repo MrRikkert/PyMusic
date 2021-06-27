@@ -12,17 +12,17 @@ min_date = (datetime.now() - timedelta(days=7)).strftime("%Y-%m-%d")
 
 min_date = dbc.Row(
     [
-        dbc.Col(html.Div("Min date:"), className="navbar-text"),
+        dbc.Col("Min date:", className="navbar-text"),
         dbc.Col(dbc.Input(type="date", id="min-date", value=min_date)),
     ],
     no_gutters=True,
     className="ml-auto flex-nowrap mt-3 mt-md-0 date-input",
-    align="right",
+    align="center",
 )
 
 max_date = dbc.Row(
     [
-        dbc.Col(html.Div("Max date:"), className="navbar-text"),
+        dbc.Col("Max date:", className="navbar-text"),
         dbc.Col(dbc.Input(type="date", id="max-date", value=max_date)),
     ],
     no_gutters=True,
