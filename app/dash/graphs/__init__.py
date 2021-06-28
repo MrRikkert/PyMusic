@@ -13,7 +13,12 @@ from pony.orm import db_session
 
 def get_default_graph(id: str):
     fig = px.bar()
-    set_theme(fig)
+    fig.update_layout(
+        margin=dict(l=10, r=10, b=10, t=40),
+        plot_bgcolor="rgba(0, 0, 0, 0)",
+        paper_bgcolor="rgba(0, 0, 0, 0)",
+        template="plotly_dark",
+    )
     return dcc.Graph(figure=fig, id=id)
 
 
@@ -22,6 +27,7 @@ def get_default_graph(id: str):
     Input("min-date", "value"),
     Input("max-date", "value"),
 )
+@set_theme
 @convert_dates
 @db_session
 def top_albums(min_date, max_date):
@@ -60,7 +66,6 @@ def top_albums(min_date, max_date):
         uniformtext_minsize=13,
         uniformtext_mode="show",
     )
-    set_theme(fig)
     fig.update_traces(textposition="inside", insidetextanchor="start")
     fig.update_yaxes(showticklabels=False)
 
