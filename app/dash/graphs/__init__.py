@@ -1,6 +1,7 @@
 from datetime import datetime
 from inspect import getfullargspec
 
+import dash_core_components as dcc
 import pandas as pd
 import plotly.express as px
 from app.dash.app import app
@@ -40,6 +41,12 @@ def set_theme(fig):
         paper_bgcolor="rgba(0, 0, 0, 0)",
         template="plotly_dark",
     )
+
+
+def get_default_graph(id: str):
+    fig = px.bar()
+    set_theme(fig)
+    return dcc.Graph(figure=fig, id=id)
 
 
 @app.callback(
