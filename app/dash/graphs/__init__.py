@@ -33,6 +33,15 @@ def add_date_clause(sql: str, min_date: datetime, max_date: datetime) -> str:
     return sql.replace(":date:", "")
 
 
+def set_theme(fig):
+    fig.update_layout(
+        margin=dict(l=10, r=10, b=10, t=40),
+        plot_bgcolor="rgba(0, 0, 0, 0)",
+        paper_bgcolor="rgba(0, 0, 0, 0)",
+        template="plotly_dark",
+    )
+
+
 @app.callback(
     Output("top-albums", "figure"),
     Input("min-date", "value"),
@@ -85,11 +94,9 @@ def top_albums(min_date, max_date):
         xaxis_title=f"Total Playtime ({scale})",
         uniformtext_minsize=13,
         uniformtext_mode="show",
-        margin=dict(l=10, r=10, b=10, t=40),
     )
-    fig.update_traces(
-        textposition="inside", insidetextanchor="start", textfont_color="#001"
-    )
+    set_theme(fig)
+    fig.update_traces(textposition="inside", insidetextanchor="start")
     fig.update_yaxes(showticklabels=False)
 
     return fig
