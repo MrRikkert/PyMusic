@@ -17,11 +17,35 @@
     h1 {
         font-size: 1.2rem;
         margin-bottom: 0px;
-        color: rgb(170, 170, 170)
+        color: rgb(170, 170, 170);
     }
 
     span {
         font-size: 1.4rem;
         font-weight: bold;
+    }
+}
+
+.top-image {
+    .title {
+        position: absolute;
+        padding: 5px 10px;
+        background-color: black;
+        border-radius: 10px;
+        margin: 5px;
+        background-color: rgba($color: white, $alpha: 0.4);
+        color: black;
+        font-weight: bold;
+    }
+
+    .name {
+        position: absolute;
+        bottom: 0px;
+        padding: 5px 10px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        background-color: rgba($color: white, $alpha: 0.4);
+        color: black;
+        width: 100%;
     }
 }
