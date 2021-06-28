@@ -17,10 +17,10 @@ app.layout = html.Div(
             [
                 dbc.Row(
                     [
-                        dbc.Col(html.Div(id="general-stats"), width=3),
-                        dbc.Col(html.Div(id="top-series"), width=3),
-                        dbc.Col(html.Div(id="top-album"), width=3),
-                        dbc.Col(html.Div(id="top-artist"), width=3),
+                        dbc.Col(html.Div(id="general-stats"), md=12, lg=3),
+                        dbc.Col(html.Div(id="top-series"), md=12, lg=3),
+                        dbc.Col(html.Div(id="top-album"), md=12, lg=3),
+                        dbc.Col(html.Div(id="top-artist"), md=12, lg=3),
                     ]
                 )
             ],
