@@ -13,7 +13,9 @@ from app.db.base import init_db
 app.layout = html.Div(
     [
         navbar,
-        dbc.Container([dbc.Row([dbc.Col(html.Div(id="general-stats"))])], fluid=True),
+        dbc.Container(
+            [dbc.Row([dbc.Col(html.Div(id="general-stats"), width=3)])], fluid=True
+        ),
     ]
 )
 

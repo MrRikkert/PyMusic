@@ -31,5 +31,7 @@ def get_stats(min_date, max_date):
                 html.H1("Total playtime", className="card-title"),
                 html.Span("18 hours, 5 minutes"),
             ]
-        )
+        ),
+        color="light",
+        outline=True,
     )
