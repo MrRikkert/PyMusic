@@ -1,9 +1,8 @@
-.date-input .navbar-text {
-    margin-right: 5px;
-}
-
 .date-input {
     margin-left: 10px;
+    .navbar-text {
+        margin-right: 5px;
+    }
 }
 
 .dash-error-menu {
@@ -12,11 +11,6 @@
 
 .navbar {
     margin-bottom: 15px;
-}
-
-#general-stats h1 {
-    font-size: 1.3rem;
-    font-weight: bold;
 }
 
 #general-stats h1 {

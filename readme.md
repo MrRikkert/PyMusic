@@ -41,6 +41,10 @@ Linting is done with flake8 using these paramaters:
 
 These paramaters are defined in `tox.ini` so you only need to run the bare `flake8` command
 
-## Formatter
+### Formatter
 
 Formatting is done using `black` with default settings
+
+### SASS
+
+For automatic SASS compilation I use the [compile hero](https://github.com/Wscats/compile-hero/blob/master/README.md) VS Code extension
