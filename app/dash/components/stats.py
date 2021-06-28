@@ -1,14 +1,7 @@
-from datetime import datetime
-from inspect import getfullargspec
-
 import dash_bootstrap_components as dbc
-import dash_core_components as dcc
 import dash_html_components as html
-import pandas as pd
-import plotly.express as px
 from app.dash.app import app
-from app.dash.utils import add_date_clause, convert_dates, set_length_scale, set_theme
-from app.db.base import db
+from app.dash.utils import convert_dates
 from dash.dependencies import Input, Output
 from pony.orm import db_session
 
