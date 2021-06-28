@@ -42,10 +42,17 @@
         position: absolute;
         bottom: 0px;
         padding: 5px 10px;
-        font-size: 1.5rem;
+        font-size: 1.1rem;
         font-weight: bold;
         background-color: rgba($color: white, $alpha: 0.4);
         color: black;
         width: 100%;
+
+        .artist {
+            font-size: 1rem;
+            font-weight: unset;
+            color: #111;
+            font-weight: 400;
+        }
     }
 }

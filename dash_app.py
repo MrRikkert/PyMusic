@@ -19,10 +19,12 @@ app.layout = html.Div(
                     [
                         dbc.Col(html.Div(id="general-stats"), width=3),
                         dbc.Col(html.Div(id="top-series"), width=3),
+                        dbc.Col(html.Div(id="top-album"), width=3),
+                        dbc.Col(html.Div(id="top-artist"), width=3),
                     ]
                 )
             ],
-            fluid=True,
+            fluid=False,
         ),
     ]
 )
