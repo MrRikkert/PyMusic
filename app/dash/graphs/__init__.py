@@ -60,6 +60,17 @@ def top_albums(min_date, max_date):
     )
     df = df.rename(columns={df.columns[0]: "Album", df.columns[1]: "Hours"})
     df = df.sort_values("Hours", ascending=True)
+    if df.iloc[-1].Hours > 172_800:
+        df.Hours = df.Hours / (24 * 60 * 60)
+        scale = "days"
+    elif df.iloc[-1].Hours > 7200:
+        df.Hours = df.Hours / (60 * 60)
+        scale = "hours"
+    elif df.iloc[-1].Hours > 120:
+        df.Hours = df.Hours / 60
+        scale = "minutes"
+    else:
+        scale = "seconds"
 
     fig = px.bar(
         df,
@@ -70,8 +81,15 @@ def top_albums(min_date, max_date):
         hover_data=["Hours"],
         text="Album",
     )
-    fig.update_layout(xaxis_title="Total Playtime (s)")
-    fig.update_traces(textposition="inside", insidetextanchor="start")
+    fig.update_layout(
+        xaxis_title=f"Total Playtime ({scale})",
+        uniformtext_minsize=13,
+        uniformtext_mode="show",
+        margin=dict(l=10, r=10, b=10, t=40),
+    )
+    fig.update_traces(
+        textposition="inside", insidetextanchor="start", textfont_color="#001"
+    )
     fig.update_yaxes(showticklabels=False)
 
     return fig
