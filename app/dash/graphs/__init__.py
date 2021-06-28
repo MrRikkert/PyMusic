@@ -5,7 +5,7 @@ import dash_core_components as dcc
 import pandas as pd
 import plotly.express as px
 from app.dash.app import app
-from app.dash.utils import add_date_clause, convert_dates, set_theme
+from app.dash.utils import add_date_clause, convert_dates, set_theme, set_length_scale
 from app.db.base import db
 from dash.dependencies import Input, Output
 from pony.orm import db_session
@@ -44,17 +44,7 @@ def top_albums(min_date, max_date):
     )
     df = df.rename(columns={df.columns[0]: "Album", df.columns[1]: "Hours"})
     df = df.sort_values("Hours", ascending=True)
-    if df.iloc[-1].Hours > 172_800:
-        df.Hours = df.Hours / (24 * 60 * 60)
-        scale = "days"
-    elif df.iloc[-1].Hours > 7200:
-        df.Hours = df.Hours / (60 * 60)
-        scale = "hours"
-    elif df.iloc[-1].Hours > 120:
-        df.Hours = df.Hours / 60
-        scale = "minutes"
-    else:
-        scale = "seconds"
+    df, scale = set_length_scale(df, "Hours")
 
     fig = px.bar(
         df,
