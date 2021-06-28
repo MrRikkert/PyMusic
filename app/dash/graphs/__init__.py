@@ -22,14 +22,14 @@ def get_default_graph(id: str):
     return dcc.Graph(figure=fig, id=id)
 
 
-@app.callback(
-    Output("top-albums", "figure"),
-    Input("min-date", "value"),
-    Input("max-date", "value"),
-)
-@set_theme
-@convert_dates
-@db_session
+# @app.callback(
+#     Output("top-albums", "figure"),
+#     Input("min-date", "value"),
+#     Input("max-date", "value"),
+# )
+# @set_theme
+# @convert_dates
+# @db_session
 def top_albums(min_date, max_date):
     sql = """
     SELECT a.name_alt, SUM(s.length) AS length, a.art
