@@ -315,3 +315,42 @@ def test_song_exists_existing():
 def test_song_exists_non_existing():
     exists = song_logic.exists(title="title", artists=["artist"])
     assert not exists
+
+
+@db_session
+def test_add_songs_same_title_different_artist():
+    db_song_1 = song_logic.add(
+        SongIn(
+            title="Close Your Eyes",
+            album="Super Eurobeat Vol. 75",
+            length=180,
+            artist="Sonya",
+            tags=[TagIn(tag_type="type", value="Eurobeat")],
+        ),
+        return_existing=True,
+        update_existing=True,
+    )
+    db_song_2 = song_logic.add(
+        SongIn(
+            title="close your eyes",
+            album="Guilty Crown Original Soundtrack",
+            length=180,
+            artist="Honda Michiyo",
+            tags=[TagIn(tag_type="type", value="Anime")],
+        ),
+        return_existing=True,
+        update_existing=True,
+    )
+    db_song_3 = song_logic.add(
+        SongIn(
+            title="Close Your Eyes",
+            album="Super Eurobeat Vol. 75",
+            length=180,
+            artist="Sonya",
+            tags=[TagIn(tag_type="type", value="Eurobeat")],
+        ),
+        return_existing=True,
+        update_existing=True,
+    )
+    assert db_song_1 == db_song_3
+    assert not db_song_1 == db_song_2
