@@ -23,7 +23,7 @@ def get_default_graph(id: str):
 
 
 # @app.callback(
-#     Output("top-albums", "figure"),
+#     Output("series-sunburst", "figure"),
 #     Input("min-date", "value"),
 #     Input("max-date", "value"),
 # )
@@ -43,7 +43,7 @@ def top_albums(min_date, max_date):
     ORDER BY length DESC
     LIMIT 10
     """
-    sql = add_date_clause(sql, min_date, max_date)
+    sql = add_date_clause(sql, min_date, max_date, where=False)
 
     df = pd.read_sql_query(
         sql, db.get_connection(), params={"min_date": min_date, "max_date": max_date}

@@ -32,11 +32,16 @@ def set_theme(func):
     return wrap
 
 
-def add_date_clause(sql: str, min_date: datetime, max_date: datetime) -> str:
+def add_date_clause(
+    sql: str, min_date: datetime, max_date: datetime, where=True
+) -> str:
     if min_date and max_date:
-        return sql.replace(
-            ":date:", "AND sc.date > %(min_date)s AND sc.date <= %(max_date)s"
-        )
+        condition = "sc.date > %(min_date)s AND sc.date <= %(max_date)s"
+        if where:
+            condition = "WHERE " + condition
+        else:
+            condition = "AND " + condition
+        return sql.replace(":date:", condition)
     return sql.replace(":date:", "")
 
 
