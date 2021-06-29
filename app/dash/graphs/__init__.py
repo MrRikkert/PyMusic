@@ -32,14 +32,14 @@ def get_default_graph(id: str):
 @db_session
 def top_albums(min_date, max_date):
     sql = """
-    SELECT a.name_alt, SUM(s.length) AS length, a.art
+    SELECT a.name_alt, SUM(s.length) AS length
     FROM scrobble sc
     INNER JOIN album a
         ON sc.album = a.id
     INNER JOIN song s
         ON s.id = sc.song
     WHERE length IS NOT NULL :date:
-    GROUP BY a.name_alt, sc.album, a.art
+    GROUP BY a.name_alt, sc.album
     ORDER BY length DESC
     LIMIT 5
     """
