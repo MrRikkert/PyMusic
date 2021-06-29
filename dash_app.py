@@ -22,7 +22,20 @@ app.layout = html.Div(
                         dbc.Col(html.Div(id="top-album"), md=12, lg=3),
                         dbc.Col(html.Div(id="top-artist"), md=12, lg=3),
                     ]
-                )
+                ),
+                dbc.Row(
+                    [
+                        dbc.Col(
+                            dbc.Card(
+                                dbc.CardBody(get_default_graph(id="top-albums")),
+                                color="light",
+                                outline=True,
+                            ),
+                            md=12,
+                            lg=9,
+                        )
+                    ]
+                ),
             ],
             fluid=False,
         ),

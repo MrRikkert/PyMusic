@@ -22,14 +22,14 @@ def get_default_graph(id: str):
     return dcc.Graph(figure=fig, id=id)
 
 
-# @app.callback(
-#     Output("series-sunburst", "figure"),
-#     Input("min-date", "value"),
-#     Input("max-date", "value"),
-# )
-# @set_theme
-# @convert_dates
-# @db_session
+@app.callback(
+    Output("top-albums", "figure"),
+    Input("min-date", "value"),
+    Input("max-date", "value"),
+)
+@set_theme
+@convert_dates
+@db_session
 def top_albums(min_date, max_date):
     sql = """
     SELECT a.name_alt, SUM(s.length) AS length, a.art
@@ -41,7 +41,7 @@ def top_albums(min_date, max_date):
     WHERE length IS NOT NULL :date:
     GROUP BY a.name_alt, sc.album, a.art
     ORDER BY length DESC
-    LIMIT 10
+    LIMIT 5
     """
     sql = add_date_clause(sql, min_date, max_date, where=False)
 
@@ -60,13 +60,15 @@ def top_albums(min_date, max_date):
         title="Top Albums",
         hover_data=["Hours"],
         text="Album",
+        height=200,
     )
     fig.update_layout(
         xaxis_title=f"Total Playtime ({scale})",
-        uniformtext_minsize=13,
+        uniformtext_minsize=8,
         uniformtext_mode="show",
     )
     fig.update_traces(textposition="inside", insidetextanchor="start")
+    fig.update_xaxes(autorange="reversed")
     fig.update_yaxes(showticklabels=False)
 
     return fig
