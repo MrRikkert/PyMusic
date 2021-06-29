@@ -99,7 +99,7 @@ def get(title: str, artists: List[str]) -> SongDb:
     query = orm.select(s for s in SongDb if s.title == title.lower())
     for artist in artists:
         _artist = clean_artist(artist).lower()
-        query.filter(
+        query = query.filter(
             lambda s: _artist in s.artists.name
             or reverse_artist(_artist) in s.artists.name
         )
