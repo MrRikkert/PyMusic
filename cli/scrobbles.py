@@ -25,9 +25,9 @@ def export_scrobbles(path: str):
         for _scrobble in scrobbles:
             date = int(pytz.utc.localize(_scrobble.date).timestamp())
             flat_scrobble = {
-                "title": _scrobble.title,
-                "artist": _scrobble.artist,
-                "album": _scrobble.album,
+                "title": _scrobble.title_alt,
+                "artist": _scrobble.artist_alt,
+                "album": _scrobble.album_name_alt,
                 "date": date,
             }
             writer.writerow(flat_scrobble)

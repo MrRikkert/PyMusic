@@ -42,9 +42,12 @@ def scrobble(scrobble: ScrobbleIn) -> ScrobbleDb:
     return ScrobbleDb(
         song=song,
         album=album,
-        title=scrobble.title,
-        artist=scrobble.artist,
-        album_name=scrobble.album,
+        title=scrobble.title.lower(),
+        title_alt=scrobble.title,
+        artist=scrobble.artist.lower(),
+        artist_alt=scrobble.artist,
+        album_name=scrobble.album.lower(),
+        album_name_alt=scrobble.album,
         date=scrobble.date,
     )
 
@@ -89,9 +92,9 @@ def sync_lastfm_scrobbles(username: str):
             scrobble(
                 scrobble=ScrobbleIn(
                     date=timestamp,
-                    artist=_scrobble.track.artist.name.lower(),
-                    album=_scrobble.album.lower(),
-                    title=_scrobble.track.title.lower(),
+                    artist=_scrobble.track.artist.name,
+                    album=_scrobble.album,
+                    title=_scrobble.track.title,
                 )
             )
         except Exception as e:

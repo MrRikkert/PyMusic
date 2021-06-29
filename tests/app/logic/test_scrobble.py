@@ -34,6 +34,27 @@ def test_scrobble_without_date():
 
 
 @db_session
+def test_scrobble_names_correct():
+    scrobble = scrobble_logic.scrobble(
+        ScrobbleIn(
+            title="Title",
+            length=1,
+            album="Album",
+            artist="Artist1",
+            tags=[TagIn(tag_type="type", value="tag")],
+        )
+    )
+    assert orm.count(s for s in SongDb) == 1
+    assert orm.count(s for s in ScrobbleDb) == 1
+    assert scrobble.title == "title"
+    assert scrobble.title_alt == "Title"
+    assert scrobble.artist == "artist1"
+    assert scrobble.artist_alt == "Artist1"
+    assert scrobble.album_name == "album"
+    assert scrobble.album_name_alt == "Album"
+
+
+@db_session
 def test_scrobble_with_date():
     date = datetime.now()
     scrobble = scrobble_logic.scrobble(
