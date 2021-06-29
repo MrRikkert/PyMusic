@@ -14,8 +14,11 @@ class ScrobbleDb(db.Entity):
     song = Required("SongDb")
     album = Required("AlbumDb")
     title = Required(str)
+    title_alt = Required(str)
     artist = Required(str)
+    artist_alt = Required(str)
     album_name = Required(str)
+    album_name_alt = Required(str)
     date = Required(datetime, volatile=True)
     composite_index(title, artist, album_name)
 
