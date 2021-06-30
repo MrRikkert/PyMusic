@@ -23,43 +23,70 @@ def get_default_graph(id: str):
 
 
 @app.callback(
-    Output("top-albums", "figure"),
+    Output("top-mixed", "figure"),
     Input("min-date", "value"),
     Input("max-date", "value"),
 )
 @set_theme
 @convert_dates
 @db_session
-def top_albums(min_date, max_date):
+def top_mixed(min_date, max_date):
     sql = """
-    SELECT a.name_alt, SUM(s.length) AS length
-    FROM scrobble sc
-    INNER JOIN album a
-        ON sc.album = a.id
-    INNER JOIN song s
-        ON s.id = sc.song
-    WHERE length IS NOT NULL :date:
-    GROUP BY a.name_alt, sc.album
-    ORDER BY length DESC
+    SELECT
+        tag_type,
+        CASE
+            WHEN franchise IS NOT NULL THEN franchise
+            WHEN sort_artist IS NOT NULL THEN sort_artist
+            WHEN "type" IS NOT NULL THEN "type"
+        END AS "name",
+        SUM("length") AS plays
+    FROM (
+        SELECT
+            sc.id,
+            s.length,
+            MAX(CASE WHEN t.tag_type = 'franchise' THEN t.value END) AS "franchise",
+            MAX(CASE WHEN t.tag_type = 'sort_artist' THEN t.value END) AS "sort_artist",
+            MAX(CASE WHEN t.tag_type = 'type' THEN t.value END) AS "type",
+            MIN(
+                CASE
+                    WHEN t.tag_type = 'franchise' THEN 'Franchise'
+                    WHEN t.tag_type = 'sort_artist' THEN 'Artist'
+                    WHEN t.tag_type = 'type' THEN 'Type'
+                END
+            ) AS tag_type
+        FROM scrobble sc
+        INNER JOIN song s
+            ON s.id = sc.song
+        INNER JOIN songdb_tagdb st
+            ON s.id = st.songdb
+        INNER JOIN tag t
+            ON t.id = st.tagdb
+        :date:
+        GROUP BY sc.id, s.length
+    ) x
+    GROUP BY "name", tag_type
+    ORDER BY plays DESC
     LIMIT 5
     """
-    sql = add_date_clause(sql, min_date, max_date, where=False)
+    sql = add_date_clause(sql, min_date, max_date, where=True)
 
     df = pd.read_sql_query(
         sql, db.get_connection(), params={"min_date": min_date, "max_date": max_date}
     )
-    df = df.rename(columns={df.columns[0]: "Album", df.columns[1]: "Hours"})
-    df = df.sort_values("Hours", ascending=True)
-    df, scale = set_length_scale(df, "Hours")
+    df = df.rename(
+        columns={df.columns[0]: "Type", df.columns[1]: "Name", df.columns[2]: "Time"}
+    )
+    df = df.sort_values("Time", ascending=True)
+    df, scale = set_length_scale(df, "Time")
 
     fig = px.bar(
         df,
-        x="Hours",
-        y="Album",
+        x="Time",
+        y="Name",
         orientation="h",
-        title="Top Albums",
-        hover_data=["Hours"],
-        text="Album",
+        title="Top Series/Artist/Type",
+        hover_data=["Time"],
+        text="Name",
         height=200,
     )
     fig.update_layout(

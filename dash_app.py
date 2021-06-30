@@ -27,7 +27,7 @@ app.layout = html.Div(
                     [
                         dbc.Col(
                             dbc.Card(
-                                dbc.CardBody(get_default_graph(id="top-albums")),
+                                dbc.CardBody(get_default_graph(id="top-mixed")),
                                 color="light",
                                 outline=True,
                             ),
@@ -45,4 +45,3 @@ app.layout = html.Div(
 if __name__ == "__main__":
     init_db()
     app.run_server(debug=True)
-
