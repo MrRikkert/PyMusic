@@ -1,6 +1,9 @@
 from datetime import datetime
 from inspect import getfullargspec
 
+import dash_core_components as dcc
+import plotly.express as px
+
 
 def convert_dates(func):
     argspec = getfullargspec(func)
@@ -58,3 +61,14 @@ def set_length_scale(df, column):
     else:
         scale = "seconds"
     return (df, scale)
+
+
+def get_default_graph(id: str):
+    fig = px.bar()
+    fig.update_layout(
+        margin=dict(l=10, r=10, b=10, t=40),
+        plot_bgcolor="rgba(0, 0, 0, 0)",
+        paper_bgcolor="rgba(0, 0, 0, 0)",
+        template="plotly_dark",
+    )
+    return dcc.Graph(figure=fig, id=id)

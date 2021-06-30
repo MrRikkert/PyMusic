@@ -1,25 +1,25 @@
-from datetime import datetime
-from inspect import getfullargspec
-
-import dash_core_components as dcc
+import dash_bootstrap_components as dbc
 import pandas as pd
 import plotly.express as px
 from app.dash.app import app
-from app.dash.utils import add_date_clause, convert_dates, set_theme, set_length_scale
+from app.dash.utils import (
+    add_date_clause,
+    convert_dates,
+    get_default_graph,
+    set_length_scale,
+    set_theme,
+)
 from app.db.base import db
 from dash.dependencies import Input, Output
 from pony.orm import db_session
 
 
-def get_default_graph(id: str):
-    fig = px.bar()
-    fig.update_layout(
-        margin=dict(l=10, r=10, b=10, t=40),
-        plot_bgcolor="rgba(0, 0, 0, 0)",
-        paper_bgcolor="rgba(0, 0, 0, 0)",
-        template="plotly_dark",
+def get_layout():
+    return (
+        dbc.Card(
+            dbc.CardBody(get_default_graph(id="top-mixed")), color="light", outline=True
+        ),
     )
-    return dcc.Graph(figure=fig, id=id)
 
 
 @app.callback(
