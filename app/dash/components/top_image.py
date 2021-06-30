@@ -56,7 +56,50 @@ def get_layout(_type):
 @convert_dates
 @db_session
 def _top_image_series_stats(min_date, max_date):
-    return ("Attack on Titan", "/assets/img/placeholder_album_art.png")
+    sql = """
+    SELECT
+        t.value AS series,
+        SUM(s.length) AS "length",
+        (
+            SELECT a.art
+            FROM album a
+            INNER JOIN albumdb_songdb a_s
+                ON a_s.albumdb = a.id
+            INNER JOIN song s
+                ON a_s.songdb = s.id
+            INNER JOIN songdb_tagdb s_t
+                ON s_t.songdb = s.id
+            INNER JOIN tag t2
+                ON t2.id = s_t.tagdb
+            INNER JOIN scrobble sc
+                ON sc.song = s.id
+            WHERE t2.value = t.value
+                :date:
+            GROUP BY a.art
+            ORDER BY SUM(s.length) DESC
+            LIMIT 1
+        )
+    FROM scrobble sc
+    INNER JOIN song s
+        ON s.id = sc.song
+    INNER JOIN songdb_tagdb s_a
+        ON s_a.songdb = s.id
+    INNER JOIN tag t
+        ON s_a.tagdb = t.id
+    WHERE "length" IS NOT NULL
+        AND t.tag_type = 'franchise'
+        AND t.value != 'Initial D'
+        :date:
+    GROUP BY t.value
+    ORDER BY "length" DESC
+    LIMIT 1
+    """
+    sql = add_date_clause(sql, min_date, max_date, where=False)
+    df = pd.read_sql_query(
+        sql, db.get_connection(), params={"min_date": min_date, "max_date": max_date}
+    ).iloc[0]
+    art = IMG_URL + df.art
+    return (df.series, art)
 
 
 @app.callback(
@@ -104,4 +147,24 @@ def _top_image_album_stats(min_date, max_date):
 @convert_dates
 @db_session
 def _top_image_artist_stats(min_date, max_date):
-    return ("Hiroyuki Sawano", "/assets/img/placeholder_album_art.png")
+    sql = """
+    SELECT
+        a.name_alt AS "artist",
+        SUM(s.length) AS "length"
+    FROM scrobble sc
+    INNER JOIN song s
+        ON s.id = sc.song
+    INNER JOIN artistdb_songdb a_s
+        ON a_s.songdb = s.id
+    INNER JOIN artist a
+        ON a_s.artistdb = a.id
+    WHERE "length" IS NOT NULL :date:
+    GROUP BY a.name_alt
+    ORDER BY "length" DESC
+    LIMIT 1
+    """
+    sql = add_date_clause(sql, min_date, max_date, where=False)
+    df = pd.read_sql_query(
+        sql, db.get_connection(), params={"min_date": min_date, "max_date": max_date}
+    ).iloc[0]
+    return (df.artist, "/assets/img/placeholder_album_art.png")
