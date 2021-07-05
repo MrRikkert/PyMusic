@@ -144,11 +144,11 @@ def top_artist(min_date, max_date):
     df = pd.read_sql_query(
         sql, db.get_connection(), params={"min_date": min_date, "max_date": max_date}
     )
-    df = df.rename(columns={df.columns[0]: "Name", df.columns[1]: "Time"})
+    df = df.rename(columns={df.columns[0]: "Artist", df.columns[1]: "Time"})
     df = df.sort_values("Time", ascending=True)
     df, scale = set_length_scale(df, "Time")
 
-    return _get_graph(df, "Time", "Name", "Top artists", scale)
+    return _get_graph(df, "Time", "Artist", "Top artists", scale)
 
 
 @app.callback(
