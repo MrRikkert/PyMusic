@@ -61,7 +61,7 @@ def _get_graph(df, x, y, title, scale):
 @set_theme
 @convert_dates
 @db_session
-def top_mixed(min_date, max_date):
+def _top_mixed(min_date, max_date):
     sql = """
     SELECT
         tag_type,
@@ -121,7 +121,7 @@ def top_mixed(min_date, max_date):
 @set_theme
 @convert_dates
 @db_session
-def top_artist(min_date, max_date):
+def _top_artist(min_date, max_date):
     sql = """
     SELECT
         a.name_alt,
@@ -159,7 +159,7 @@ def top_artist(min_date, max_date):
 @set_theme
 @convert_dates
 @db_session
-def top_album(min_date, max_date):
+def _top_album(min_date, max_date):
     sql = """
     SELECT
         a.name_alt,
