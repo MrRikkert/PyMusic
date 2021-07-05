@@ -61,7 +61,7 @@ def get_layout():
         ],
         color="dark",
         dark=True,
-        fixed="top",
+        sticky="top",
     )
     return navbar
 
