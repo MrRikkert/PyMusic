@@ -23,7 +23,7 @@ def get_layout(_type):
         )
 
     if _type == "mixed":
-        return get_card("top-mixed")
+        return get_card("top-mixed-chart")
 
 
 def _get_graph(df, x, y, title, scale):
@@ -50,7 +50,7 @@ def _get_graph(df, x, y, title, scale):
 
 
 @app.callback(
-    Output("top-mixed", "figure"),
+    Output("top-mixed-chart", "figure"),
     Input("min-date", "value"),
     Input("max-date", "value"),
 )
