@@ -23,6 +23,7 @@ app.layout = html.Div(
                     ]
                 ),
                 dbc.Row([dbc.Col(top_chart.get_layout("mixed"), md=12, lg=9)]),
+                dbc.Row([dbc.Col(top_chart.get_layout("artist"), md=12, lg=9)]),
             ],
             fluid=False,
         ),
