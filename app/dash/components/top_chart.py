@@ -14,12 +14,39 @@ from dash.dependencies import Input, Output
 from pony.orm import db_session
 
 
-def get_layout():
-    return (
-        dbc.Card(
-            dbc.CardBody(get_default_graph(id="top-mixed")), color="light", outline=True
-        ),
+def get_layout(_type):
+    def get_card(id):
+        return (
+            dbc.Card(
+                dbc.CardBody(get_default_graph(id=id)), color="light", outline=True
+            ),
+        )
+
+    if _type == "mixed":
+        return get_card("top-mixed")
+
+
+def _get_graph(df, x, y, title, scale):
+    fig = px.bar(
+        df,
+        x=x,
+        y=y,
+        orientation="h",
+        title=title,
+        hover_data=["Time"],
+        text="Name",
+        height=200,
     )
+    fig.update_layout(
+        xaxis_title=f"Total Playtime ({scale})",
+        uniformtext_minsize=8,
+        uniformtext_mode="show",
+    )
+    fig.update_traces(textposition="inside", insidetextanchor="start")
+    fig.update_xaxes(autorange="reversed")
+    fig.update_yaxes(showticklabels=False)
+
+    return fig
 
 
 @app.callback(
@@ -79,23 +106,4 @@ def top_mixed(min_date, max_date):
     df = df.sort_values("Time", ascending=True)
     df, scale = set_length_scale(df, "Time")
 
-    fig = px.bar(
-        df,
-        x="Time",
-        y="Name",
-        orientation="h",
-        title="Top Series/Artist/Type",
-        hover_data=["Time"],
-        text="Name",
-        height=200,
-    )
-    fig.update_layout(
-        xaxis_title=f"Total Playtime ({scale})",
-        uniformtext_minsize=8,
-        uniformtext_mode="show",
-    )
-    fig.update_traces(textposition="inside", insidetextanchor="start")
-    fig.update_xaxes(autorange="reversed")
-    fig.update_yaxes(showticklabels=False)
-
-    return fig
+    return _get_graph(df, "Time", "Name", "Top Series/Artist/Type", scale)
