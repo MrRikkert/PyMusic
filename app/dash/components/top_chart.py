@@ -26,6 +26,8 @@ def get_layout(_type):
         return get_card("top-mixed-chart")
     elif _type == "artist":
         return get_card("top-artist-chart")
+    elif _type == "album":
+        return get_card("top-album-chart")
 
 
 def _get_graph(df, x, y, title, scale):
@@ -36,7 +38,7 @@ def _get_graph(df, x, y, title, scale):
         orientation="h",
         title=title,
         hover_data=["Time"],
-        text="Name",
+        text=y,
         height=200,
     )
     fig.update_layout(
@@ -147,3 +149,41 @@ def top_artist(min_date, max_date):
     df, scale = set_length_scale(df, "Time")
 
     return _get_graph(df, "Time", "Name", "Top artists", scale)
+
+
+@app.callback(
+    Output("top-album-chart", "figure"),
+    Input("min-date", "value"),
+    Input("max-date", "value"),
+)
+@set_theme
+@convert_dates
+@db_session
+def top_album(min_date, max_date):
+    sql = """
+    SELECT
+        a.name_alt,
+        SUM(s.length) AS "length"
+    FROM scrobble sc
+    INNER JOIN song s
+        ON sc.song = s.id
+    INNER JOIN albumdb_songdb a_s
+        ON a_s.songdb = s.id
+    INNER JOIN album a
+        ON a_s.albumdb = a.id
+    WHERE "length" IS NOT NULL
+        :date:
+    GROUP BY a.name_alt
+    ORDER BY "length" desc
+    LIMIT 5
+    """
+    sql = add_date_clause(sql, min_date, max_date, where=False)
+
+    df = pd.read_sql_query(
+        sql, db.get_connection(), params={"min_date": min_date, "max_date": max_date}
+    )
+    df = df.rename(columns={df.columns[0]: "Album", df.columns[1]: "Time"})
+    df = df.sort_values("Time", ascending=True)
+    df, scale = set_length_scale(df, "Time")
+
+    return _get_graph(df, "Time", "Album", "Top albums", scale)
