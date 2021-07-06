@@ -17,19 +17,25 @@ app.layout = html.Div(
                 dbc.Row([dbc.Col(stats.get_layout(), md=12, lg=3)]),
                 dbc.Row(
                     [
-                        dbc.Col(top_chart.get_layout("mixed"), md=12, lg=9),
+                        dbc.Col(
+                            top_chart.get_layout("mixed", reverse=True), md=12, lg=9
+                        ),
                         dbc.Col(top_image.get_layout("series"), md=12, lg=3),
                     ]
                 ),
                 dbc.Row(
                     [
                         dbc.Col(top_image.get_layout("artist"), md=12, lg=3),
-                        dbc.Col(top_chart.get_layout("artist"), md=12, lg=9),
+                        dbc.Col(
+                            top_chart.get_layout("artist", reverse=False), md=12, lg=9
+                        ),
                     ]
                 ),
                 dbc.Row(
                     [
-                        dbc.Col(top_chart.get_layout("album"), md=12, lg=9),
+                        dbc.Col(
+                            top_chart.get_layout("album", reverse=True), md=12, lg=9
+                        ),
                         dbc.Col(top_image.get_layout("album"), md=12, lg=3),
                     ]
                 ),

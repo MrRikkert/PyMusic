@@ -12,25 +12,32 @@ from app.dash.utils import (
 from app.db.base import db
 from dash.dependencies import Input, Output
 from pony.orm import db_session
+import dash_core_components as dcc
 
 
-def get_layout(_type):
-    def get_card(id):
+def get_layout(_type, reverse=False):
+    def get_card(id, className=""):
         return (
             dbc.Card(
-                dbc.CardBody(get_default_graph(id=id)), color="light", outline=True
+                dbc.CardBody(get_default_graph(id=id, className=className)),
+                color="light",
+                outline=True,
             ),
         )
 
     if _type == "mixed":
-        return get_card("top-mixed-chart")
+        _id = "top-mixed-chart"
     elif _type == "artist":
-        return get_card("top-artist-chart")
+        _id = "top-artist-chart"
     elif _type == "album":
-        return get_card("top-album-chart")
+        _id = "top-album-chart"
+
+    if reverse:
+        return get_card(_id, "reversed")
+    return get_card(_id)
 
 
-def _get_graph(df, x, y, title, scale):
+def _get_graph(df, x, y, title, scale, className=""):
     fig = px.bar(
         df,
         x=x,
@@ -47,8 +54,9 @@ def _get_graph(df, x, y, title, scale):
         uniformtext_mode="show",
     )
     fig.update_traces(textposition="inside", insidetextanchor="start")
-    fig.update_xaxes(autorange="reversed")
     fig.update_yaxes(showticklabels=False)
+    if "reversed" in className:
+        fig.update_xaxes(autorange="reversed")
 
     return fig
 
@@ -57,11 +65,12 @@ def _get_graph(df, x, y, title, scale):
     Output("top-mixed-chart", "figure"),
     Input("min-date", "value"),
     Input("max-date", "value"),
+    Input("top-mixed-chart", "className"),
 )
 @set_theme
 @convert_dates
 @db_session
-def _top_mixed(min_date, max_date):
+def _top_mixed(min_date, max_date, className):
     sql = """
     SELECT
         tag_type,
@@ -109,19 +118,19 @@ def _top_mixed(min_date, max_date):
     )
     df = df.sort_values("Time", ascending=True)
     df, scale = set_length_scale(df, "Time")
-
-    return _get_graph(df, "Time", "Name", "Top Series/Artist/Type", scale)
+    return _get_graph(df, "Time", "Name", "Top Series/Artist/Type", scale, className)
 
 
 @app.callback(
     Output("top-artist-chart", "figure"),
     Input("min-date", "value"),
     Input("max-date", "value"),
+    Input("top-artist-chart", "className"),
 )
 @set_theme
 @convert_dates
 @db_session
-def _top_artist(min_date, max_date):
+def _top_artist(min_date, max_date, className):
     sql = """
     SELECT
         a.name_alt,
@@ -148,18 +157,19 @@ def _top_artist(min_date, max_date):
     df = df.sort_values("Time", ascending=True)
     df, scale = set_length_scale(df, "Time")
 
-    return _get_graph(df, "Time", "Artist", "Top artists", scale)
+    return _get_graph(df, "Time", "Artist", "Top artists", scale, className)
 
 
 @app.callback(
     Output("top-album-chart", "figure"),
     Input("min-date", "value"),
     Input("max-date", "value"),
+    Input("top-album-chart", "className"),
 )
 @set_theme
 @convert_dates
 @db_session
-def _top_album(min_date, max_date):
+def _top_album(min_date, max_date, className):
     sql = """
     SELECT
         a.name_alt,
@@ -186,4 +196,4 @@ def _top_album(min_date, max_date):
     df = df.sort_values("Time", ascending=True)
     df, scale = set_length_scale(df, "Time")
 
-    return _get_graph(df, "Time", "Album", "Top albums", scale)
+    return _get_graph(df, "Time", "Album", "Top albums", scale, className)

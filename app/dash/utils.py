@@ -63,7 +63,7 @@ def set_length_scale(df, column):
     return (df, scale)
 
 
-def get_default_graph(id: str):
+def get_default_graph(id: str, className=""):
     fig = px.bar()
     fig.update_layout(
         margin=dict(l=10, r=10, b=10, t=40),
@@ -71,4 +71,4 @@ def get_default_graph(id: str):
         paper_bgcolor="rgba(0, 0, 0, 0)",
         template="plotly_dark",
     )
-    return dcc.Graph(figure=fig, id=id)
+    return dcc.Graph(figure=fig, id=id, className=className)
