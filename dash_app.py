@@ -11,7 +11,6 @@ from app.db.base import init_db
 app.layout = html.Div(
     [
         navbar.get_layout(),
-        # navbar,
         dbc.Container(
             [
                 dbc.Row([dbc.Col(stats.get_layout(), md=12, lg=3)]),
