@@ -1,0 +1,21 @@
+@use 'bootstrap';
+@use "functions"as *;
+@use "variables"as *;
+
+@mixin col-height() {
+    @include bootstrap.media-breakpoint-up(sm) {
+        height: $col-height-sm;
+    }
+
+    @include bootstrap.media-breakpoint-up(md) {
+        height: $col-height-md;
+    }
+
+    @include bootstrap.media-breakpoint-up(lg) {
+        height: $col-height-lg;
+    }
+
+    @include bootstrap.media-breakpoint-up(xl) {
+        height: $col-height-xl;
+    }
+}

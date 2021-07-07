@@ -1,18 +1,7 @@
-// Main bootstrap imports
-@import "./bootstrap/scss/functions";
-@import "./bootstrap/scss/mixins";
-@import "./bootstrap/darkly/variables";
-
-// Own variable overrides
-
-// optional Bootstrap components as you like
-@import "./bootstrap/scss/bootstrap";
-
-// Apply theme
-@import "./bootstrap/darkly/bootswatch";
-
-// Variables
-$col-height: 253px;
+@use 'bootstrap';
+@use "functions"as *;
+@use "mixins"as *;
+@use "variables"as *;
 
 
 .dash-error-menu {
@@ -25,6 +14,7 @@ $col-height: 253px;
 
     .date-input {
         margin-left: 10px;
+
         .navbar-text {
             margin-right: 5px;
         }
@@ -41,6 +31,7 @@ $col-height: 253px;
 .card {
     height: $col-height;
 
+    @include col-height
 }
 
 
@@ -95,7 +86,9 @@ $col-height: 253px;
 
     img {
         padding-bottom: 2px;
-        max-height: $col-height;
+        height: $col-height;
         object-fit: cover;
+
+        @include col-height
     }
 }

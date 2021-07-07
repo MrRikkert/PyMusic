@@ -1,0 +1,8 @@
+@use 'bootstrap';
+@use "functions"as *;
+
+$col-height: 250px;
+$col-height-sm: get-container-widths(sm) / 12 * 3 - bootstrap.$grid-gutter-width;
+$col-height-md: get-container-widths(md) / 12 * 3 - bootstrap.$grid-gutter-width;
+$col-height-lg: get-container-widths(lg) / 12 * 3 - bootstrap.$grid-gutter-width;
+$col-height-xl: get-container-widths(xl) / 12 * 3 - bootstrap.$grid-gutter-width;
