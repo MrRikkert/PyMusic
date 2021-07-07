@@ -3,6 +3,10 @@
 @use "variables"as *;
 
 @mixin col-height() {
+    @include bootstrap.media-breakpoint-up(xs) {
+        height: $col-height-xs;
+    }
+
     @include bootstrap.media-breakpoint-up(sm) {
         height: $col-height-sm;
     }

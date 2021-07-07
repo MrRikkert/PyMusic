@@ -28,14 +28,11 @@
     }
 }
 
+//Card specific CSS
 .card {
-    height: $col-height;
-
     @include col-height
 }
 
-
-//Card specific CSS
 .general-stats {
     h1 {
         font-size: 1.2rem;
@@ -86,7 +83,6 @@
 
     img {
         padding-bottom: 2px;
-        height: $col-height;
         object-fit: cover;
 
         @include col-height
