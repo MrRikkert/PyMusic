@@ -71,4 +71,4 @@ def get_default_graph(id: str, className=""):
         paper_bgcolor="rgba(0, 0, 0, 0)",
         template="plotly_dark",
     )
-    return dcc.Graph(figure=fig, id=id, className=className)
+    return dcc.Graph(figure=fig, id=id, className=className, style={"height": "100%"})

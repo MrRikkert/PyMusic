@@ -39,18 +39,11 @@ def get_layout(_type, reverse=False):
 
 def _get_graph(df, x, y, title, scale, className=""):
     fig = px.bar(
-        df,
-        x=x,
-        y=y,
-        orientation="h",
-        title=title,
-        hover_data=["Time"],
-        text=y,
-        height=200,
+        df, x=x, y=y, orientation="h", title=title, hover_data=["Time"], text=y
     )
     fig.update_layout(
         xaxis_title=f"Total Playtime ({scale})",
-        uniformtext_minsize=8,
+        uniformtext_minsize=10,
         uniformtext_mode="show",
     )
     fig.update_traces(textposition="inside", insidetextanchor="start")

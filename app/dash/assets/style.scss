@@ -1,24 +1,36 @@
-.date-input {
-    margin-left: 10px;
-    .navbar-text {
-        margin-right: 5px;
-    }
-}
+// Variables
+$col-height: 253px;
+
 
 .dash-error-menu {
     color: black;
 }
 
+// Navbar
 .navbar {
     margin-bottom: 15px;
+
+    .date-input {
+        margin-left: 10px;
+        .navbar-text {
+            margin-right: 5px;
+        }
+    }
 }
 
+// General layout CSS
 .container {
     [class^="col"] {
         margin-bottom: 15px;
     }
 }
 
+.card {
+    max-height: $col-height;
+}
+
+
+//Card specific CSS
 .general-stats {
     h1 {
         font-size: 1.2rem;
@@ -60,5 +72,11 @@
             color: #111;
             font-weight: 400;
         }
+    }
+
+    img {
+        padding-bottom: 2px;
+        max-height: $col-height;
+        object-fit: cover;
     }
 }
