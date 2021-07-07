@@ -43,7 +43,7 @@ def _get_graph(df, x, y, title, scale, className=""):
     )
     fig.update_layout(
         xaxis_title=f"Total Playtime ({scale})",
-        uniformtext_minsize=10,
+        uniformtext_minsize=13,
         uniformtext_mode="show",
     )
     fig.update_traces(textposition="inside", insidetextanchor="start")
