@@ -56,8 +56,8 @@ def _get_graph(df, x, y, title, scale, className=""):
 
 @app.callback(
     Output("top-mixed-chart", "figure"),
-    Input("min-date", "value"),
-    Input("max-date", "value"),
+    Input("datepicker_range", "start_date"),
+    Input("datepicker_range", "end_date"),
     Input("top-mixed-chart", "className"),
 )
 @set_theme
@@ -116,8 +116,8 @@ def _top_mixed(min_date, max_date, className):
 
 @app.callback(
     Output("top-artist-chart", "figure"),
-    Input("min-date", "value"),
-    Input("max-date", "value"),
+    Input("datepicker_range", "start_date"),
+    Input("datepicker_range", "end_date"),
     Input("top-artist-chart", "className"),
 )
 @set_theme
@@ -155,8 +155,8 @@ def _top_artist(min_date, max_date, className):
 
 @app.callback(
     Output("top-album-chart", "figure"),
-    Input("min-date", "value"),
-    Input("max-date", "value"),
+    Input("datepicker_range", "start_date"),
+    Input("datepicker_range", "end_date"),
     Input("top-album-chart", "className"),
 )
 @set_theme

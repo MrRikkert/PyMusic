@@ -50,10 +50,9 @@ def get_layout(_type):
 @app.callback(
     Output("top-series-image-name", "children"),
     Output("top-series-image-art", "src"),
-    Input("min-date", "value"),
-    Input("max-date", "value"),
+    Input("datepicker_range", "start_date"),
+    Input("datepicker_range", "end_date"),
 )
-@convert_dates
 @db_session
 def _top_image_series_stats(min_date, max_date):
     sql = """
@@ -106,8 +105,8 @@ def _top_image_series_stats(min_date, max_date):
     Output("top-album-image-name", "children"),
     Output("top-album-image-art", "src"),
     Output("top-album-image-artist", "children"),
-    Input("min-date", "value"),
-    Input("max-date", "value"),
+    Input("datepicker_range", "start_date"),
+    Input("datepicker_range", "end_date"),
 )
 @convert_dates
 @db_session
@@ -141,8 +140,8 @@ def _top_image_album_stats(min_date, max_date):
 @app.callback(
     Output("top-artist-image-name", "children"),
     Output("top-artist-image-art", "src"),
-    Input("min-date", "value"),
-    Input("max-date", "value"),
+    Input("datepicker_range", "start_date"),
+    Input("datepicker_range", "end_date"),
 )
 @convert_dates
 @db_session

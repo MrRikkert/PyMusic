@@ -31,8 +31,8 @@ def get_layout():
 
 @app.callback(
     Output("stats-total-scrobbles", "children"),
-    Input("min-date", "value"),
-    Input("max-date", "value"),
+    Input("datepicker_range", "start_date"),
+    Input("datepicker_range", "end_date"),
 )
 @convert_dates
 @db_session
@@ -52,8 +52,8 @@ def __get_total_scrobbles(min_date, max_date):
 
 @app.callback(
     Output("stats-scrobbles-per-day", "children"),
-    Input("min-date", "value"),
-    Input("max-date", "value"),
+    Input("datepicker_range", "start_date"),
+    Input("datepicker_range", "end_date"),
 )
 @convert_dates
 @db_session
@@ -75,8 +75,8 @@ def __get_average_scrobbles(min_date, max_date):
 
 @app.callback(
     Output("stats-total-playtime", "children"),
-    Input("min-date", "value"),
-    Input("max-date", "value"),
+    Input("datepicker_range", "start_date"),
+    Input("datepicker_range", "end_date"),
 )
 @convert_dates
 @db_session

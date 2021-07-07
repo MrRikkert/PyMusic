@@ -106,8 +106,8 @@ def _get_data(min_date, max_date, filter_date=True):
 
 @app.callback(
     Output("plays-line-chart", "figure"),
-    Input("min-date", "value"),
-    Input("max-date", "value"),
+    Input("datepicker_range", "start_date"),
+    Input("datepicker_range", "end_date"),
 )
 @set_theme
 @convert_dates

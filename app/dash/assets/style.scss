@@ -10,21 +10,17 @@
 
 // Navbar
 .navbar {
-    margin-bottom: 15px;
+    margin-bottom: bootstrap.$grid-gutter-width;
 
-    .date-input {
-        margin-left: 10px;
-
-        .navbar-text {
-            margin-right: 5px;
-        }
+    .DateRangePicker_picker {
+        left: -350px !important;
     }
 }
 
 // General layout CSS
 .container {
     [class^="col"] {
-        margin-bottom: 15px;
+        margin-bottom: bootstrap.$grid-gutter-width;
     }
 }
 

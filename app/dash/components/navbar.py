@@ -1,7 +1,9 @@
 from datetime import datetime, timedelta
 
 import dash_bootstrap_components as dbc
+import dash_core_components as dcc
 import dash_html_components as html
+from numpy import ma
 from app.dash.app import app
 from dash.dependencies import Input, Output, State
 
@@ -9,28 +11,28 @@ from dash.dependencies import Input, Output, State
 def get_layout():
     LOGO = "https://images.plot.ly/logo/new-branding/plotly-logomark.png"
 
-    max_date = datetime.now().strftime("%Y-%m-%d")
-    min_date = (datetime.now() - timedelta(days=7)).strftime("%Y-%m-%d")
+    max_date = datetime.now().date()
+    min_date = (datetime.now() - timedelta(days=7)).date()
 
-    min_date = dbc.Row(
-        [
-            dbc.Col("Min date:", className="navbar-text"),
-            dbc.Col(dbc.Input(type="date", id="min-date", value=min_date)),
-        ],
-        no_gutters=True,
-        className="ml-auto flex-nowrap mt-3 mt-md-0 date-input",
-        align="center",
-    )
+    # min_date = dbc.Row(
+    #     [
+    #         dbc.Col("Min date:", className="navbar-text"),
+    #         dbc.Col(dbc.Input(type="date", id="min-date", value=min_date)),
+    #     ],
+    #     no_gutters=True,
+    #     className="ml-auto flex-nowrap mt-3 mt-md-0 date-input",
+    #     align="center",
+    # )
 
-    max_date = dbc.Row(
-        [
-            dbc.Col("Max date:", className="navbar-text"),
-            dbc.Col(dbc.Input(type="date", id="max-date", value=max_date)),
-        ],
-        no_gutters=True,
-        className="flex-nowrap mt-3 mt-md-0 date-input",
-        align="center",
-    )
+    # max_date = dbc.Row(
+    #     [
+    #         dbc.Col("Max date:", className="navbar-text"),
+    #         dbc.Col(dbc.Input(type="date", id="max-date", value=max_date)),
+    #     ],
+    #     no_gutters=True,
+    #     className="flex-nowrap mt-3 mt-md-0 date-input",
+    #     align="center",
+    # )
 
     navbar = dbc.Navbar(
         [
@@ -51,8 +53,13 @@ def get_layout():
                 [
                     dbc.Nav(dbc.NavItem(dbc.NavLink("Page 1", href="#")), navbar=True),
                     dbc.Nav(dbc.NavItem(dbc.NavLink("Page 2", href="#")), navbar=True),
-                    min_date,
-                    max_date,
+                    dcc.DatePickerRange(
+                        "datepicker_range",
+                        start_date=min_date,
+                        end_date=max_date,
+                        number_of_months_shown=2,
+                        className="ml-auto flex-nowrap mt-3 mt-md-0 date-input",
+                    ),
                 ],
                 id="navbar-collapse",
                 navbar=True,
