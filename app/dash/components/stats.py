@@ -1,3 +1,4 @@
+from ast import Div
 import math
 import dash_bootstrap_components as dbc
 import dash_html_components as html
@@ -19,7 +20,8 @@ def get_layout():
                 html.Span("Loading...", id="stats-scrobbles-per-day"),
                 html.H1("Total playtime", className="card-title"),
                 html.Span("Loading...", id="stats-total-playtime"),
-            ]
+            ],
+            className="d-flex align-items-center justify-content-center",
         ),
         color="light",
         outline=True,

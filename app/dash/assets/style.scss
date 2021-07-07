@@ -27,6 +27,7 @@ $col-height: 253px;
 
 .card {
     height: $col-height;
+
 }
 
 
@@ -39,8 +40,13 @@ $col-height: 253px;
     }
 
     span {
-        font-size: 1.4rem;
+        font-size: 1.5rem;
         font-weight: bold;
+        text-align: center;
+    }
+
+    .card-body {
+        flex-direction: column;
     }
 }
 
