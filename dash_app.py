@@ -5,7 +5,7 @@ import dash_html_components as html
 import app.dash.components
 import app.settings  # Import settings before anything else
 from app.dash.app import app
-from app.dash.components import navbar, stats, top_image, top_chart
+from app.dash.components import navbar, stats, top_image, top_chart, plays_over_time_chart
 from app.db.base import init_db
 
 app.layout = html.Div(
@@ -13,7 +13,12 @@ app.layout = html.Div(
         navbar.get_layout(),
         dbc.Container(
             [
-                dbc.Row([dbc.Col(stats.get_layout(), md=12, lg=3)]),
+                dbc.Row(
+                    [
+                        dbc.Col(stats.get_layout(), md=12, lg=3),
+                        dbc.Col(plays_over_time_chart.get_layout(), md=12, lg=9),
+                    ]
+                ),
                 dbc.Row(
                     [
                         dbc.Col(
