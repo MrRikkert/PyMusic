@@ -31,12 +31,12 @@ def get_layout():
 
 @app.callback(
     Output("stats-total-scrobbles", "children"),
-    Input("datepicker_range", "start_date"),
-    Input("datepicker_range", "end_date"),
+    Input("date-range-select", "value"),
+    Input("date-select", "value"),
 )
 @convert_dates
 @db_session
-def __get_total_scrobbles(min_date, max_date):
+def __get_total_scrobbles(date_range, min_date, max_date):
     sql = """
     SELECT COUNT(*) as plays
     FROM scrobble sc
@@ -52,12 +52,12 @@ def __get_total_scrobbles(min_date, max_date):
 
 @app.callback(
     Output("stats-scrobbles-per-day", "children"),
-    Input("datepicker_range", "start_date"),
-    Input("datepicker_range", "end_date"),
+    Input("date-range-select", "value"),
+    Input("date-select", "value"),
 )
 @convert_dates
 @db_session
-def __get_average_scrobbles(min_date, max_date):
+def __get_average_scrobbles(date_range, min_date, max_date):
     sql = """
     SELECT COUNT(*) as plays
     FROM scrobble sc
@@ -75,12 +75,12 @@ def __get_average_scrobbles(min_date, max_date):
 
 @app.callback(
     Output("stats-total-playtime", "children"),
-    Input("datepicker_range", "start_date"),
-    Input("datepicker_range", "end_date"),
+    Input("date-range-select", "value"),
+    Input("date-select", "value"),
 )
 @convert_dates
 @db_session
-def __get_playtime(min_date, max_date):
+def __get_playtime(date_range, min_date, max_date):
     sql = """
     SELECT SUM(s.length) AS length
     FROM scrobble sc
