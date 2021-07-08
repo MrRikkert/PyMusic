@@ -34,6 +34,7 @@ better-exceptions = "*"
 pandas = "*"
 dash = "*"
 dash-bootstrap-components = "*"
+python-dateutil = "*"
 
 [requires]
 python_version = "3.9"
