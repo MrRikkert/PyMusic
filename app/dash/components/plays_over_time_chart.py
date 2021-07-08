@@ -143,6 +143,11 @@ def _plays_bar_chart(date_range, min_date, max_date):
         yaxis_title=f"Total Playtime ({scale})",
         uniformtext_minsize=11,
         uniformtext_mode="show",
+        legend_orientation="h",
+        legend_yanchor="bottom",
+        legend_xanchor="right",
+        legend_y=1.15,
+        legend_x=1,
     )
     fig.update_traces(texttemplate="%{value:.0f}")
 
