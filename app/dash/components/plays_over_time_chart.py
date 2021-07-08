@@ -28,36 +28,20 @@ def get_layout():
     return get_card()
 
 
-def _build_query(min_date, max_date, filter_date=True):
-    days = (max_date - min_date).days
-    if days <= 14:
-        _type = "days"
+def _build_query(date_range, min_date, max_date, filter_date=True):
+    if date_range == "week" or date_range == "month":
         select = """
             EXTRACT(year from DATE) AS "Year",
             EXTRACT(month from DATE) AS "Month",
             EXTRACT(day from DATE) AS "Day",
         """
         group_columns = ['"Year"', '"Month"', '"Day"']
-    elif days <= 7 * 14:
-        _type = "weeks"
-        select = """
-            EXTRACT(year from DATE) AS "Year",
-            EXTRACT(week from DATE) AS "Week",
-        """
-        group_columns = ['"Year"', '"Week"']
-    elif days <= 14 * 30:
-        _type = "months"
+    elif date_range == "year":
         select = """
             EXTRACT(year from DATE) AS "Year",
             EXTRACT(month from DATE) AS "Month",
         """
         group_columns = ['"Year"', '"Month"']
-    else:
-        _type = "years"
-        select = """
-            EXTRACT(year from DATE) AS "Year",
-        """
-        group_columns = ['"Year"']
 
     sql = f"""
     SELECT
@@ -76,11 +60,11 @@ def _build_query(min_date, max_date, filter_date=True):
         sql = add_date_clause(sql, min_date, max_date, where=True)
     else:
         sql = sql.replace(":date:", "")
-    return (sql, _type)
+    return sql
 
 
-def _get_data(min_date, max_date, filter_date=True):
-    sql, _type = _build_query(min_date, max_date, filter_date)
+def _get_data(date_range, min_date, max_date, filter_date=True):
+    sql = _build_query(date_range, min_date, max_date, filter_date)
 
     df = pd.read_sql_query(
         sql,
@@ -90,15 +74,12 @@ def _get_data(min_date, max_date, filter_date=True):
     )
     df = df.sort_values("Date")
 
-    if _type == "days":
+    if date_range == "week":
         df["Date"] = df["Date"].dt.strftime("%a, %b %d")
-    elif _type == "weeks":
-        df["Date"] = df["Date"] - pd.to_timedelta(df["Date"].dt.dayofweek, unit="d")
-        df["Date"] = df["Date"].dt.strftime("Week %W, %Y")
-    elif _type == "months":
-        df["Date"] = df["Date"].dt.strftime("%b %Y")
-    elif _type == "years":
-        df["Date"] = df["Date"].dt.strftime("%Y")
+    elif date_range == "month":
+        df["Date"] = df["Date"].dt.strftime("%d")
+    elif date_range == "year":
+        df["Date"] = df["Date"].dt.strftime("%b")
 
     df, scale = set_length_scale(df, "Time")
     return (df, scale)
@@ -113,7 +94,7 @@ def _get_data(min_date, max_date, filter_date=True):
 @convert_dates
 @db_session
 def _plays_bar_chart(date_range, min_date, max_date):
-    df, scale = _get_data(min_date, max_date)
+    df, scale = _get_data(date_range, min_date, max_date)
 
     fig = px.bar(
         df, x="Date", y="Time", title=f"Playtime over time ({scale})", text="Time"
