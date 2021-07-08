@@ -50,11 +50,12 @@ def get_layout(_type):
 @app.callback(
     Output("top-series-image-name", "children"),
     Output("top-series-image-art", "src"),
-    Input("datepicker_range", "start_date"),
-    Input("datepicker_range", "end_date"),
+    Input("date-range-select", "value"),
+    Input("date-select", "value"),
 )
+@convert_dates
 @db_session
-def _top_image_series_stats(min_date, max_date):
+def _top_image_series_stats(date_range, min_date, max_date):
     sql = """
     SELECT
         t.value AS series,
@@ -105,12 +106,12 @@ def _top_image_series_stats(min_date, max_date):
     Output("top-album-image-name", "children"),
     Output("top-album-image-art", "src"),
     Output("top-album-image-artist", "children"),
-    Input("datepicker_range", "start_date"),
-    Input("datepicker_range", "end_date"),
+    Input("date-range-select", "value"),
+    Input("date-select", "value"),
 )
 @convert_dates
 @db_session
-def _top_image_album_stats(min_date, max_date):
+def _top_image_album_stats(date_range, min_date, max_date):
     sql = """
     SELECT
         al.name_alt AS "album",
@@ -140,12 +141,12 @@ def _top_image_album_stats(min_date, max_date):
 @app.callback(
     Output("top-artist-image-name", "children"),
     Output("top-artist-image-art", "src"),
-    Input("datepicker_range", "start_date"),
-    Input("datepicker_range", "end_date"),
+    Input("date-range-select", "value"),
+    Input("date-select", "value"),
 )
 @convert_dates
 @db_session
-def _top_image_artist_stats(min_date, max_date):
+def _top_image_artist_stats(date_range, min_date, max_date):
     # Uses top album art like series
     # No easy accessible API to get artist images
     sql = """
