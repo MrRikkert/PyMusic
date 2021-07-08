@@ -66,7 +66,6 @@ def _get_graph(df, x, y, title, scale, className=""):
 def _top_mixed(date_range, min_date, className, max_date):
     sql = """
     SELECT
-        tag_type,
         CASE
             WHEN franchise IS NOT NULL THEN franchise
             WHEN sort_artist IS NOT NULL THEN sort_artist
@@ -79,14 +78,7 @@ def _top_mixed(date_range, min_date, className, max_date):
             s.length,
             MAX(CASE WHEN t.tag_type = 'franchise' THEN t.value END) AS "franchise",
             MAX(CASE WHEN t.tag_type = 'sort_artist' THEN t.value END) AS "sort_artist",
-            MAX(CASE WHEN t.tag_type = 'type' THEN t.value END) AS "type",
-            MIN(
-                CASE
-                    WHEN t.tag_type = 'franchise' THEN 'Franchise'
-                    WHEN t.tag_type = 'sort_artist' THEN 'Artist'
-                    WHEN t.tag_type = 'type' THEN 'Type'
-                END
-            ) AS tag_type
+            MAX(CASE WHEN t.tag_type = 'type' THEN t.value END) AS "type"
         FROM scrobble sc
         INNER JOIN song s
             ON s.id = sc.song
@@ -97,7 +89,7 @@ def _top_mixed(date_range, min_date, className, max_date):
         :date:
         GROUP BY sc.id, s.length
     ) x
-    GROUP BY "name", tag_type
+    GROUP BY "name"
     ORDER BY plays DESC
     LIMIT 5
     """
@@ -106,9 +98,7 @@ def _top_mixed(date_range, min_date, className, max_date):
     df = pd.read_sql_query(
         sql, db.get_connection(), params={"min_date": min_date, "max_date": max_date}
     )
-    df = df.rename(
-        columns={df.columns[0]: "Type", df.columns[1]: "Name", df.columns[2]: "Time"}
-    )
+    df = df.rename(columns={df.columns[0]: "Name", df.columns[1]: "Time"})
     df = df.sort_values("Time", ascending=True)
     df, scale = set_length_scale(df, "Time")
     print(df)
