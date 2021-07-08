@@ -3,16 +3,19 @@ from datetime import datetime, timedelta
 import dash_bootstrap_components as dbc
 import dash_core_components as dcc
 import dash_html_components as html
-from numpy import ma
+import pandas as pd
 from app.dash.app import app
+from app.db.base import db
 from dash.dependencies import Input, Output, State
+from numpy import ma
+from pony.orm import db_session
 
 
 def get_layout():
     LOGO = "https://images.plot.ly/logo/new-branding/plotly-logomark.png"
 
-    max_date = datetime.now().date()
-    min_date = (datetime.now() - timedelta(days=7)).date()
+    end_date = datetime.now().date()
+    start_date = (datetime.now() - timedelta(days=7)).date()
 
     # min_date = dbc.Row(
     #     [
@@ -53,12 +56,23 @@ def get_layout():
                 [
                     dbc.Nav(dbc.NavItem(dbc.NavLink("Page 1", href="#")), navbar=True),
                     dbc.Nav(dbc.NavItem(dbc.NavLink("Page 2", href="#")), navbar=True),
-                    dcc.DatePickerRange(
-                        "datepicker_range",
-                        start_date=min_date,
-                        end_date=max_date,
-                        number_of_months_shown=2,
+                    dbc.Select(
+                        "date-range-select",
+                        options=[
+                            {"label": "Week", "value": "week"},
+                            {"label": "Month", "value": "month"},
+                            {"label": "Year", "value": "year"},
+                        ],
+                        value="week",
                         className="ml-auto flex-nowrap mt-3 mt-md-0 date-input",
+                    ),
+                    dbc.Select(
+                        "date-select",
+                        options=[
+                            {"label": f"option_{idx}", "value": idx}
+                            for idx in range(100)
+                        ],
+                        className="flex-nowrap mt-3 mt-md-0 date-input",
                     ),
                 ],
                 id="navbar-collapse",
@@ -71,6 +85,42 @@ def get_layout():
         sticky="top",
     )
     return navbar
+
+
+@app.callback(
+    Output("date-select", "options"),
+    Output("date-select", "value"),
+    Input("date-range-select", "value"),
+)
+@db_session
+def fill_options(value):
+    sql = """
+    SELECT
+        MAX(sc.date) max_date,
+        MIN(sc.date) min_date
+    FROM scrobble sc
+    """
+    df = pd.read_sql_query(sql, db.get_connection())
+    min_date = df.min_date[0]
+    max_date = df.max_date[0]
+
+    if value == "week":
+        freq = "W-MON"
+        frmt = r"Week %W, %Y"
+    elif value == "month":
+        freq = "MS"
+        frmt = r"%b %Y"
+    elif value == "year":
+        freq = "YS"
+        frmt = "%Y"
+
+    dates = pd.date_range(start=min_date, end=max_date, freq=freq)
+    dates = dates.sort_values(ascending=False)
+    options = [
+        {"label": date.strftime(frmt), "value": date.strftime(r"%Y-%m-%d")}
+        for date in dates
+    ]
+    return options, options[0]["value"]
 
 
 # add callback for toggling the collapse on small screens
