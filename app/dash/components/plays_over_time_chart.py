@@ -130,8 +130,6 @@ def _plays_bar_chart(date_range, min_date, max_date):
     df, scale = set_length_scale(df, "Time")
     df_total, scale = set_length_scale(df_total, "Time")
 
-    print(df_total)
-
     fig = px.bar(
         df,
         x="X",
@@ -149,7 +147,13 @@ def _plays_bar_chart(date_range, min_date, max_date):
     fig.update_traces(texttemplate="%{value:.0f}")
 
     fig_2 = px.line(df_total, x="X", y="Time")
-    fig_2.update_traces(text=None, line_color="white")
+    fig_2.update_traces(
+        name="Mean",
+        text=None,
+        line_color="white",
+        showlegend=True,
+        mode="markers+lines",
+    )
 
     fig.add_trace(fig_2.data[0])
 
