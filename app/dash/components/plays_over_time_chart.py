@@ -106,13 +106,13 @@ def _get_data(min_date, max_date, filter_date=True):
 
 @app.callback(
     Output("plays-line-chart", "figure"),
-    Input("datepicker_range", "start_date"),
-    Input("datepicker_range", "end_date"),
+    Input("date-range-select", "value"),
+    Input("date-select", "value"),
 )
 @set_theme
 @convert_dates
 @db_session
-def _plays_bar_chart(min_date, max_date):
+def _plays_bar_chart(date_range, min_date, max_date):
     df, scale = _get_data(min_date, max_date)
 
     fig = px.bar(
