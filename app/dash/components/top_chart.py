@@ -56,14 +56,14 @@ def _get_graph(df, x, y, title, scale, className=""):
 
 @app.callback(
     Output("top-mixed-chart", "figure"),
-    Input("datepicker_range", "start_date"),
-    Input("datepicker_range", "end_date"),
+    Input("date-range-select", "value"),
+    Input("date-select", "value"),
     Input("top-mixed-chart", "className"),
 )
 @set_theme
 @convert_dates
 @db_session
-def _top_mixed(min_date, max_date, className):
+def _top_mixed(date_range, min_date, className, max_date):
     sql = """
     SELECT
         tag_type,
@@ -116,14 +116,14 @@ def _top_mixed(min_date, max_date, className):
 
 @app.callback(
     Output("top-artist-chart", "figure"),
-    Input("datepicker_range", "start_date"),
-    Input("datepicker_range", "end_date"),
+    Input("date-range-select", "value"),
+    Input("date-select", "value"),
     Input("top-artist-chart", "className"),
 )
 @set_theme
 @convert_dates
 @db_session
-def _top_artist(min_date, max_date, className):
+def _top_artist(date_range, min_date, className, max_date):
     sql = """
     SELECT
         a.name_alt,
@@ -155,14 +155,14 @@ def _top_artist(min_date, max_date, className):
 
 @app.callback(
     Output("top-album-chart", "figure"),
-    Input("datepicker_range", "start_date"),
-    Input("datepicker_range", "end_date"),
+    Input("date-range-select", "value"),
+    Input("date-select", "value"),
     Input("top-album-chart", "className"),
 )
 @set_theme
 @convert_dates
 @db_session
-def _top_album(min_date, max_date, className):
+def _top_album(date_range, min_date, className, max_date):
     sql = """
     SELECT
         a.name_alt,
