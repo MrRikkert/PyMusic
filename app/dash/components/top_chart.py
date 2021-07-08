@@ -108,7 +108,6 @@ def _top_mixed(date_range, min_date, className, max_date):
     )
     df = df.sort_values("Time", ascending=True)
     df, scale = set_length_scale(df, "Time")
-    print(df)
     return _get_graph(df, "Time", "Name", "Top Series/Artist/Type", scale, className)
 
 
