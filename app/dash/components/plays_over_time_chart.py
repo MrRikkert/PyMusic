@@ -82,6 +82,7 @@ def _build_query(date_range, min_date, max_date, filter_date=True):
 @db_session
 def _plays_bar_chart(date_range, min_date, max_date):
     sql = _build_query(date_range, min_date, max_date)
+    sql_total = _build_query(date_range, min_date, max_date, filter_date=False)
 
     if date_range == "week":
         min_date = min_date - relativedelta(days=7)
@@ -96,21 +97,44 @@ def _plays_bar_chart(date_range, min_date, max_date):
     )
     df = df.sort_values("Date")
 
+    df_total = pd.read_sql_query(
+        sql_total,
+        db.get_connection(),
+        params={"min_date": min_date, "max_date": max_date},
+        parse_dates=["Date"],
+    )
+    df_total = df_total.sort_values("Date")
+
     if date_range == "week":
-        df["Date"] = df["Date"].dt.strftime("%a")
+        frmt = "%a"
         color = "Week"
+        df_total = df_total.groupby(df_total["Date"].dt.weekday, as_index=False).agg(
+            {"Time": "mean", "Date": "first"}
+        )
     elif date_range == "month":
-        df["Date"] = df["Date"].dt.strftime("%d")
+        frmt = "%d"
         color = None
+        df_total = df_total.groupby("Day", as_index=False).agg(
+            {"Time": "mean", "Date": "first"}
+        )
     elif date_range == "year":
-        df["Date"] = df["Date"].dt.strftime("%b")
+        frmt = "%b"
         color = "Year"
+        df_total = df_total.groupby("Month", as_index=False).agg(
+            {"Time": "mean", "Date": "first"}
+        )
+
+    df["X"] = df["Date"].dt.strftime(frmt)
+    df_total["X"] = df_total["Date"].dt.strftime(frmt)
 
     df, scale = set_length_scale(df, "Time")
+    df_total, scale = set_length_scale(df_total, "Time")
+
+    print(df_total)
 
     fig = px.bar(
         df,
-        x="Date",
+        x="X",
         y="Time",
         title=f"Playtime over time ({scale})",
         text="Time",
@@ -124,10 +148,9 @@ def _plays_bar_chart(date_range, min_date, max_date):
     )
     fig.update_traces(texttemplate="%{value:.0f}")
 
-    # df, scale = _get_data(min_date, max_date, filter_date=False)
-    # fig_2 = px.line(df, x="Date", y="Time", text="Time")
-    # fig_2.update_traces(text=None, line_color="white")
+    fig_2 = px.line(df_total, x="X", y="Time")
+    fig_2.update_traces(text=None, line_color="white")
 
-    # fig.add_trace(fig_2.data[0])
+    fig.add_trace(fig_2.data[0])
 
     return fig
