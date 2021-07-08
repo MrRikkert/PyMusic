@@ -67,6 +67,11 @@ def _top_mixed(date_range, min_date, className, max_date):
     sql = """
     SELECT
         CASE
+            WHEN franchise IS NOT NULL THEN 'franchise'
+            WHEN sort_artist IS NOT NULL THEN 'sort_artist'
+            WHEN "type" IS NOT NULL THEN 'type'
+        END AS "tag_type",
+        CASE
             WHEN franchise IS NOT NULL THEN franchise
             WHEN sort_artist IS NOT NULL THEN sort_artist
             WHEN "type" IS NOT NULL THEN "type"
@@ -89,7 +94,7 @@ def _top_mixed(date_range, min_date, className, max_date):
         :date:
         GROUP BY sc.id, s.length
     ) x
-    GROUP BY "name"
+    GROUP BY "name", "tag_type"
     ORDER BY plays DESC
     LIMIT 5
     """
@@ -98,7 +103,9 @@ def _top_mixed(date_range, min_date, className, max_date):
     df = pd.read_sql_query(
         sql, db.get_connection(), params={"min_date": min_date, "max_date": max_date}
     )
-    df = df.rename(columns={df.columns[0]: "Name", df.columns[1]: "Time"})
+    df = df.rename(
+        columns={df.columns[0]: "Type", df.columns[1]: "Name", df.columns[2]: "Time"}
+    )
     df = df.sort_values("Time", ascending=True)
     df, scale = set_length_scale(df, "Time")
     print(df)
