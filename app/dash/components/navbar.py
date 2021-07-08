@@ -115,7 +115,7 @@ def fill_options(value):
         frmt = "%Y"
 
     dates = pd.date_range(start=min_date, end=max_date, freq=freq)
-    dates = dates.sort_values(ascending=False)
+    dates = dates.sort_values(ascending=False)[1:]
     options = [
         {"label": date.strftime(frmt), "value": date.strftime(r"%Y-%m-%d")}
         for date in dates
