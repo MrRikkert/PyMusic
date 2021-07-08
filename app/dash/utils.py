@@ -1,22 +1,32 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from inspect import getfullargspec
 
 import dash_core_components as dcc
 import plotly.express as px
+from dateutil.relativedelta import relativedelta
 
 
 def convert_dates(func):
     argspec = getfullargspec(func)
-    min_date = argspec.args.index("min_date")
-    max_date = argspec.args.index("max_date")
 
     def wrap(*args, **kwargs):
+        date_range_idx = argspec.args.index("date_range")
+        min_date_idx = argspec.args.index("min_date")
+
         args = list(args)
-        if args[min_date]:
-            args[min_date] = datetime.strptime(args[min_date], "%Y-%m-%d")
-        if args[max_date]:
-            args[max_date] = datetime.strptime(args[max_date], "%Y-%m-%d")
-        return func(*args, **kwargs)
+
+        min_date = datetime.strptime(args[min_date_idx], "%Y-%m-%d")
+        date_range = args[date_range_idx]
+
+        if date_range == "week":
+            max_date = min_date + timedelta(days=7)
+        elif date_range == "month":
+            max_date = min_date + relativedelta(months=1)
+        elif date_range == "year":
+            max_date = min_date + relativedelta(years=1)
+
+        args[min_date_idx] = min_date
+        return func(*args, **kwargs, max_date=max_date)
 
     return wrap
 
@@ -39,7 +49,7 @@ def add_date_clause(
     sql: str, min_date: datetime, max_date: datetime, where=True
 ) -> str:
     if min_date and max_date:
-        condition = "sc.date > %(min_date)s AND sc.date <= %(max_date)s"
+        condition = "sc.date > %(min_date)s AND sc.date < %(max_date)s"
         if where:
             condition = "WHERE " + condition
         else:
