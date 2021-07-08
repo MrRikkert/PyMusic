@@ -110,9 +110,11 @@ def fill_options(value):
     elif value == "month":
         freq = "MS"
         frmt = r"%b %Y"
+        min_date = min_date + pd.offsets.MonthBegin(-1)
     elif value == "year":
         freq = "YS"
         frmt = "%Y"
+        min_date = min_date + pd.offsets.YearBegin(-1)
 
     dates = pd.date_range(start=min_date, end=max_date, freq=freq)
     dates = dates.sort_values(ascending=False)[1:]
