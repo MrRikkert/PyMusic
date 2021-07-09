@@ -37,14 +37,12 @@ def get_layout(_type, reverse=False):
     return get_card(_id)
 
 
-def _get_graph(df, x, y, title, scale, className=""):
+def _get_graph(df, x, y, title, xaxis_title, className=""):
     fig = px.bar(
         df, x=x, y=y, orientation="h", title=title, hover_data=["Time"], text=y
     )
     fig.update_layout(
-        xaxis_title=f"Total Playtime ({scale})",
-        uniformtext_minsize=13,
-        uniformtext_mode="show",
+        xaxis_title=xaxis_title, uniformtext_minsize=13, uniformtext_mode="show"
     )
     fig.update_traces(textposition="inside", insidetextanchor="start", textangle=0)
     fig.update_yaxes(showticklabels=False)
@@ -59,12 +57,20 @@ def _get_graph(df, x, y, title, scale, className=""):
     Input("date-range-select", "value"),
     Input("date-select", "value"),
     Input("top-mixed-chart", "className"),
+    Input("use-playtime", "checked"),
 )
 @set_theme
 @convert_dates
 @db_session
-def _top_mixed(date_range, min_date, className, max_date):
-    sql = """
+def _top_tag(date_range, min_date, className, playtime, max_date):
+    if playtime:
+        agg = "SUM"
+        title = "Top tag (playtime)"
+    else:
+        agg = "COUNT"
+        title = "Top tag (plays)"
+
+    sql = f"""
     SELECT
         CASE
             WHEN franchise IS NOT NULL THEN 'franchise'
@@ -76,7 +82,7 @@ def _top_mixed(date_range, min_date, className, max_date):
             WHEN sort_artist IS NOT NULL THEN sort_artist
             WHEN "type" IS NOT NULL THEN "type"
         END AS "name",
-        SUM("length") AS plays
+        {agg}("length") AS plays
     FROM (
         SELECT
             sc.id,
@@ -107,8 +113,21 @@ def _top_mixed(date_range, min_date, className, max_date):
         columns={df.columns[0]: "Type", df.columns[1]: "Name", df.columns[2]: "Time"}
     )
     df = df.sort_values("Time", ascending=True)
-    df, scale = set_length_scale(df, "Time")
-    return _get_graph(df, "Time", "Name", "Top Series/Artist/Type", scale, className)
+    df, scale = set_length_scale(df, "Time", playtime)
+
+    if playtime:
+        xaxis_title = f"Total Playtime ({scale})"
+    else:
+        xaxis_title = f"Total Plays"
+
+    return _get_graph(
+        df=df,
+        x="Time",
+        y="Name",
+        title=title,
+        xaxis_title=xaxis_title,
+        className=className,
+    )
 
 
 @app.callback(
