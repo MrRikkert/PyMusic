@@ -185,15 +185,16 @@ def _top_artist(date_range, min_date, className, playtime, max_date):
     Input("date-range-select", "value"),
     Input("date-select", "value"),
     Input("top-album-chart", "className"),
+    Input("use-playtime", "checked"),
 )
 @set_theme
 @convert_dates
 @db_session
-def _top_album(date_range, min_date, className, max_date):
-    sql = """
+def _top_album(date_range, min_date, className, playtime, max_date):
+    sql = f"""
     SELECT
         a.name_alt,
-        SUM(s.length) AS "length"
+        {get_agg(playtime)}(s.length) AS "length"
     FROM scrobble sc
     INNER JOIN song s
         ON sc.song = s.id
@@ -214,6 +215,20 @@ def _top_album(date_range, min_date, className, max_date):
     )
     df = df.rename(columns={df.columns[0]: "Album", df.columns[1]: "Time"})
     df = df.sort_values("Time", ascending=True)
-    df, scale = set_length_scale(df, "Time")
+    df, scale = set_length_scale(df, "Time", playtime)
 
-    return _get_graph(df, "Time", "Album", "Top albums", scale, className)
+    if playtime:
+        title = "Top albums (Playtime)"
+        xaxis_title = f"Total Playtime ({scale})"
+    else:
+        title = "Top albums (plays)"
+        xaxis_title = f"Total Plays"
+
+    return _get_graph(
+        df=df,
+        x="Time",
+        y="Album",
+        title=title,
+        xaxis_title=xaxis_title,
+        className=className,
+    )
