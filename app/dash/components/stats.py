@@ -5,7 +5,12 @@ import dash_bootstrap_components as dbc
 import dash_html_components as html
 import pandas as pd
 from app.dash.app import app
-from app.dash.utils import add_date_clause, convert_dates, min_date_to_last_range
+from app.dash.utils import (
+    add_date_clause,
+    convert_dates,
+    min_date_to_last_range,
+    seconds_to_text,
+)
 from app.db.base import db
 from dash.dependencies import Input, Output
 from dateutil.relativedelta import relativedelta
@@ -123,24 +128,7 @@ def __get_playtime(date_range, min_date, max_date):
         sql, db.get_connection(), params={"min_date": min_date, "max_date": max_date}
     )
 
-    total_seconds = df.iloc[0].length
-
-    time = ""
-    weeks = math.floor(total_seconds / 604_800)
-    days = math.floor(total_seconds % 604_800 / 86400)
-    hours = math.floor(total_seconds % 604_800 % 86400 / 3600)
-    minutes = math.floor(total_seconds % 604_800 % 86400 % 3600 / 60)
-
-    if weeks > 0:
-        time = f"{time}{weeks} weeks, "
-    if days > 0:
-        time = f"{time}{days} days, "
-    if hours > 0:
-        time = f"{time}{hours} hours, "
-    if minutes > 0:
-        time = f"{time}{minutes} minutes"
-
-    return time
+    return seconds_to_text(df.iloc[0].length)
 
 
 @app.callback(
@@ -151,6 +139,8 @@ def __get_playtime(date_range, min_date, max_date):
 @convert_dates
 @db_session
 def __get_average_playtime(date_range, min_date, max_date):
+    days = (max_date - min_date).days
+
     sql = """
     SELECT SUM(s.length) AS playtime
     FROM scrobble sc
@@ -164,22 +154,4 @@ def __get_average_playtime(date_range, min_date, max_date):
         sql, db.get_connection(), params={"min_date": min_date, "max_date": max_date}
     )
 
-    total_seconds = df.iloc[0].playtime
-    total_seconds = total_seconds / (max_date - min_date).days
-
-    time = ""
-    weeks = math.floor(total_seconds / 604_800)
-    days = math.floor(total_seconds % 604_800 / 86400)
-    hours = math.floor(total_seconds % 604_800 % 86400 / 3600)
-    minutes = math.floor(total_seconds % 604_800 % 86400 % 3600 / 60)
-
-    if weeks > 0:
-        time = f"{time}{weeks} weeks, "
-    if days > 0:
-        time = f"{time}{days} days, "
-    if hours > 0:
-        time = f"{time}{hours} hours, "
-    if minutes > 0:
-        time = f"{time}{minutes} minutes"
-
-    return time
+    return seconds_to_text(df.iloc[0].playtime / days)
