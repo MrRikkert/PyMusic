@@ -1,4 +1,5 @@
 import math
+from datetime import timedelta
 
 import dash_bootstrap_components as dbc
 import dash_html_components as html
@@ -7,6 +8,7 @@ from app.dash.app import app
 from app.dash.utils import add_date_clause, convert_dates
 from app.db.base import db
 from dash.dependencies import Input, Output
+from dateutil.relativedelta import relativedelta
 from pony.orm import db_session
 
 
@@ -17,7 +19,10 @@ def get_layout(_type):
                 dbc.CardBody(
                     [
                         html.H1(title, className="card-title"),
-                        html.Span("Loading...", id=id),
+                        html.Span("Loading...", id=id, className="main-stat"),
+                        html.Span(
+                            "Loading...", id=f"{id}-old", className="main-stat-old"
+                        ),
                     ],
                     className="d-flex align-items-center justify-content-center",
                 ),
@@ -39,23 +44,38 @@ def get_layout(_type):
 
 @app.callback(
     Output("stats-total-scrobbles", "children"),
+    Output("stats-total-scrobbles-old", "children"),
     Input("date-range-select", "value"),
     Input("date-select", "value"),
 )
 @convert_dates
 @db_session
 def __get_total_scrobbles(date_range, min_date, max_date):
-    sql = """
+    if date_range == "week":
+        min_date = min_date - timedelta(days=7)
+    elif date_range == "month":
+        min_date = min_date - relativedelta(months=1)
+    elif date_range == "year":
+        min_date = min_date - relativedelta(years=1)
+
+    sql = f"""
     SELECT COUNT(*) as plays
     FROM scrobble sc
+    INNER JOIN song s
+	    ON sc.song = s.id
     :date:
+    GROUP BY EXTRACT({date_range} FROM sc.date)
+    ORDER BY EXTRACT({date_range} FROM sc.date) DESC
     """
     sql = add_date_clause(sql, min_date, max_date, where=True)
 
     df = pd.read_sql_query(
         sql, db.get_connection(), params={"min_date": min_date, "max_date": max_date}
     )
-    return df.iloc[0].plays
+
+    if len(df) > 1:
+        return df.iloc[0].plays, f"vs. {df.iloc[1].plays} (last {date_range})"
+    return df.iloc[0].plays, None
 
 
 @app.callback(
