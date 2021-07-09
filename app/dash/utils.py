@@ -1,6 +1,6 @@
-import math
 from datetime import datetime, timedelta
 from inspect import getfullargspec
+from math import floor
 
 import dash_core_components as dcc
 import plotly.express as px
@@ -105,18 +105,16 @@ def min_date_to_last_range(min_date, date_range):
 
 
 def seconds_to_text(total_seconds):
-    time = ""
-    weeks = math.floor(total_seconds / 604_800)
-    days = math.floor(total_seconds % 604_800 / 86400)
-    hours = math.floor(total_seconds % 604_800 % 86400 / 3600)
-    minutes = math.floor(total_seconds % 604_800 % 86400 % 3600 / 60)
+    weeks = total_seconds / 604_800
+    days = total_seconds % 604_800 / 86400
+    hours = total_seconds % 604_800 % 86400 / 3600
+    minutes = total_seconds % 604_800 % 86400 % 3600 / 60
 
-    if weeks > 0:
-        time = f"{time}{weeks} weeks, "
-    if days > 0:
-        time = f"{time}{days} days, "
-    if hours > 0:
-        time = f"{time}{hours} hours, "
-    if minutes > 0:
-        time = f"{time}{minutes} minutes"
-    return time
+    if total_seconds < 60 * 60:
+        return f"{floor(minutes)} minutes"
+    elif total_seconds < 60 * 60 * 24:
+        return f"{floor(hours)} hours, {round(minutes)} minutes"
+    elif total_seconds < 60 * 60 * 24 * 7:
+        return f"{floor(days)} days, {round(hours)} hours"
+    else:
+        return f"{floor(weeks)} weeks, {round(days)} days"
