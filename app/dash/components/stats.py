@@ -73,18 +73,22 @@ def __get_total_scrobbles(date_range, min_date, max_date):
 
 @app.callback(
     Output("stats-scrobbles-per-day", "children"),
+    Output("stats-scrobbles-per-day-old", "children"),
     Input("date-range-select", "value"),
     Input("date-select", "value"),
 )
 @convert_dates
 @db_session
 def __get_average_scrobbles(date_range, min_date, max_date):
+    days = (max_date - min_date).days
     min_date = min_date_to_last_range(min_date, date_range)
 
-    sql = """
+    sql = f"""
     SELECT COUNT(*) as plays
     FROM scrobble sc
     :date:
+    GROUP BY EXTRACT({date_range} FROM sc.date)
+    ORDER BY EXTRACT({date_range} FROM sc.date) DESC
     """
     sql = add_date_clause(sql, min_date, max_date, where=True)
 
@@ -92,8 +96,9 @@ def __get_average_scrobbles(date_range, min_date, max_date):
         sql, db.get_connection(), params={"min_date": min_date, "max_date": max_date}
     )
 
-    count = df.iloc[0].plays
-    return round(count / (max_date - min_date).days)
+    if len(df) > 1:
+        return (round(df.iloc[0].plays / days), round(df.iloc[1].plays / days))
+    return round(df.iloc[0].plays / days), None
 
 
 @app.callback(
