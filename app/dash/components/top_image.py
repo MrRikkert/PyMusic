@@ -2,11 +2,11 @@ import dash_bootstrap_components as dbc
 import dash_html_components as html
 import pandas as pd
 from app.dash.app import app
-from app.dash.utils import add_date_clause, convert_dates
+from app.dash.utils import add_date_clause, convert_dates, get_agg
 from app.db.base import db
+from app.settings import IMG_URL
 from dash.dependencies import Input, Output
 from pony.orm import db_session
-from app.settings import IMG_URL
 
 
 def get_layout(_type):
@@ -52,14 +52,15 @@ def get_layout(_type):
     Output("top-series-image-art", "src"),
     Input("date-range-select", "value"),
     Input("date-select", "value"),
+    Input("use-playtime", "checked"),
 )
 @convert_dates
 @db_session
-def _top_image_series_stats(date_range, min_date, max_date):
-    sql = """
+def _top_image_series_stats(date_range, min_date, playtime, max_date):
+    sql = f"""
     SELECT
         t.value AS series,
-        SUM(s.length) AS "length",
+        {get_agg(playtime)}(s.length) AS "length",
         (
             SELECT a.art
             FROM album a
@@ -76,7 +77,7 @@ def _top_image_series_stats(date_range, min_date, max_date):
             WHERE t2.value = t.value
                 :date:
             GROUP BY a.art
-            ORDER BY SUM(s.length) DESC
+            ORDER BY {get_agg(playtime)}(s.length) DESC
             LIMIT 1
         )
     FROM scrobble sc
@@ -108,16 +109,17 @@ def _top_image_series_stats(date_range, min_date, max_date):
     Output("top-album-image-artist", "children"),
     Input("date-range-select", "value"),
     Input("date-select", "value"),
+    Input("use-playtime", "checked"),
 )
 @convert_dates
 @db_session
-def _top_image_album_stats(date_range, min_date, max_date):
-    sql = """
+def _top_image_album_stats(date_range, min_date, playtime, max_date):
+    sql = f"""
     SELECT
         al.name_alt AS "album",
         al.art,
         ar.name_alt AS "artist",
-        SUM(s.length) AS "length"
+        {get_agg(playtime)}(s.length) AS "length"
     FROM scrobble sc
     INNER JOIN song s
         ON s.id = sc.song
@@ -143,16 +145,17 @@ def _top_image_album_stats(date_range, min_date, max_date):
     Output("top-artist-image-art", "src"),
     Input("date-range-select", "value"),
     Input("date-select", "value"),
+    Input("use-playtime", "checked"),
 )
 @convert_dates
 @db_session
-def _top_image_artist_stats(date_range, min_date, max_date):
+def _top_image_artist_stats(date_range, min_date, playtime, max_date):
     # Uses top album art like series
     # No easy accessible API to get artist images
-    sql = """
+    sql = f"""
     SELECT
         a.name_alt AS "artist",
-        SUM(s.length) AS "length",
+        {get_agg(playtime)}(s.length) AS "length",
         (
             SELECT al.art
             FROM album al
@@ -169,7 +172,7 @@ def _top_image_artist_stats(date_range, min_date, max_date):
             WHERE ar.name_alt = a.name_alt
                 :date:
             GROUP BY al.art
-            ORDER BY SUM(s.length) DESC
+            ORDER BY {get_agg(playtime)}(s.length) DESC
             LIMIT 1
         )
     FROM scrobble sc
