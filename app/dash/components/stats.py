@@ -108,18 +108,23 @@ def __get_average_scrobbles(date_range, min_date, max_date):
 
 @app.callback(
     Output("stats-total-playtime", "children"),
+    Output("stats-total-playtime-old", "children"),
     Input("date-range-select", "value"),
     Input("date-select", "value"),
 )
 @convert_dates
 @db_session
 def __get_playtime(date_range, min_date, max_date):
-    sql = """
+    min_date = min_date_to_last_range(min_date, date_range)
+
+    sql = f"""
     SELECT SUM(s.length) AS length
     FROM scrobble sc
     INNER JOIN song s
         ON s.id = sc.song
     :date:
+    GROUP BY EXTRACT({date_range} FROM sc.date)
+    ORDER BY EXTRACT({date_range} FROM sc.date) DESC
     """
 
     sql = add_date_clause(sql, min_date, max_date, where=True)
@@ -127,8 +132,9 @@ def __get_playtime(date_range, min_date, max_date):
     df = pd.read_sql_query(
         sql, db.get_connection(), params={"min_date": min_date, "max_date": max_date}
     )
-
-    return seconds_to_text(df.iloc[0].length)
+    if len(df) > 1:
+        return seconds_to_text(df.iloc[0].length), seconds_to_text(df.iloc[1].length)
+    return seconds_to_text(df.iloc[0].length), None
 
 
 @app.callback(
