@@ -56,8 +56,6 @@ def __get_total_scrobbles(date_range, min_date, max_date):
     sql = f"""
     SELECT COUNT(*) as plays
     FROM scrobble sc
-    INNER JOIN song s
-	    ON sc.song = s.id
     :date:
     GROUP BY EXTRACT({date_range} FROM sc.date)
     ORDER BY EXTRACT({date_range} FROM sc.date) DESC
@@ -81,6 +79,8 @@ def __get_total_scrobbles(date_range, min_date, max_date):
 @convert_dates
 @db_session
 def __get_average_scrobbles(date_range, min_date, max_date):
+    min_date = min_date_to_last_range(min_date, date_range)
+
     sql = """
     SELECT COUNT(*) as plays
     FROM scrobble sc
