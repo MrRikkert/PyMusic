@@ -58,18 +58,21 @@ def add_date_clause(
     return sql.replace(":date:", "")
 
 
-def set_length_scale(df, column):
-    if df.iloc[-1][column] > 172_800:
-        df[column] = df[column] / (24 * 60 * 60)
-        scale = "days"
-    elif df.iloc[-1][column] > 7200:
-        df[column] = df[column] / (60 * 60)
-        scale = "hours"
-    elif df.iloc[-1][column] > 120:
-        df[column] = df[column] / 60
-        scale = "minutes"
+def set_length_scale(df, column, playtime):
+    if playtime:
+        if df.iloc[-1][column] > 172_800:
+            df[column] = df[column] / (24 * 60 * 60)
+            scale = "days"
+        elif df.iloc[-1][column] > 7200:
+            df[column] = df[column] / (60 * 60)
+            scale = "hours"
+        elif df.iloc[-1][column] > 120:
+            df[column] = df[column] / 60
+            scale = "minutes"
+        else:
+            scale = "seconds"
     else:
-        scale = "seconds"
+        scale = "Plays"
     return (df, scale)
 
 
