@@ -49,7 +49,7 @@ def add_date_clause(
     sql: str, min_date: datetime, max_date: datetime, where=True
 ) -> str:
     if min_date and max_date:
-        condition = "sc.date > %(min_date)s AND sc.date < %(max_date)s"
+        condition = "sc.date >= %(min_date)s AND sc.date < %(max_date)s"
         if where:
             condition = "WHERE " + condition
         else:
