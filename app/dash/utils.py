@@ -85,3 +85,9 @@ def get_default_graph(id: str, className=""):
         template="plotly_dark",
     )
     return dcc.Graph(figure=fig, id=id, className=className, style={"height": "100%"})
+
+
+def get_agg(playtime):
+    if playtime:
+        return "SUM"
+    return "COUNT"

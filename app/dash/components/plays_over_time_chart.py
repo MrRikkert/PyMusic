@@ -6,6 +6,7 @@ from app.dash.app import app
 from app.dash.utils import (
     add_date_clause,
     convert_dates,
+    get_agg,
     get_default_graph,
     set_length_scale,
     set_theme,
@@ -52,15 +53,11 @@ def _build_query(date_range, min_date, max_date, playtime, filter_date=True):
         """
         group_columns = ['"Year"', '"Month"']
 
-    agg = "COUNT"
-    if playtime:
-        agg = "SUM"
-
     sql = f"""
     SELECT
         {select}
         MIN(DATE::DATE) AS "Date",
-        {agg}(s.length) as "Time"
+        {get_agg(playtime)}(s.length) as "Time"
     FROM scrobble sc
     INNER JOIN song s
 	    ON sc.song = s.id

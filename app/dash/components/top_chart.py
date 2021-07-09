@@ -1,10 +1,12 @@
 import dash_bootstrap_components as dbc
+import dash_core_components as dcc
 import pandas as pd
 import plotly.express as px
 from app.dash.app import app
 from app.dash.utils import (
     add_date_clause,
     convert_dates,
+    get_agg,
     get_default_graph,
     set_length_scale,
     set_theme,
@@ -12,7 +14,6 @@ from app.dash.utils import (
 from app.db.base import db
 from dash.dependencies import Input, Output
 from pony.orm import db_session
-import dash_core_components as dcc
 
 
 def get_layout(_type, reverse=False):
@@ -63,13 +64,6 @@ def _get_graph(df, x, y, title, xaxis_title, className=""):
 @convert_dates
 @db_session
 def _top_tag(date_range, min_date, className, playtime, max_date):
-    if playtime:
-        agg = "SUM"
-        title = "Top tag (playtime)"
-    else:
-        agg = "COUNT"
-        title = "Top tag (plays)"
-
     sql = f"""
     SELECT
         CASE
@@ -82,7 +76,7 @@ def _top_tag(date_range, min_date, className, playtime, max_date):
             WHEN sort_artist IS NOT NULL THEN sort_artist
             WHEN "type" IS NOT NULL THEN "type"
         END AS "name",
-        {agg}("length") AS plays
+        {get_agg(playtime)}("length") AS plays
     FROM (
         SELECT
             sc.id,
@@ -116,8 +110,10 @@ def _top_tag(date_range, min_date, className, playtime, max_date):
     df, scale = set_length_scale(df, "Time", playtime)
 
     if playtime:
+        title = "Top tag (playtime)"
         xaxis_title = f"Total Playtime ({scale})"
     else:
+        title = "Top tag (plays)"
         xaxis_title = f"Total Plays"
 
     return _get_graph(
