@@ -14,28 +14,41 @@ from pony.orm import db_session
 def get_layout():
     LOGO = "https://images.plot.ly/logo/new-branding/plotly-logomark.png"
 
-    end_date = datetime.now().date()
-    start_date = (datetime.now() - timedelta(days=7)).date()
-
-    # min_date = dbc.Row(
-    #     [
-    #         dbc.Col("Min date:", className="navbar-text"),
-    #         dbc.Col(dbc.Input(type="date", id="min-date", value=min_date)),
-    #     ],
-    #     no_gutters=True,
-    #     className="ml-auto flex-nowrap mt-3 mt-md-0 date-input",
-    #     align="center",
-    # )
-
-    # max_date = dbc.Row(
-    #     [
-    #         dbc.Col("Max date:", className="navbar-text"),
-    #         dbc.Col(dbc.Input(type="date", id="max-date", value=max_date)),
-    #     ],
-    #     no_gutters=True,
-    #     className="flex-nowrap mt-3 mt-md-0 date-input",
-    #     align="center",
-    # )
+    collapse = [
+        dbc.Nav(dbc.NavItem(dbc.NavLink("Page 1", href="#")), navbar=True),
+        dbc.Nav(dbc.NavItem(dbc.NavLink("Page 2", href="#")), navbar=True),
+        dbc.Nav(id="test"),
+        html.Div([], className="ml-auto flex-nowrap mt-3 mt-md-0"),
+        dbc.FormGroup(
+            [
+                dbc.Checkbox(
+                    id="use-playtime", className="form-check-input", checked=True
+                ),
+                dbc.Label(
+                    "Use playtime?",
+                    html_for="use-playtime",
+                    className="form-check-label",
+                ),
+            ],
+            check=True,
+            className="right",
+        ),
+        dbc.Select(
+            "date-range-select",
+            options=[
+                {"label": "Week", "value": "week"},
+                {"label": "Month", "value": "month"},
+                {"label": "Year", "value": "year"},
+            ],
+            value="week",
+            className="right",
+        ),
+        dbc.Select(
+            "date-select",
+            options=[{"label": f"option_{idx}", "value": idx} for idx in range(100)],
+            className="right",
+        ),
+    ]
 
     navbar = dbc.Navbar(
         [
@@ -52,33 +65,7 @@ def get_layout():
                 href="https://plotly.com",
             ),
             dbc.NavbarToggler(id="navbar-toggler", n_clicks=0),
-            dbc.Collapse(
-                [
-                    dbc.Nav(dbc.NavItem(dbc.NavLink("Page 1", href="#")), navbar=True),
-                    dbc.Nav(dbc.NavItem(dbc.NavLink("Page 2", href="#")), navbar=True),
-                    dbc.Select(
-                        "date-range-select",
-                        options=[
-                            {"label": "Week", "value": "week"},
-                            {"label": "Month", "value": "month"},
-                            {"label": "Year", "value": "year"},
-                        ],
-                        value="week",
-                        className="ml-auto flex-nowrap mt-3 mt-md-0 date-input",
-                    ),
-                    dbc.Select(
-                        "date-select",
-                        options=[
-                            {"label": f"option_{idx}", "value": idx}
-                            for idx in range(100)
-                        ],
-                        className="flex-nowrap mt-3 mt-md-0 date-input",
-                    ),
-                ],
-                id="navbar-collapse",
-                navbar=True,
-                is_open=False,
-            ),
+            dbc.Collapse(collapse, id="navbar-collapse", navbar=True, is_open=False),
         ],
         color="dark",
         dark=True,

@@ -12,8 +12,8 @@
 .navbar {
     margin-bottom: bootstrap.$grid-gutter-width;
 
-    .DateRangePicker_picker {
-        left: -350px !important;
+    .right {
+        margin-left: 15px
     }
 
     #date-select {
