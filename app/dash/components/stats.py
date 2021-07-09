@@ -10,23 +10,31 @@ from dash.dependencies import Input, Output
 from pony.orm import db_session
 
 
-def get_layout():
-    return dbc.Card(
-        dbc.CardBody(
-            [
-                html.H1("Scrobbles", className="card-title"),
-                html.Span("Loading...", id="stats-total-scrobbles"),
-                html.H1("Scrobbles per day", className="card-title"),
-                html.Span("Loading...", id="stats-scrobbles-per-day"),
-                html.H1("Total playtime", className="card-title"),
-                html.Span("Loading...", id="stats-total-playtime"),
-            ],
-            className="d-flex align-items-center justify-content-center",
-        ),
-        color="light",
-        outline=True,
-        className="general-stats",
-    )
+def get_layout(_type):
+    def get_card(title, id):
+        return (
+            dbc.Card(
+                dbc.CardBody(
+                    [
+                        html.H1(title, className="card-title"),
+                        html.Span("Loading...", id=id),
+                    ],
+                    className="d-flex align-items-center justify-content-center",
+                ),
+                color="light",
+                outline=True,
+                className="general-stats halve",
+            ),
+        )
+
+    if _type == "total_scrobbles":
+        return get_card("Scrobbles", "stats-total-scrobbles")
+    elif _type == "daily_scrobbles":
+        return get_card("Scrobbles per day", "stats-scrobbles-per-day")
+    elif _type == "total_playtime":
+        return get_card("Total playtime", "stats-total-playtime")
+    elif _type == "daily_playtime":
+        return get_card("Playtime per day", "stats-daily-playtime")
 
 
 @app.callback(
@@ -96,6 +104,48 @@ def __get_playtime(date_range, min_date, max_date):
     )
 
     total_seconds = df.iloc[0].length
+
+    time = ""
+    weeks = math.floor(total_seconds / 604_800)
+    days = math.floor(total_seconds % 604_800 / 86400)
+    hours = math.floor(total_seconds % 604_800 % 86400 / 3600)
+    minutes = math.floor(total_seconds % 604_800 % 86400 % 3600 / 60)
+
+    if weeks > 0:
+        time = f"{time}{weeks} weeks, "
+    if days > 0:
+        time = f"{time}{days} days, "
+    if hours > 0:
+        time = f"{time}{hours} hours, "
+    if minutes > 0:
+        time = f"{time}{minutes} minutes"
+
+    return time
+
+
+@app.callback(
+    Output("stats-daily-playtime", "children"),
+    Input("date-range-select", "value"),
+    Input("date-select", "value"),
+)
+@convert_dates
+@db_session
+def __get_average_playtime(date_range, min_date, max_date):
+    sql = """
+    SELECT SUM(s.length) AS playtime
+    FROM scrobble sc
+    INNER JOIN song s
+	    ON sc.song = s.id
+    :date:
+    """
+    sql = add_date_clause(sql, min_date, max_date, where=True)
+
+    df = pd.read_sql_query(
+        sql, db.get_connection(), params={"min_date": min_date, "max_date": max_date}
+    )
+
+    total_seconds = df.iloc[0].playtime
+    total_seconds = total_seconds / (max_date - min_date).days
 
     time = ""
     weeks = math.floor(total_seconds / 604_800)

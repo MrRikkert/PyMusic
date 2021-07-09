@@ -21,10 +21,13 @@ app.layout = html.Div(
             [
                 dbc.Row(
                     [
-                        dbc.Col(stats.get_layout(), md=12, lg=3),
-                        dbc.Col(plays_over_time_chart.get_layout(), md=12, lg=9),
+                        dbc.Col(stats.get_layout("total_scrobbles"), md=12, lg=3),
+                        dbc.Col(stats.get_layout("daily_scrobbles"), md=12, lg=3),
+                        dbc.Col(stats.get_layout("daily_playtime"), md=12, lg=3),
+                        dbc.Col(stats.get_layout("total_playtime"), md=12, lg=3),
                     ]
                 ),
+                dbc.Row([dbc.Col(plays_over_time_chart.get_layout(), md=12)]),
                 dbc.Row(
                     [
                         dbc.Col(

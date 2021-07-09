@@ -23,3 +23,25 @@
         height: $col-height-xl;
     }
 }
+
+@mixin col-height-halve() {
+    @include bootstrap.media-breakpoint-up(xs) {
+        height: $col-height-xs / 2;
+    }
+
+    @include bootstrap.media-breakpoint-up(sm) {
+        height: $col-height-sm / 2;
+    }
+
+    @include bootstrap.media-breakpoint-up(md) {
+        height: $col-height-md / 2;
+    }
+
+    @include bootstrap.media-breakpoint-up(lg) {
+        height: $col-height-lg / 2;
+    }
+
+    @include bootstrap.media-breakpoint-up(xl) {
+        height: $col-height-xl / 2;
+    }
+}

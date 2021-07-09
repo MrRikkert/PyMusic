@@ -34,7 +34,11 @@
 
 //Card specific CSS
 .card {
-    @include col-height
+    @include col-height;
+
+    &.halve {
+        @include col-height-halve;
+    }
 }
 
 .general-stats {
