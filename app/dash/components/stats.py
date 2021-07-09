@@ -139,6 +139,7 @@ def __get_playtime(date_range, min_date, max_date):
 
 @app.callback(
     Output("stats-daily-playtime", "children"),
+    Output("stats-daily-playtime-old", "children"),
     Input("date-range-select", "value"),
     Input("date-select", "value"),
 )
@@ -146,13 +147,16 @@ def __get_playtime(date_range, min_date, max_date):
 @db_session
 def __get_average_playtime(date_range, min_date, max_date):
     days = (max_date - min_date).days
+    min_date = min_date_to_last_range(min_date, date_range)
 
-    sql = """
+    sql = f"""
     SELECT SUM(s.length) AS playtime
     FROM scrobble sc
     INNER JOIN song s
 	    ON sc.song = s.id
     :date:
+    GROUP BY EXTRACT({date_range} FROM sc.date)
+    ORDER BY EXTRACT({date_range} FROM sc.date) DESC
     """
     sql = add_date_clause(sql, min_date, max_date, where=True)
 
@@ -160,4 +164,9 @@ def __get_average_playtime(date_range, min_date, max_date):
         sql, db.get_connection(), params={"min_date": min_date, "max_date": max_date}
     )
 
-    return seconds_to_text(df.iloc[0].playtime / days)
+    if len(df) > 1:
+        return (
+            seconds_to_text(df.iloc[0].playtime / days),
+            seconds_to_text(df.iloc[1].playtime / days),
+        )
+    return seconds_to_text(df.iloc[0].playtime / days), None
