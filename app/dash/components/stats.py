@@ -102,7 +102,10 @@ def __get_average_scrobbles(date_range, min_date, max_date):
     )
 
     if len(df) > 1:
-        return (round(df.iloc[0].plays / days), round(df.iloc[1].plays / days))
+        return (
+            round(df.iloc[0].plays / days),
+            f"vs. {round(df.iloc[1].plays / days)} (last {date_range})",
+        )
     return round(df.iloc[0].plays / days), None
 
 
@@ -133,7 +136,10 @@ def __get_playtime(date_range, min_date, max_date):
         sql, db.get_connection(), params={"min_date": min_date, "max_date": max_date}
     )
     if len(df) > 1:
-        return seconds_to_text(df.iloc[0].length), seconds_to_text(df.iloc[1].length)
+        return (
+            seconds_to_text(df.iloc[0].length),
+            f"vs. {seconds_to_text(df.iloc[1].length)} (last {date_range})",
+        )
     return seconds_to_text(df.iloc[0].length), None
 
 
@@ -167,6 +173,6 @@ def __get_average_playtime(date_range, min_date, max_date):
     if len(df) > 1:
         return (
             seconds_to_text(df.iloc[0].playtime / days),
-            seconds_to_text(df.iloc[1].playtime / days),
+            f"vs. {seconds_to_text(df.iloc[1].playtime / days)} (last {date_range})",
         )
     return seconds_to_text(df.iloc[0].playtime / days), None
