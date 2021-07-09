@@ -7,6 +7,7 @@ from app.dash.utils import (
     convert_dates,
     get_agg,
     get_default_graph,
+    min_date_to_last_range,
     set_length_scale,
     set_theme,
 )
@@ -87,10 +88,8 @@ def _plays_bar_chart(date_range, min_date, playtime, max_date):
         date_range, min_date, max_date, playtime, filter_date=False
     )
 
-    if date_range == "week":
-        min_date = min_date - relativedelta(days=7)
-    elif date_range == "year":
-        min_date = min_date - relativedelta(years=1)
+    if date_range == "week" or date_range == "year":
+        min_date = min_date_to_last_range(min_date, date_range)
 
     df = pd.read_sql_query(
         sql,

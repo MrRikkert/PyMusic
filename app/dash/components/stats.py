@@ -5,7 +5,7 @@ import dash_bootstrap_components as dbc
 import dash_html_components as html
 import pandas as pd
 from app.dash.app import app
-from app.dash.utils import add_date_clause, convert_dates
+from app.dash.utils import add_date_clause, convert_dates, min_date_to_last_range
 from app.db.base import db
 from dash.dependencies import Input, Output
 from dateutil.relativedelta import relativedelta
@@ -51,12 +51,7 @@ def get_layout(_type):
 @convert_dates
 @db_session
 def __get_total_scrobbles(date_range, min_date, max_date):
-    if date_range == "week":
-        min_date = min_date - timedelta(days=7)
-    elif date_range == "month":
-        min_date = min_date - relativedelta(months=1)
-    elif date_range == "year":
-        min_date = min_date - relativedelta(years=1)
+    min_date = min_date_to_last_range(min_date, date_range)
 
     sql = f"""
     SELECT COUNT(*) as plays

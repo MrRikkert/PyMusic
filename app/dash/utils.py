@@ -91,3 +91,13 @@ def get_agg(playtime):
     if playtime:
         return "SUM"
     return "COUNT"
+
+
+def min_date_to_last_range(min_date, date_range):
+    if date_range == "week":
+        min_date = min_date - timedelta(days=7)
+    elif date_range == "month":
+        min_date = min_date - relativedelta(months=1)
+    elif date_range == "year":
+        min_date = min_date - relativedelta(years=1)
+    return min_date
