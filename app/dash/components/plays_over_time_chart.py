@@ -1,3 +1,4 @@
+from datetime import datetime
 import dash_bootstrap_components as dbc
 import pandas as pd
 import plotly.express as px
@@ -86,8 +87,13 @@ def _plays_bar_chart(date_range, min_date, playtime, max_date):
     sql = _build_query(date_range, min_date, max_date, playtime)
     sql_total = _build_query(date_range, min_date, max_date, playtime)
 
-    min_date_total, max_date_total = min_date - relativedelta(months=6), min_date
-    if date_range == "week" or date_range == "year":
+    if date_range == "week":
+        min_date_total, max_date_total = min_date - relativedelta(months=6), min_date
+        min_date = min_date_to_last_range(min_date, date_range)
+    elif date_range == "month":
+        min_date_total, max_date_total = min_date - relativedelta(years=1), min_date
+    elif date_range == "year":
+        min_date_total, max_date_total = datetime(1990, 1, 1), min_date
         min_date = min_date_to_last_range(min_date, date_range)
 
     df = pd.read_sql_query(
