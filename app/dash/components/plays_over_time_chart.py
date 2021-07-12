@@ -74,27 +74,8 @@ def _build_query(date_range, min_date, max_date, playtime, filter_date=True):
     return sql
 
 
-@app.callback(
-    Output("plays-line-chart", "figure"),
-    Input("date-range-select", "value"),
-    Input("date-select", "value"),
-    Input("use-playtime", "checked"),
-)
-@set_theme
-@convert_dates
-@db_session
-def _plays_bar_chart(date_range, min_date, playtime, max_date):
+def _get_bar_chart(date_range, min_date, playtime, max_date):
     sql = _build_query(date_range, min_date, max_date, playtime)
-    sql_total = _build_query(date_range, min_date, max_date, playtime)
-
-    if date_range == "week":
-        min_date_total, max_date_total = min_date - relativedelta(months=6), min_date
-        min_date = min_date_to_last_range(min_date, date_range)
-    elif date_range == "month":
-        min_date_total, max_date_total = min_date - relativedelta(years=1), min_date
-    elif date_range == "year":
-        min_date_total, max_date_total = datetime(1990, 1, 1), min_date
-        min_date = min_date_to_last_range(min_date, date_range)
 
     df = pd.read_sql_query(
         sql,
@@ -104,55 +85,28 @@ def _plays_bar_chart(date_range, min_date, playtime, max_date):
     )
     df = df.sort_values("Date")
 
-    df_total = pd.read_sql_query(
-        sql_total,
-        db.get_connection(),
-        params={"min_date": min_date_total, "max_date": max_date_total},
-        parse_dates=["Date"],
-    )
-    df_total = df_total.sort_values("Date")
-
     if date_range == "week":
         frmt = "%a"
-        color = "Week"
-        x_axis_title = "Day"
-        df_total = df_total.groupby(df_total["Date"].dt.weekday, as_index=False).agg(
-            {"Time": "mean", "Date": "first"}
-        )
     elif date_range == "month":
         frmt = "%d"
-        color = None
-        x_axis_title = "Day"
-        df_total = df_total.groupby("Day", as_index=False).agg(
-            {"Time": "mean", "Date": "first"}
-        )
     elif date_range == "year":
         frmt = "%b"
-        color = "Year"
-        x_axis_title = "Month"
-        df_total = df_total.groupby("Month", as_index=False).agg(
-            {"Time": "mean", "Date": "first"}
-        )
 
     df["X"] = df["Date"].dt.strftime(frmt)
-    df_total["X"] = df_total["Date"].dt.strftime(frmt)
-
     df, scale = set_length_scale(df, "Time", playtime)
-    df_total, scale = set_length_scale(df_total, "Time", playtime)
-
-    if playtime:
-        title = f"Playtime over time ({scale})"
-        y_axis_title = f"Total Playtime ({scale})"
-    else:
-        title = "Plays over time"
-        y_axis_title = "Plays"
 
     fig = px.bar(
-        df, x="X", y="Time", title=title, text="Time", color=color, barmode="group"
+        df,
+        x="X",
+        y="Time",
+        title=f"Playtime over time ({scale})",
+        text="Time",
+        color=date_range.title() if date_range != "month" else None,
+        barmode="group",
     )
     fig.update_layout(
-        yaxis_title=y_axis_title,
-        xaxis_title=x_axis_title,
+        yaxis_title=f"Total Playtime ({scale})",
+        xaxis_title=date_range.title(),
         uniformtext_minsize=11,
         uniformtext_mode="show",
         legend_orientation="h",
@@ -163,8 +117,40 @@ def _plays_bar_chart(date_range, min_date, playtime, max_date):
     )
     fig.update_traces(texttemplate="%{value:.0f}")
 
-    fig_2 = px.line(df_total, x="X", y="Time")
-    fig_2.update_traces(
+    return fig
+
+
+def _get_line_chart(date_range, min_date, playtime, max_date):
+    sql_total = _build_query(date_range, min_date, max_date, playtime)
+    df = pd.read_sql_query(
+        sql_total,
+        db.get_connection(),
+        params={"min_date": min_date, "max_date": max_date},
+        parse_dates=["Date"],
+    )
+
+    if len(df) == 0:
+        return None
+
+    df = df.sort_values("Date")
+
+    if date_range == "week":
+        frmt = "%a"
+        df = df.groupby(df["Date"].dt.weekday, as_index=False).agg(
+            {"Time": "mean", "Date": "first"}
+        )
+    elif date_range == "month":
+        frmt = "%d"
+        df = df.groupby("Day", as_index=False).agg({"Time": "mean", "Date": "first"})
+    elif date_range == "year":
+        frmt = "%b"
+        df = df.groupby("Month", as_index=False).agg({"Time": "mean", "Date": "first"})
+
+    df["X"] = df["Date"].dt.strftime(frmt)
+    df, scale = set_length_scale(df, "Time", playtime)
+
+    fig = px.line(df, x="X", y="Time")
+    fig.update_traces(
         name="Mean",
         text=None,
         line_color="white",
@@ -172,6 +158,32 @@ def _plays_bar_chart(date_range, min_date, playtime, max_date):
         mode="markers+lines",
     )
 
-    fig.add_trace(fig_2.data[0])
-
     return fig
+
+
+@app.callback(
+    Output("plays-line-chart", "figure"),
+    Input("date-range-select", "value"),
+    Input("date-select", "value"),
+    Input("use-playtime", "checked"),
+)
+@set_theme
+@convert_dates
+@db_session
+def _plays_bar_chart(date_range, min_date, playtime, max_date):
+    if date_range == "week":
+        min_date_total, max_date_total = min_date - relativedelta(months=6), min_date
+        min_date = min_date_to_last_range(min_date, date_range)
+    elif date_range == "month":
+        min_date_total, max_date_total = min_date - relativedelta(years=1), min_date
+    elif date_range == "year":
+        min_date_total, max_date_total = datetime(1990, 1, 1), min_date
+        min_date = min_date_to_last_range(min_date, date_range)
+
+    fig_bar = _get_bar_chart(date_range, min_date, playtime, max_date)
+    fig_line = _get_line_chart(date_range, min_date_total, playtime, max_date_total)
+
+    if fig_line is not None:
+        fig_bar.add_trace(fig_line.data[0])
+
+    return fig_bar
