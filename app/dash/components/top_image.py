@@ -35,7 +35,7 @@ def get_layout(_type):
     if _type == "series":
         name_id = "top-series-image-name"
         art_id = "top-series-image-art"
-        return get_card("Top series", name_id, art_id)
+        return get_card("Top tag", name_id, art_id)
     elif _type == "album":
         name_id = "top-album-image-name"
         art_id = "top-album-image-art"
@@ -50,57 +50,44 @@ def get_layout(_type):
 @app.callback(
     Output("top-series-image-name", "children"),
     Output("top-series-image-art", "src"),
+    Input("top-tags", "data"),
     Input("date-range-select", "value"),
     Input("date-select", "value"),
     Input("use-playtime", "checked"),
 )
 @convert_dates
 @db_session
-def _top_image_series_stats(date_range, min_date, playtime, max_date):
+def _top_image_series_stats(df, date_range, min_date, playtime, max_date):
+    df = pd.read_json(df, orient="split")
+
     sql = f"""
-    SELECT
-        t.value AS series,
-        {get_agg(playtime)}(s.length) AS "length",
-        (
-            SELECT a.art
-            FROM album a
-            INNER JOIN albumdb_songdb a_s
-                ON a_s.albumdb = a.id
-            INNER JOIN song s
-                ON a_s.songdb = s.id
-            INNER JOIN songdb_tagdb s_t
-                ON s_t.songdb = s.id
-            INNER JOIN tag t2
-                ON t2.id = s_t.tagdb
-            INNER JOIN scrobble sc
-                ON sc.song = s.id
-            WHERE t2.value = t.value
-                :date:
-            GROUP BY a.art
-            ORDER BY {get_agg(playtime)}(s.length) DESC
-            LIMIT 1
-        )
-    FROM scrobble sc
+    SELECT art
+    FROM album a
+    INNER JOIN albumdb_songdb a_s
+        ON a_s.albumdb = a.id
     INNER JOIN song s
-        ON s.id = sc.song
-    INNER JOIN songdb_tagdb s_a
-        ON s_a.songdb = s.id
+        ON a_s.songdb = s.id
+    INNER JOIN scrobble sc
+        ON sc.song = s.id
+    INNER JOIN songdb_tagdb s_t
+        ON s_t.songdb = s.id
     INNER JOIN tag t
-        ON s_a.tagdb = t.id
-    WHERE "length" IS NOT NULL
-        AND t.tag_type = 'franchise'
-        AND t.value != 'Initial D'
+        ON s_t.tagdb = t.id
+    WHERE t.value = %(tag)s
         :date:
-    GROUP BY t.value
-    ORDER BY "length" DESC
+    GROUP BY art
+    ORDER BY {get_agg(playtime)}(s.length) DESC
     LIMIT 1
     """
     sql = add_date_clause(sql, min_date, max_date, where=False)
-    df = pd.read_sql_query(
-        sql, db.get_connection(), params={"min_date": min_date, "max_date": max_date}
+    df_art = pd.read_sql_query(
+        sql,
+        db.get_connection(),
+        params={"min_date": min_date, "max_date": max_date, "tag": df.iloc[-1]["Name"]},
     ).iloc[0]
-    art = IMG_URL + df.art
-    return (df.series, art)
+    art = IMG_URL + df_art.art
+
+    return (df.iloc[-1]["Name"], art)
 
 
 @app.callback(
