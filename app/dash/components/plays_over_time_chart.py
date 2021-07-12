@@ -86,6 +86,7 @@ def _plays_bar_chart(date_range, min_date, playtime, max_date):
     sql = _build_query(date_range, min_date, max_date, playtime)
     sql_total = _build_query(date_range, min_date, max_date, playtime)
 
+    min_date_total, max_date_total = min_date - relativedelta(months=6), min_date
     if date_range == "week" or date_range == "year":
         min_date = min_date_to_last_range(min_date, date_range)
 
@@ -100,7 +101,7 @@ def _plays_bar_chart(date_range, min_date, playtime, max_date):
     df_total = pd.read_sql_query(
         sql_total,
         db.get_connection(),
-        params={"min_date": min_date - relativedelta(months=6), "max_date": min_date},
+        params={"min_date": min_date_total, "max_date": max_date_total},
         parse_dates=["Date"],
     )
     df_total = df_total.sort_values("Date")
