@@ -4,6 +4,7 @@ import dash_html_components as html
 import app.dash.components
 import app.settings  # Import settings before anything else
 from app.dash.app import app
+from app.dash import data_callbacks
 from app.dash.components import (
     navbar,
     stats,
@@ -54,6 +55,7 @@ app.layout = html.Div(
             ],
             fluid=False,
         ),
+        data_callbacks.get_layout(),
     ]
 )
 

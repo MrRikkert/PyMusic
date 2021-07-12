@@ -54,60 +54,15 @@ def _get_graph(df, x, y, title, xaxis_title, className=""):
 
 @app.callback(
     Output("top-mixed-chart", "figure"),
-    Input("date-range-select", "value"),
-    Input("date-select", "value"),
+    Input("top-tags", "data"),
+    Input("top-tags-scale", "data"),
     Input("top-mixed-chart", "className"),
     Input("use-playtime", "checked"),
 )
 @set_theme
-@convert_dates
 @db_session
-def _top_tag(date_range, min_date, className, playtime, max_date):
-    sql = f"""
-    SELECT
-        CASE
-            WHEN franchise IS NOT NULL THEN 'franchise'
-            WHEN sort_artist IS NOT NULL THEN 'sort_artist'
-            WHEN "type" IS NOT NULL THEN 'type'
-        END AS "tag_type",
-        CASE
-            WHEN franchise IS NOT NULL THEN franchise
-            WHEN sort_artist IS NOT NULL THEN sort_artist
-            WHEN "type" IS NOT NULL THEN "type"
-        END AS "name",
-        {get_agg(playtime)}("length") AS plays
-    FROM (
-        SELECT
-            sc.id,
-            s.length,
-            MAX(CASE WHEN t.tag_type = 'franchise' THEN t.value END) AS "franchise",
-            MAX(CASE WHEN t.tag_type = 'sort_artist' THEN t.value END) AS "sort_artist",
-            MAX(CASE WHEN t.tag_type = 'type' THEN t.value END) AS "type"
-        FROM scrobble sc
-        INNER JOIN song s
-            ON s.id = sc.song
-        INNER JOIN songdb_tagdb st
-            ON s.id = st.songdb
-        INNER JOIN tag t
-            ON t.id = st.tagdb
-        :date:
-        GROUP BY sc.id, s.length
-    ) x
-    GROUP BY "name", "tag_type"
-    ORDER BY plays DESC
-    LIMIT 5
-    """
-    sql = add_date_clause(sql, min_date, max_date, where=True)
-
-    df = pd.read_sql_query(
-        sql, db.get_connection(), params={"min_date": min_date, "max_date": max_date}
-    )
-    df = df.rename(
-        columns={df.columns[0]: "Type", df.columns[1]: "Name", df.columns[2]: "Time"}
-    )
-    df = df.sort_values("Time", ascending=True)
-    df, scale = set_length_scale(df, "Time", playtime)
-
+def _top_tag(df, scale, className, playtime):
+    df = pd.read_json(df, orient="split")
     if playtime:
         title = "Top tag (playtime)"
         xaxis_title = f"Total Playtime ({scale})"
