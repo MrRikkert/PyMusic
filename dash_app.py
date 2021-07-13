@@ -3,14 +3,15 @@ import dash_html_components as html
 
 import app.dash.components
 import app.settings  # Import settings before anything else
-from app.dash.app import app
 from app.dash import data_callbacks
+from app.dash.app import app
 from app.dash.components import (
     navbar,
-    stats,
-    top_image,
-    top_chart,
     plays_over_time_chart,
+    stats,
+    top_chart,
+    top_image,
+    vocal_chart,
 )
 from app.db.base import init_db
 
@@ -52,6 +53,7 @@ app.layout = html.Div(
                         dbc.Col(top_image.get_layout("album"), md=12, lg=3),
                     ]
                 ),
+                dbc.Row([dbc.Col(vocal_chart.get_layout(), md=12)]),
             ],
             fluid=False,
         ),
