@@ -57,7 +57,7 @@ def get_layout(_type):
 )
 @convert_dates
 @db_session
-def _top_image_series_stats(df, date_range, min_date, playtime, max_date):
+def _top_image_tags_stats(df, date_range, min_date, playtime, max_date):
     df = pd.read_json(df, orient="split")
 
     sql = f"""

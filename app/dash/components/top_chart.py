@@ -60,7 +60,6 @@ def _get_graph(df, x, y, title, xaxis_title, className=""):
     Input("use-playtime", "checked"),
 )
 @set_theme
-@db_session
 def _top_tag(df, scale, className, playtime):
     df = pd.read_json(df, orient="split")
     if playtime:
