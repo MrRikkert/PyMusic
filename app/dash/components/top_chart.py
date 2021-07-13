@@ -81,41 +81,14 @@ def _top_tag(df, scale, className, playtime):
 
 @app.callback(
     Output("top-artist-chart", "figure"),
-    Input("date-range-select", "value"),
-    Input("date-select", "value"),
+    Input("top-artists", "data"),
+    Input("top-artists-scale", "data"),
     Input("top-artist-chart", "className"),
     Input("use-playtime", "checked"),
 )
 @set_theme
-@convert_dates
-@db_session
-def _top_artist(date_range, min_date, className, playtime, max_date):
-    sql = f"""
-    SELECT
-        a.name_alt,
-        {get_agg(playtime)}(s.length) AS "length"
-    FROM scrobble sc
-    INNER JOIN song s
-        ON sc.song = s.id
-    INNER JOIN artistdb_songdb a_s
-        ON a_s.songdb = s.id
-    INNER JOIN artist a
-        ON a_s.artistdb = a.id
-    WHERE "length" IS NOT NULL
-        :date:
-    GROUP BY a.name_alt
-    ORDER BY "length" desc
-    LIMIT 5
-    """
-    sql = add_date_clause(sql, min_date, max_date, where=False)
-
-    df = pd.read_sql_query(
-        sql, db.get_connection(), params={"min_date": min_date, "max_date": max_date}
-    )
-    df = df.rename(columns={df.columns[0]: "Artist", df.columns[1]: "Time"})
-    df = df.sort_values("Time", ascending=True)
-    df, scale = set_length_scale(df, "Time", playtime)
-
+def _top_artist(df, scale, className, playtime):
+    df = pd.read_json(df, orient="split")
     if playtime:
         title = "Top artist (playtime)"
         xaxis_title = f"Total Playtime ({scale})"

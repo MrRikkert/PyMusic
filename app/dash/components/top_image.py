@@ -107,54 +107,11 @@ def _top_image_album_stats(df):
 @app.callback(
     Output("top-artist-image-name", "children"),
     Output("top-artist-image-art", "src"),
-    Input("date-range-select", "value"),
-    Input("date-select", "value"),
-    Input("use-playtime", "checked"),
+    Input("top-artists", "data"),
 )
-@convert_dates
-@db_session
-def _top_image_artist_stats(date_range, min_date, playtime, max_date):
-    # Uses top album art like series
-    # No easy accessible API to get artist images
-    sql = f"""
-    SELECT
-        a.name_alt AS "artist",
-        {get_agg(playtime)}(s.length) AS "length",
-        (
-            SELECT al.art
-            FROM album al
-            INNER JOIN albumdb_songdb al_s
-                ON al_s.albumdb = al.id
-            INNER JOIN song s
-                ON al_s.songdb = s.id
-            INNER JOIN artistdb_songdb ar_s
-                ON ar_s.songdb = s.id
-            INNER JOIN artist ar
-                ON ar_s.artistdb = ar.id
-            INNER JOIN scrobble sc
-                ON sc.song = s.id
-            WHERE ar.name_alt = a.name_alt
-                :date:
-            GROUP BY al.art
-            ORDER BY {get_agg(playtime)}(s.length) DESC
-            LIMIT 1
-        )
-    FROM scrobble sc
-    INNER JOIN song s
-        ON s.id = sc.song
-    INNER JOIN artistdb_songdb a_s
-        ON a_s.songdb = s.id
-    INNER JOIN artist a
-        ON a_s.artistdb = a.id
-    WHERE "length" IS NOT NULL
-        :date:
-    GROUP BY a.name_alt
-    ORDER BY "length" DESC
-    LIMIT 1
-    """
-    sql = add_date_clause(sql, min_date, max_date, where=False)
-    df = pd.read_sql_query(
-        sql, db.get_connection(), params={"min_date": min_date, "max_date": max_date}
-    ).iloc[0]
-    art = IMG_URL + df.art
-    return (df.artist, art)
+def _top_image_artist_stats(df):
+    df = pd.read_json(df, orient="split")
+
+    top = df.iloc[-1]
+    art = IMG_URL + top.Art
+    return (top.Artist, art)
