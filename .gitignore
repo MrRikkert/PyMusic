@@ -139,4 +139,4 @@ dmypy.json
 *.sqlite3
 *.csv
 
-# only commit template
+*.ipynb
