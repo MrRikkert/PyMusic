@@ -24,6 +24,7 @@ def get_layout():
                 dbc.CardBody(get_default_graph(id="plays-line-chart")),
                 color="light",
                 outline=True,
+                className="plays-over-time",
             ),
         )
 

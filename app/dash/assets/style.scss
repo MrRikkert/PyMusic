@@ -117,6 +117,20 @@
     }
 }
 
+.plays-over-time {
+    @include bootstrap.media-breakpoint-up(xs) {
+        @include col-height(6)
+    }
+
+    @include bootstrap.media-breakpoint-up(md) {
+        @include col-height(4)
+    }
+
+    @include bootstrap.media-breakpoint-up(lg) {
+        @include col-height(3)
+    }
+}
+
 .top-image {
     @include bootstrap.media-breakpoint-up(xs) {
         height: auto;
