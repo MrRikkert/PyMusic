@@ -10,8 +10,6 @@
 
 // Navbar
 .navbar {
-    margin-bottom: bootstrap.$grid-gutter-width;
-
     .right {
         margin-left: 15px
     }
@@ -30,6 +28,10 @@
     [class^="col"] {
         margin-bottom: bootstrap.$grid-gutter-width;
     }
+
+    padding-top: bootstrap.$grid-gutter-width;
+
+    background-color: bootstrap.$body-bg;
 }
 
 //Card specific CSS
