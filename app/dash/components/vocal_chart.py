@@ -88,7 +88,6 @@ def _top_tag(playtime, min_date, date_range, max_date):
     fig.update_layout(
         xaxis=dict(visible=False, range=[0, 100], fixedrange=True),
         yaxis=dict(visible=False, fixedrange=True),
-        margin=dict(l=0, r=0, t=0, b=0),
         uniformtext=dict(minsize=13, mode="show"),
         showlegend=False,
     )
