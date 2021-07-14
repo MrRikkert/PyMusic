@@ -28,7 +28,7 @@ def get_layout():
     Input("date-range-select", "value"),
     Input("date-select", "value"),
     Input("top-mixed-chart", "className"),
-    Input("use-playtime", "checked"),
+    Input("use-playtime", "value"),
 )
 @convert_dates
 @db_session
@@ -85,7 +85,7 @@ def _top_tags(date_range, min_date, className, playtime, max_date):
     Output("top-albums-scale", "data"),
     Input("date-range-select", "value"),
     Input("date-select", "value"),
-    Input("use-playtime", "checked"),
+    Input("use-playtime", "value"),
 )
 @convert_dates
 @db_session
@@ -131,7 +131,7 @@ def _top_albums(date_range, min_date, playtime, max_date):
     Output("top-artists-scale", "data"),
     Input("date-range-select", "value"),
     Input("date-select", "value"),
-    Input("use-playtime", "checked"),
+    Input("use-playtime", "value"),
 )
 @convert_dates
 @db_session

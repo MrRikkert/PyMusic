@@ -53,7 +53,7 @@ def get_layout(_type):
     Input("top-tags", "data"),
     State("date-range-select", "value"),
     State("date-select", "value"),
-    State("use-playtime", "checked"),
+    State("use-playtime", "value"),
 )
 @convert_dates
 @db_session

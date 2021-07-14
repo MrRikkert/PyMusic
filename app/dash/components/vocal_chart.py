@@ -42,7 +42,7 @@ def _get_graph(df, x, y, title, xaxis_title, className=""):
 
 @app.callback(
     Output("vocal-dist-chart", "figure"),
-    Input("use-playtime", "checked"),
+    Input("use-playtime", "value"),
     Input("date-select", "value"),
     State("date-range-select", "value"),
 )

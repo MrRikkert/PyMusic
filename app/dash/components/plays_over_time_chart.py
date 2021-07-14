@@ -165,7 +165,7 @@ def _get_line_chart(date_range, min_date, playtime, max_date):
 @app.callback(
     Output("plays-line-chart", "figure"),
     Input("date-select", "value"),
-    Input("use-playtime", "checked"),
+    Input("use-playtime", "value"),
     State("date-range-select", "value"),
 )
 @convert_dates

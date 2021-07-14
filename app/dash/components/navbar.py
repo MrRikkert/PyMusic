@@ -18,17 +18,14 @@ def get_layout():
         html.Div([], className="ml-auto flex-nowrap mt-3 mt-md-0"),
         dbc.FormGroup(
             [
-                dbc.Checkbox(
-                    id="use-playtime", className="form-check-input", checked=True
-                ),
-                dbc.Label(
-                    "Use playtime?",
-                    html_for="use-playtime",
-                    className="form-check-label",
-                ),
+                dbc.Checklist(
+                    options=[{"label": "Use playtime?", "value": 1}],
+                    value=[1],
+                    id="use-playtime",
+                    inline=True,
+                )
             ],
             check=True,
-            className="right",
         ),
         dbc.Select(
             "date-range-select",
@@ -38,7 +35,6 @@ def get_layout():
                 {"label": "Year", "value": "year"},
             ],
             value="week",
-            className="right",
         ),
         dbc.Select(
             "date-select",

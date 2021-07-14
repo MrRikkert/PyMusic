@@ -48,7 +48,7 @@ def _get_graph(df, x, y, title, xaxis_title, className=""):
     Input("top-tags", "data"),
     State("top-tags-scale", "data"),
     State("top-mixed-chart", "className"),
-    State("use-playtime", "checked"),
+    State("use-playtime", "value"),
 )
 def _top_tag(df, scale, className, playtime):
     df = pd.read_json(df, orient="split")
@@ -74,7 +74,7 @@ def _top_tag(df, scale, className, playtime):
     Input("top-artists", "data"),
     State("top-artists-scale", "data"),
     State("top-artist-chart", "className"),
-    State("use-playtime", "checked"),
+    State("use-playtime", "value"),
 )
 def _top_artist(df, scale, className, playtime):
     df = pd.read_json(df, orient="split")
@@ -100,7 +100,7 @@ def _top_artist(df, scale, className, playtime):
     Input("top-albums", "data"),
     State("top-albums-scale", "data"),
     State("top-album-chart", "className"),
-    State("use-playtime", "checked"),
+    State("use-playtime", "value"),
 )
 def _top_album(df, scale, className, playtime):
     df = pd.read_json(df, orient="split")
