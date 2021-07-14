@@ -50,10 +50,19 @@
 }
 
 .title-bar {
+    @include bootstrap.media-breakpoint-up(sm) {
+        @include col-height(2)
+    }
+
+    @include bootstrap.media-breakpoint-up(lg) {
+        @include col-height(1)
+    }
+
     h1 {
         font-size: 2rem;
         margin-bottom: 0px;
         font-weight: bold;
+        text-align: center;
         // color: bootstrap.$primary;
     }
 }
