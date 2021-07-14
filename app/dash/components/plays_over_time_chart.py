@@ -107,15 +107,10 @@ def _get_bar_chart(date_range, min_date, playtime, max_date):
         barmode="group",
     )
     fig.update_layout(
-        yaxis_title=f"Total Playtime ({scale})",
-        xaxis_title=date_range.title(),
-        uniformtext_minsize=11,
-        uniformtext_mode="show",
-        legend_orientation="h",
-        legend_yanchor="bottom",
-        legend_xanchor="right",
-        legend_y=1.15,
-        legend_x=1,
+        yaxis=dict(title=f"Total Playtime ({scale})"),
+        xaxis=dict(title=date_range.title()),
+        uniformtext=dict(minsize=11, mode="show"),
+        legend=dict(orientation="h", yanchor="bottom", xanchor="right", y=1.15, x=1),
     )
     fig.update_traces(texttemplate="%{value:.0f}")
 

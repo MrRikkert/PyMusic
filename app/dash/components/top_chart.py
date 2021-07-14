@@ -34,7 +34,7 @@ def _get_graph(df, x, y, title, xaxis_title, className=""):
         df, x=x, y=y, orientation="h", title=title, hover_data=["Time"], text=y
     )
     fig.update_layout(
-        xaxis_title=xaxis_title, uniformtext_minsize=13, uniformtext_mode="show"
+        xaxis=dict(title=xaxis_title), uniformtext=dict(minsize=13, mode="show")
     )
     fig.update_traces(textposition="inside", insidetextanchor="start", textangle=0)
     fig.update_yaxes(showticklabels=False)
