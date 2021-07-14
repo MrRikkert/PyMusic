@@ -6,3 +6,9 @@ $col-height-sm: get-container-widths(sm) / 12 * 3 - bootstrap.$grid-gutter-width
 $col-height-md: get-container-widths(md) / 12 * 3 - bootstrap.$grid-gutter-width;
 $col-height-lg: get-container-widths(lg) / 12 * 3 - bootstrap.$grid-gutter-width;
 $col-height-xl: get-container-widths(xl) / 12 * 3 - bootstrap.$grid-gutter-width;
+
+$col-height-4-xs: 250px;
+$col-height-4-sm: get-container-widths(sm) / 12 * 4 - bootstrap.$grid-gutter-width;
+$col-height-4-md: get-container-widths(md) / 12 * 4 - bootstrap.$grid-gutter-width;
+$col-height-4-lg: get-container-widths(lg) / 12 * 4 - bootstrap.$grid-gutter-width;
+$col-height-4-xl: get-container-widths(xl) / 12 * 4 - bootstrap.$grid-gutter-width;

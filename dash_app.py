@@ -6,6 +6,7 @@ import app.settings  # Import settings before anything else
 from app.dash import data_callbacks
 from app.dash.app import app
 from app.dash.components import (
+    listening_clock_chart,
     navbar,
     plays_over_time_chart,
     stats,
@@ -56,6 +57,7 @@ app.layout = html.Div(
                     ]
                 ),
                 dbc.Row([dbc.Col(vocal_chart.get_layout(), md=12)]),
+                dbc.Row([dbc.Col(listening_clock_chart.get_layout(), md=12, lg=4)]),
             ],
             fluid=False,
             id="main-content",

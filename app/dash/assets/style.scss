@@ -46,6 +46,10 @@
         @include col-height-quarter;
     }
 
+    &.test {
+        @include col-height-4
+    }
+
     .card-body {
         padding: 5px;
     }
