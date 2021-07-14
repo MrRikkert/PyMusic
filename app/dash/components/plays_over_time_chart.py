@@ -82,14 +82,16 @@ def _get_bar_chart(date_range, min_date, playtime, max_date):
         params={"min_date": min_date, "max_date": max_date},
         parse_dates=["Date"],
     )
-    df = df.sort_values("Date")
 
     if date_range == "week":
         frmt = "%a"
+        df = df.sort_values(["Week", "Date"], ascending=[False, True])
     elif date_range == "month":
         frmt = "%d"
+        df = df.sort_values("Date")
     elif date_range == "year":
         frmt = "%b"
+        df = df.sort_values(["Year", "Date"], ascending=[False, True])
 
     df["X"] = df["Date"].dt.strftime(frmt)
     df, scale = set_length_scale(df, "Time", playtime)
