@@ -36,18 +36,12 @@
 
 //Card specific CSS
 .card {
-    @include col-height;
+    @include col-height(3);
 
-    &.halve {
-        @include col-height-halve;
-    }
-
-    &.quarter {
-        @include col-height-quarter;
-    }
-
-    &.test {
-        @include col-height-4
+    @for $i from 1 through 12 {
+        &.height-#{$i} {
+            @include col-height($i);
+        }
     }
 
     .card-body {
@@ -122,6 +116,6 @@
         padding-bottom: 2px;
         object-fit: cover;
 
-        @include col-height
+        @include col-height(3);
     }
 }

@@ -2,90 +2,24 @@
 @use "functions"as *;
 @use "variables"as *;
 
-@mixin col-height() {
+@mixin col-height($i) {
     @include bootstrap.media-breakpoint-up(xs) {
-        height: $col-height-xs;
+        height: 250px;
     }
 
     @include bootstrap.media-breakpoint-up(sm) {
-        height: $col-height-sm;
+        height: get-container-widths(sm) / 12 * $i - bootstrap.$grid-gutter-width;
     }
 
     @include bootstrap.media-breakpoint-up(md) {
-        height: $col-height-md;
+        height: get-container-widths(md) / 12 * $i - bootstrap.$grid-gutter-width;
     }
 
     @include bootstrap.media-breakpoint-up(lg) {
-        height: $col-height-lg;
+        height: get-container-widths(lg) / 12 * $i - bootstrap.$grid-gutter-width;
     }
 
     @include bootstrap.media-breakpoint-up(xl) {
-        height: $col-height-xl;
-    }
-}
-
-@mixin col-height-4() {
-    @include bootstrap.media-breakpoint-up(xs) {
-        height: $col-height-4-xs;
-    }
-
-    @include bootstrap.media-breakpoint-up(sm) {
-        height: $col-height-4-sm;
-    }
-
-    @include bootstrap.media-breakpoint-up(md) {
-        height: $col-height-4-md;
-    }
-
-    @include bootstrap.media-breakpoint-up(lg) {
-        height: $col-height-4-lg;
-    }
-
-    @include bootstrap.media-breakpoint-up(xl) {
-        height: $col-height-4-xl;
-    }
-}
-
-@mixin col-height-halve() {
-    @include bootstrap.media-breakpoint-up(xs) {
-        height: $col-height-xs / 2;
-    }
-
-    @include bootstrap.media-breakpoint-up(sm) {
-        height: $col-height-sm / 2;
-    }
-
-    @include bootstrap.media-breakpoint-up(md) {
-        height: $col-height-md / 2;
-    }
-
-    @include bootstrap.media-breakpoint-up(lg) {
-        height: $col-height-lg / 2;
-    }
-
-    @include bootstrap.media-breakpoint-up(xl) {
-        height: $col-height-xl / 2;
-    }
-}
-
-@mixin col-height-quarter() {
-    @include bootstrap.media-breakpoint-up(xs) {
-        height: $col-height-xs / 4;
-    }
-
-    @include bootstrap.media-breakpoint-up(sm) {
-        height: $col-height-sm / 4;
-    }
-
-    @include bootstrap.media-breakpoint-up(md) {
-        height: $col-height-md / 4;
-    }
-
-    @include bootstrap.media-breakpoint-up(lg) {
-        height: $col-height-lg / 4;
-    }
-
-    @include bootstrap.media-breakpoint-up(xl) {
-        height: $col-height-xl / 4;
+        height: get-container-widths(xl) / 12 * $i - bootstrap.$grid-gutter-width;
     }
 }

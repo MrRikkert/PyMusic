@@ -20,7 +20,7 @@ def get_layout():
             dbc.CardBody(get_default_graph(id="listening-clock")),
             color="light",
             outline=True,
-            className="test",
+            className="height-4",
         ),
     )
 
