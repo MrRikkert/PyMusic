@@ -55,7 +55,8 @@
     h1 {
         font-size: 2rem;
         margin-bottom: 0px;
-        // color: rgb(170, 170, 170);
+        font-weight: bold;
+        // color: bootstrap.$primary;
     }
 }
 
@@ -63,7 +64,7 @@
     h1 {
         font-size: 1.2rem;
         margin-bottom: 0px;
-        color: rgb(170, 170, 170);
+        color: bootstrap.$light;
     }
 
     .main-stat {
@@ -75,6 +76,7 @@
     .main-stat-old {
         font-size: 1rem;
         text-align: center;
+        color: bootstrap.$light;
     }
 
     .card-body {
