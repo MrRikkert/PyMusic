@@ -25,21 +25,6 @@ def get_layout():
     )
 
 
-def _get_graph(df, x, y, title, xaxis_title, className=""):
-    fig = px.bar(
-        df, x=x, y=y, orientation="h", title=title, hover_data=["Time"], text=y
-    )
-    fig.update_layout(
-        xaxis_title=xaxis_title, uniformtext_minsize=13, uniformtext_mode="show"
-    )
-    fig.update_traces(textposition="inside", insidetextanchor="start", textangle=0)
-    fig.update_yaxes(showticklabels=False)
-    if "reversed" in className:
-        fig.update_xaxes(autorange="reversed")
-
-    return fig
-
-
 @app.callback(
     Output("vocal-dist-chart", "figure"),
     Input("use-playtime", "value"),
@@ -48,7 +33,7 @@ def _get_graph(df, x, y, title, xaxis_title, className=""):
 )
 @convert_dates
 @db_session
-def _top_tag(playtime, min_date, date_range, max_date):
+def _vocal_chart(playtime, min_date, date_range, max_date):
     sql = f"""
     SELECT
         t.value,
