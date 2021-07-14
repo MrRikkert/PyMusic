@@ -4,7 +4,7 @@
 
 @mixin col-height($i) {
     @include bootstrap.media-breakpoint-up(xs) {
-        height: 250px;
+        min-height: get-container-widths(xs);
     }
 
     @include bootstrap.media-breakpoint-up(sm) {

@@ -59,6 +59,18 @@
 }
 
 .general-stats {
+    @include bootstrap.media-breakpoint-up(md) {
+        @include col-height(2)
+    }
+
+    @include bootstrap.media-breakpoint-up(lg) {
+        @include col-height(2.5)
+    }
+
+    @include bootstrap.media-breakpoint-up(xl) {
+        @include col-height(1.5)
+    }
+
     h1 {
         font-size: 1.2rem;
         margin-bottom: 0px;

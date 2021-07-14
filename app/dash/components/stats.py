@@ -33,7 +33,7 @@ def get_layout(_type):
                 ),
                 color="light",
                 outline=True,
-                className="general-stats height-3",
+                className="general-stats",
             ),
         )
 
