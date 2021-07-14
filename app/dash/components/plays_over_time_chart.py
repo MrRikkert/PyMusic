@@ -13,7 +13,7 @@ from app.dash.utils import (
     set_theme,
 )
 from app.db.base import db
-from dash.dependencies import Input, Output
+from dash.dependencies import Input, Output, State
 from dateutil.relativedelta import relativedelta
 from pony.orm import db_session
 
@@ -163,14 +163,14 @@ def _get_line_chart(date_range, min_date, playtime, max_date):
 
 @app.callback(
     Output("plays-line-chart", "figure"),
-    Input("date-range-select", "value"),
     Input("date-select", "value"),
     Input("use-playtime", "checked"),
+    State("date-range-select", "value"),
 )
 @set_theme
 @convert_dates
 @db_session
-def _plays_bar_chart(date_range, min_date, playtime, max_date):
+def _plays_bar_chart(min_date, playtime, date_range, max_date):
     if date_range == "week":
         min_date_total, max_date_total = min_date - relativedelta(months=6), min_date
         min_date = min_date_to_last_range(min_date, date_range)

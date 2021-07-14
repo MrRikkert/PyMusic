@@ -11,7 +11,7 @@ from app.dash.utils import (
     set_theme,
 )
 from app.db.base import db
-from dash.dependencies import Input, Output
+from dash.dependencies import Input, Output, State
 from pony.orm import db_session
 
 
@@ -44,13 +44,13 @@ def _get_graph(df, x, y, title, xaxis_title, className=""):
 @app.callback(
     Output("vocal-dist-chart", "figure"),
     Input("use-playtime", "checked"),
-    Input("date-range-select", "value"),
     Input("date-select", "value"),
+    State("date-range-select", "value"),
 )
 @set_theme
 @convert_dates
 @db_session
-def _top_tag(playtime, date_range, min_date, max_date):
+def _top_tag(playtime, min_date, date_range, max_date):
     sql = f"""
     SELECT
         t.value,

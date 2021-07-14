@@ -11,7 +11,7 @@ from app.dash.utils import (
     set_theme,
 )
 from app.db.base import db
-from dash.dependencies import Input, Output
+from dash.dependencies import Input, Output, State
 from pony.orm import db_session
 
 
@@ -55,9 +55,9 @@ def _get_graph(df, x, y, title, xaxis_title, className=""):
 @app.callback(
     Output("top-mixed-chart", "figure"),
     Input("top-tags", "data"),
-    Input("top-tags-scale", "data"),
-    Input("top-mixed-chart", "className"),
-    Input("use-playtime", "checked"),
+    State("top-tags-scale", "data"),
+    State("top-mixed-chart", "className"),
+    State("use-playtime", "checked"),
 )
 @set_theme
 def _top_tag(df, scale, className, playtime):
@@ -82,9 +82,9 @@ def _top_tag(df, scale, className, playtime):
 @app.callback(
     Output("top-artist-chart", "figure"),
     Input("top-artists", "data"),
-    Input("top-artists-scale", "data"),
-    Input("top-artist-chart", "className"),
-    Input("use-playtime", "checked"),
+    State("top-artists-scale", "data"),
+    State("top-artist-chart", "className"),
+    State("use-playtime", "checked"),
 )
 @set_theme
 def _top_artist(df, scale, className, playtime):
@@ -109,9 +109,9 @@ def _top_artist(df, scale, className, playtime):
 @app.callback(
     Output("top-album-chart", "figure"),
     Input("top-albums", "data"),
-    Input("top-albums-scale", "data"),
-    Input("top-album-chart", "className"),
-    Input("use-playtime", "checked"),
+    State("top-albums-scale", "data"),
+    State("top-album-chart", "className"),
+    State("use-playtime", "checked"),
 )
 @set_theme
 def _top_album(df, scale, className, playtime):

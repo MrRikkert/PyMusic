@@ -12,7 +12,7 @@ from app.dash.utils import (
     seconds_to_text,
 )
 from app.db.base import db
-from dash.dependencies import Input, Output
+from dash.dependencies import Input, Output, State
 from dateutil.relativedelta import relativedelta
 from pony.orm import db_session
 
@@ -50,12 +50,12 @@ def get_layout(_type):
 @app.callback(
     Output("stats-total-scrobbles", "children"),
     Output("stats-total-scrobbles-old", "children"),
-    Input("date-range-select", "value"),
     Input("date-select", "value"),
+    State("date-range-select", "value"),
 )
 @convert_dates
 @db_session
-def __get_total_scrobbles(date_range, min_date, max_date):
+def __get_total_scrobbles(min_date, date_range, max_date):
     min_date = min_date_to_last_range(min_date, date_range)
 
     sql = f"""
@@ -79,12 +79,12 @@ def __get_total_scrobbles(date_range, min_date, max_date):
 @app.callback(
     Output("stats-scrobbles-per-day", "children"),
     Output("stats-scrobbles-per-day-old", "children"),
-    Input("date-range-select", "value"),
     Input("date-select", "value"),
+    State("date-range-select", "value"),
 )
 @convert_dates
 @db_session
-def __get_average_scrobbles(date_range, min_date, max_date):
+def __get_average_scrobbles(min_date, date_range, max_date):
     days = (max_date - min_date).days
     min_date = min_date_to_last_range(min_date, date_range)
 
@@ -112,12 +112,12 @@ def __get_average_scrobbles(date_range, min_date, max_date):
 @app.callback(
     Output("stats-total-playtime", "children"),
     Output("stats-total-playtime-old", "children"),
-    Input("date-range-select", "value"),
     Input("date-select", "value"),
+    State("date-range-select", "value"),
 )
 @convert_dates
 @db_session
-def __get_playtime(date_range, min_date, max_date):
+def __get_playtime(min_date, date_range, max_date):
     min_date = min_date_to_last_range(min_date, date_range)
 
     sql = f"""
@@ -146,12 +146,12 @@ def __get_playtime(date_range, min_date, max_date):
 @app.callback(
     Output("stats-daily-playtime", "children"),
     Output("stats-daily-playtime-old", "children"),
-    Input("date-range-select", "value"),
     Input("date-select", "value"),
+    State("date-range-select", "value"),
 )
 @convert_dates
 @db_session
-def __get_average_playtime(date_range, min_date, max_date):
+def __get_average_playtime(min_date, date_range, max_date):
     days = (max_date - min_date).days
     min_date = min_date_to_last_range(min_date, date_range)
 

@@ -5,7 +5,7 @@ from app.dash.app import app
 from app.dash.utils import add_date_clause, convert_dates, get_agg
 from app.db.base import db
 from app.settings import IMG_URL
-from dash.dependencies import Input, Output
+from dash.dependencies import Input, Output, State
 from pony.orm import db_session
 
 
@@ -51,9 +51,9 @@ def get_layout(_type):
     Output("top-series-image-name", "children"),
     Output("top-series-image-art", "src"),
     Input("top-tags", "data"),
-    Input("date-range-select", "value"),
-    Input("date-select", "value"),
-    Input("use-playtime", "checked"),
+    State("date-range-select", "value"),
+    State("date-select", "value"),
+    State("use-playtime", "checked"),
 )
 @convert_dates
 @db_session
