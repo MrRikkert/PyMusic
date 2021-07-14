@@ -2,7 +2,7 @@ import dash_bootstrap_components as dbc
 import pandas as pd
 import plotly.express as px
 from app.dash.app import app
-from app.dash.utils import get_default_graph, set_theme
+from app.dash.utils import get_default_graph
 from dash.dependencies import Input, Output, State
 
 
@@ -50,7 +50,6 @@ def _get_graph(df, x, y, title, xaxis_title, className=""):
     State("top-mixed-chart", "className"),
     State("use-playtime", "checked"),
 )
-@set_theme
 def _top_tag(df, scale, className, playtime):
     df = pd.read_json(df, orient="split")
     if playtime:
@@ -77,7 +76,6 @@ def _top_tag(df, scale, className, playtime):
     State("top-artist-chart", "className"),
     State("use-playtime", "checked"),
 )
-@set_theme
 def _top_artist(df, scale, className, playtime):
     df = pd.read_json(df, orient="split")
     if playtime:
@@ -104,7 +102,6 @@ def _top_artist(df, scale, className, playtime):
     State("top-album-chart", "className"),
     State("use-playtime", "checked"),
 )
-@set_theme
 def _top_album(df, scale, className, playtime):
     df = pd.read_json(df, orient="split")
 

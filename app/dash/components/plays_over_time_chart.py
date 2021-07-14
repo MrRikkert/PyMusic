@@ -10,7 +10,6 @@ from app.dash.utils import (
     get_default_graph,
     min_date_to_last_range,
     set_length_scale,
-    set_theme,
 )
 from app.db.base import db
 from dash.dependencies import Input, Output, State
@@ -167,7 +166,6 @@ def _get_line_chart(date_range, min_date, playtime, max_date):
     Input("use-playtime", "checked"),
     State("date-range-select", "value"),
 )
-@set_theme
 @convert_dates
 @db_session
 def _plays_bar_chart(min_date, playtime, date_range, max_date):

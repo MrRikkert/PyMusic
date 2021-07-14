@@ -8,7 +8,6 @@ from app.dash.utils import (
     get_agg,
     get_default_graph,
     set_length_scale,
-    set_theme,
 )
 from app.db.base import db
 from dash.dependencies import Input, Output, State
@@ -47,7 +46,6 @@ def _get_graph(df, x, y, title, xaxis_title, className=""):
     Input("date-select", "value"),
     State("date-range-select", "value"),
 )
-@set_theme
 @convert_dates
 @db_session
 def _top_tag(playtime, min_date, date_range, max_date):
