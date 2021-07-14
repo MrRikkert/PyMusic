@@ -40,8 +40,20 @@
         @include col-height-halve;
     }
 
+    &.quarter {
+        @include col-height-quarter;
+    }
+
     .card-body {
         padding: 5px;
+    }
+}
+
+.title-bar {
+    h1 {
+        font-size: 2rem;
+        margin-bottom: 0px;
+        // color: rgb(170, 170, 170);
     }
 }
 

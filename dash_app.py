@@ -9,6 +9,7 @@ from app.dash.components import (
     navbar,
     plays_over_time_chart,
     stats,
+    title_bar,
     top_chart,
     top_image,
     vocal_chart,
@@ -20,6 +21,7 @@ app.layout = html.Div(
         navbar.get_layout(),
         dbc.Container(
             [
+                dbc.Row(dbc.Col(title_bar.get_layout(), md=12)),
                 dbc.Row(
                     [
                         dbc.Col(stats.get_layout("total_scrobbles"), md=12, lg=3),
@@ -56,6 +58,7 @@ app.layout = html.Div(
                 dbc.Row([dbc.Col(vocal_chart.get_layout(), md=12)]),
             ],
             fluid=False,
+            id="main-content",
         ),
         data_callbacks.get_layout(),
     ]
