@@ -30,7 +30,7 @@ def get_layout():
             ),
             color="light",
             outline=True,
-            className="title-bar height-1",
+            className="title-bar height-2",
         ),
     )
 

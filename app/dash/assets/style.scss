@@ -38,9 +38,9 @@
 .card {
     @include col-height(3);
 
-    @for $i from 1 through 12 {
+    @for $i from 1 through 24 {
         &.height-#{$i} {
-            @include col-height($i);
+            @include col-height($i/2);
         }
     }
 
