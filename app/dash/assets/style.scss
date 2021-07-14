@@ -39,6 +39,10 @@
     &.halve {
         @include col-height-halve;
     }
+
+    .card-body {
+        padding: 5px;
+    }
 }
 
 .general-stats {
