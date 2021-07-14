@@ -2,17 +2,8 @@ import dash_bootstrap_components as dbc
 import pandas as pd
 import plotly.express as px
 from app.dash.app import app
-from app.dash.utils import (
-    add_date_clause,
-    convert_dates,
-    get_agg,
-    get_default_graph,
-    set_length_scale,
-    set_theme,
-)
-from app.db.base import db
+from app.dash.utils import get_default_graph, set_theme
 from dash.dependencies import Input, Output, State
-from pony.orm import db_session
 
 
 def get_layout(_type, reverse=False):
