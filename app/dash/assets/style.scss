@@ -145,6 +145,20 @@
     }
 }
 
+.listening-clock {
+    @include bootstrap.media-breakpoint-up(xs) {
+        @include col-height(6)
+    }
+
+    @include bootstrap.media-breakpoint-up(sm) {
+        @include col-height(12)
+    }
+
+    @include bootstrap.media-breakpoint-up(lg) {
+        @include col-height(4)
+    }
+}
+
 .top-image {
     @include bootstrap.media-breakpoint-up(xs) {
         height: auto;
