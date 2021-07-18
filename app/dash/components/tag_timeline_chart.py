@@ -29,15 +29,7 @@ def get_layout():
     )
 
 
-@app.callback(
-    Output("tag-timeline", "figure"),
-    Input("date-select", "value"),
-    Input("use-playtime", "value"),
-    State("date-range-select", "value"),
-)
-@convert_dates
-@db_session
-def _plays_bar_chart(min_date, playtime, date_range, max_date):
+def _get_vars(date_range, min_date):
     if date_range == "week":
         min_date = min_date - relativedelta(weeks=11)
         resample = "W-MON"
@@ -55,20 +47,15 @@ def _plays_bar_chart(min_date, playtime, date_range, max_date):
         frmt = "%b"
         group = 'EXTRACT(month FROM sc.date), EXTRACT("year" FROM sc.date)'
         title = "Tag timeline (year)"
+    return min_date, resample, frmt, group, title
 
+
+def _get_data(playtime, min_date, max_date, group, resample, frmt):
     sql = f"""
-    SELECT *
-    FROM (
         SELECT
             MIN(sc.date) as "date",
             t.value,
-            {get_agg(playtime)}(s.length) AS "time",
-            dense_rank() over (
-                partition by
-                    {group}
-                order by
-                    {get_agg(playtime)}(s.length) desc
-                ) as rank
+            {get_agg(playtime)}(s.length) AS "time"
         FROM scrobble sc
         INNER JOIN song s
             ON sc.song = s.id
@@ -79,9 +66,6 @@ def _plays_bar_chart(min_date, playtime, date_range, max_date):
         WHERE t.tag_type = 'type'
             :date:
         GROUP BY {group}, t.value
-    ) sub
-    WHERE rank <= 5
-    ORDER BY "date", rank, "time"
     """
     sql = add_date_clause(sql, min_date, max_date, where=False)
 
@@ -91,21 +75,63 @@ def _plays_bar_chart(min_date, playtime, date_range, max_date):
         params={"min_date": min_date, "max_date": max_date},
         parse_dates=["date"],
     )
+
+    # Fill missing dates with NaNs
+    # make lines disconnect when a group dissapears for a time frame
     df = (
         df.groupby("value")
         .apply(
             lambda x: x.drop_duplicates("date")
             .set_index("date")
             .resample(resample)
-            .agg({"rank": "min", "time": "min"})
+            .sum()
         )
         .reset_index()
     )
+    df["time"] = df["time"].replace(0, np.NaN)
     df = df.loc[df.date < max_date]
+    df["rank"] = df.groupby(pd.Grouper(key="date", freq=resample))["time"].rank(
+        ascending=False
+    )
     df["x"] = df.date.dt.strftime(frmt)
-    df["rank"] = df["rank"].replace(0, np.NaN)
+
     if playtime:
         df["time"] = df["time"].apply(lambda x: seconds_to_text(x))
+
+    df.loc[df["rank"] > 5, "rank"] = np.NaN
+    return df
+
+
+def _add_scatter(fig):
+    for i, d in enumerate(fig.data):
+        idx = pd.Series(d.y).last_valid_index()
+        if not idx:
+            continue
+        fig.add_scatter(
+            x=[d.x[idx]],
+            y=[d.y[idx]],
+            mode="markers+text",
+            text=d.customdata[idx],
+            textfont=dict(color=d.line.color),
+            textposition="top center",
+            marker=dict(color=d.line.color, size=12),
+            showlegend=False,
+            hoverinfo="skip",
+        )
+    return fig
+
+
+@app.callback(
+    Output("tag-timeline", "figure"),
+    Input("date-select", "value"),
+    Input("use-playtime", "value"),
+    State("date-range-select", "value"),
+)
+@convert_dates
+@db_session
+def _plays_bar_chart(min_date, playtime, date_range, max_date):
+    min_date, resample, frmt, group, title = _get_vars(date_range, min_date)
+    df = _get_data(playtime, min_date, max_date, group, resample, frmt)
 
     fig = px.line(
         df,
@@ -137,20 +163,5 @@ def _plays_bar_chart(min_date, playtime, date_range, max_date):
         mode="markers+lines",
     )
 
-    for i, d in enumerate(fig.data):
-        idx = pd.Series(d.y).last_valid_index()
-        if not idx:
-            continue
-        fig.add_scatter(
-            x=[d.x[idx]],
-            y=[d.y[idx]],
-            mode="markers+text",
-            text=d.customdata[idx],
-            textfont=dict(color=d.line.color),
-            textposition="top center",
-            marker=dict(color=d.line.color, size=12),
-            showlegend=False,
-            hoverinfo="skip",
-        )
-
+    fig = _add_scatter(fig)
     return fig
