@@ -96,11 +96,14 @@ def seconds_to_text(total_seconds):
     hours = total_seconds % 604_800 % 86400 / 3600
     minutes = total_seconds % 604_800 % 86400 % 3600 / 60
 
-    if total_seconds < 60 * 60:
-        return f"{floor(minutes)} minutes"
-    elif total_seconds < 60 * 60 * 24:
-        return f"{floor(hours)} hours, {round(minutes)} minutes"
-    elif total_seconds < 60 * 60 * 24 * 7:
-        return f"{floor(days)} days, {round(hours)} hours"
-    else:
-        return f"{floor(weeks)} weeks, {round(days)} days"
+    try:
+        if total_seconds < 60 * 60:
+            return f"{floor(minutes)} minutes"
+        elif total_seconds < 60 * 60 * 24:
+            return f"{floor(hours)} hours, {round(minutes)} minutes"
+        elif total_seconds < 60 * 60 * 24 * 7:
+            return f"{floor(days)} days, {round(hours)} hours"
+        else:
+            return f"{floor(weeks)} weeks, {round(days)} days"
+    except:
+        return None

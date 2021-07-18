@@ -10,8 +10,7 @@ from app.dash.utils import (
     convert_dates,
     get_agg,
     get_default_graph,
-    min_date_to_last_range,
-    set_length_scale,
+    seconds_to_text,
 )
 from app.db.base import db
 from dash.dependencies import Input, Output, State
@@ -40,19 +39,22 @@ def get_layout():
 @db_session
 def _plays_bar_chart(min_date, playtime, date_range, max_date):
     if date_range == "week":
-        min_date = min_date - relativedelta(weeks=5)
+        min_date = min_date - relativedelta(weeks=11)
         resample = "W-MON"
         frmt = "%W, %Y"
         group = 'EXTRACT(week FROM sc.date), EXTRACT("year" FROM sc.date)'
+        title = "Tag timeline (last 12 weeks)"
     elif date_range == "month":
-        min_date = min_date - relativedelta(months=6)
+        min_date = min_date - relativedelta(months=11)
         resample = "MS"
         frmt = "%b, %Y"
         group = 'EXTRACT(month FROM sc.date), EXTRACT("year" FROM sc.date)'
+        title = "Tag timeline (last 12 months)"
     elif date_range == "year":
         resample = "MS"
         frmt = "%b"
         group = 'EXTRACT(month FROM sc.date), EXTRACT("year" FROM sc.date)'
+        title = "Tag timeline (year)"
 
     sql = f"""
     SELECT *
@@ -60,12 +62,12 @@ def _plays_bar_chart(min_date, playtime, date_range, max_date):
         SELECT
             MIN(sc.date) as "date",
             t.value,
-            SUM(s.length) AS "time",
+            {get_agg(playtime)}(s.length) AS "time",
             dense_rank() over (
                 partition by
                     {group}
                 order by
-                    SUM(s.length) desc
+                    {get_agg(playtime)}(s.length) desc
                 ) as rank
         FROM scrobble sc
         INNER JOIN song s
@@ -95,21 +97,24 @@ def _plays_bar_chart(min_date, playtime, date_range, max_date):
             lambda x: x.drop_duplicates("date")
             .set_index("date")
             .resample(resample)
-            .agg({"rank": "min"})
+            .agg({"rank": "min", "time": "min"})
         )
         .reset_index()
     )
     df = df.loc[df.date < max_date]
     df["x"] = df.date.dt.strftime(frmt)
     df["rank"] = df["rank"].replace(0, np.NaN)
+    if playtime:
+        df["time"] = df["time"].apply(lambda x: seconds_to_text(x))
 
     fig = px.line(
         df,
         x="x",
         y="rank",
         color="value",
-        custom_data=["value"],
+        custom_data=["value", "time"],
         color_discrete_sequence=px.colors.qualitative.G10,
+        title=title,
     )
 
     fig.update_layout(
@@ -120,7 +125,12 @@ def _plays_bar_chart(min_date, playtime, date_range, max_date):
     )
 
     fig.update_traces(
-        hovertemplate="Tag: %{customdata[0]} <extra></extra>",
+        hovertemplate="<br>".join(
+            [
+                "Tag: %{customdata[0]} <extra></extra>",
+                "Playtime: %{customdata[1]}" if playtime else "Plays: %{customdata[1]}",
+            ]
+        ),
         line=dict(shape="spline", smoothing=1),
         marker=dict(size=12),
         connectgaps=False,
