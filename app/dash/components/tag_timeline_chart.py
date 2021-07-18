@@ -91,7 +91,7 @@ def _get_data(playtime, min_date, max_date, group, resample, frmt):
     df["time"] = df["time"].replace(0, np.NaN)
     df = df.loc[df.date < max_date]
     df["rank"] = df.groupby(pd.Grouper(key="date", freq=resample))["time"].rank(
-        ascending=False
+        ascending=False, method="first"
     )
     df["x"] = df.date.dt.strftime(frmt)
 
@@ -99,7 +99,7 @@ def _get_data(playtime, min_date, max_date, group, resample, frmt):
         df["time"] = df["time"].apply(lambda x: seconds_to_text(x))
 
     df.loc[df["rank"] > 5, "rank"] = np.NaN
-    return df
+    return df.sort_values("date")
 
 
 def _add_scatter(fig):
