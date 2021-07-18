@@ -10,6 +10,7 @@ from app.dash.components import (
     navbar,
     plays_over_time_chart,
     stats,
+    tag_timeline_chart,
     title_bar,
     top_chart,
     top_image,
@@ -75,7 +76,12 @@ app.layout = html.Div(
                     ]
                 ),
                 dbc.Row([dbc.Col(vocal_chart.get_layout(), xs=12)]),
-                dbc.Row([dbc.Col(listening_clock_chart.get_layout(), xs=12, lg=4)]),
+                dbc.Row(
+                    [
+                        dbc.Col(listening_clock_chart.get_layout(), xs=12, lg=4),
+                        dbc.Col(tag_timeline_chart.get_layout(), xs=12, lg=8),
+                    ]
+                ),
             ],
             fluid=False,
             id="main-content",
