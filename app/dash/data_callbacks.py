@@ -45,25 +45,28 @@ def _top_tags(date_range, min_date, className, playtime, max_date):
             WHEN sort_artist IS NOT NULL THEN sort_artist
             WHEN "type" IS NOT NULL THEN "type"
         END AS "name",
-        {get_agg(playtime)}("length") AS plays
+        {get_agg(playtime)}(agg) plays
     FROM (
         SELECT
-            sc.id,
-            s.length,
-            MAX(CASE WHEN t.tag_type = 'franchise' THEN t.value END) AS "franchise",
-            MAX(CASE WHEN t.tag_type = 'sort_artist' THEN t.value END) AS "sort_artist",
-            MAX(CASE WHEN t.tag_type = 'type' THEN t.value END) AS "type"
+            MIN(s.length) AS agg,
+            MIN(franchise.value) AS franchise,
+            MIN(sort_artist.value) AS sort_artist,
+            MIN("type".value) AS "type"
         FROM scrobble sc
         INNER JOIN song s
             ON s.id = sc.song
         INNER JOIN songdb_tagdb st
             ON s.id = st.songdb
-        INNER JOIN tag t
-            ON t.id = st.tagdb
+        LEFT JOIN tag franchise
+            ON franchise.id = st.tagdb AND franchise.tag_type = 'franchise'
+        LEFT JOIN tag sort_artist
+            ON sort_artist.id = st.tagdb AND sort_artist.tag_type = 'sort_artist'
+        LEFT JOIN tag "type"
+            ON "type".id = st.tagdb AND "type".tag_type = 'type'
         :date:
-        GROUP BY sc.id, s.length
+        GROUP BY sc.id
     ) x
-    GROUP BY "name", "tag_type"
+    GROUP BY tag_type, "name", "type"
     ORDER BY plays DESC
     LIMIT 5
     """
