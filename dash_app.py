@@ -1,11 +1,11 @@
 import dash_bootstrap_components as dbc
 import dash_html_components as html
 
-import app.dash.components
+import app.components
 import shared.settings  # Import settings before anything else
-from app.dash import data_callbacks
-from app.dash.app import app
-from app.dash.components import (
+from app import data_callbacks
+from app.app import app
+from app.components import (
     listening_clock_chart,
     navbar,
     plays_over_time_chart,

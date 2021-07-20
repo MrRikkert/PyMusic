@@ -4,8 +4,8 @@ import dash_bootstrap_components as dbc
 import numpy as np
 import pandas as pd
 import plotly.express as px
-from app.dash.app import app
-from app.dash.utils import (
+from app.app import app
+from app.utils import (
     add_date_clause,
     convert_dates,
     get_agg,

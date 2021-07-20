@@ -4,8 +4,8 @@ from datetime import timedelta
 import dash_bootstrap_components as dbc
 import dash_html_components as html
 import pandas as pd
-from app.dash.app import app
-from app.dash.utils import (
+from app.app import app
+from app.utils import (
     add_date_clause,
     convert_dates,
     min_date_to_last_range,

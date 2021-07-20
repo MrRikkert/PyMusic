@@ -1,7 +1,7 @@
 import dash_bootstrap_components as dbc
 import dash_html_components as html
 import pandas as pd
-from app.dash.app import app
+from app.app import app
 from shared.db.base import db
 from dash.dependencies import Input, Output, State
 from dateutil.relativedelta import relativedelta

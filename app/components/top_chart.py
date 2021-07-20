@@ -1,8 +1,8 @@
 import dash_bootstrap_components as dbc
 import pandas as pd
 import plotly.express as px
-from app.dash.app import app
-from app.dash.utils import get_default_graph
+from app.app import app
+from app.utils import get_default_graph
 from dash.dependencies import Input, Output, State
 
 

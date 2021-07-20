@@ -3,8 +3,8 @@ import dash_html_components as html
 import pandas as pd
 from pony.orm import db_session
 
-from app.dash.app import app
-from app.dash.utils import add_date_clause, convert_dates, get_agg, set_length_scale
+from app.app import app
+from app.utils import add_date_clause, convert_dates, get_agg, set_length_scale
 from shared.db.base import db
 from dash.dependencies import Input, Output
 

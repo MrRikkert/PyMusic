@@ -19,6 +19,6 @@ pio.templates["myname"] = go.layout.Template(
 )
 pio.templates.default = "plotly_dark+myname"
 
-assets_path = os.getcwd() + "/app/dash/assets/"
+assets_path = os.getcwd() + "/app/assets/"
 
 app = dash.Dash(__name__, assets_folder=assets_path)
