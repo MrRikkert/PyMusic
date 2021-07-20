@@ -1,11 +1,12 @@
 import csv
+import os
 import time
 from datetime import datetime
+from pathlib import Path
 
 import click
-from loguru import logger
 import pytz
-
+from loguru import logger
 from shared.db.base import db
 from shared.logic import scrobble
 from shared.models.songs import ScrobbleIn
@@ -17,6 +18,7 @@ def sync_lastfm_scrobbles(username: str):
 
 def export_scrobbles(path: str):
     scrobbles = scrobble.recent_plays()
+    Path(os.path.dirname(path)).mkdir(parents=True, exist_ok=True)
     with open(path, "w", newline="", encoding="utf-8") as file:
         writer = csv.DictWriter(
             file, delimiter=",", fieldnames=["title", "artist", "album", "date"]

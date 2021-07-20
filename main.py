@@ -7,6 +7,8 @@ from shared.db.base import db, init_db
 from cli import mb, scrobbles
 from pony import orm
 from shared.db.models import ScrobbleDb
+from datetime import datetime
+import os
 
 
 @click.group()
@@ -66,9 +68,8 @@ def sync_scrobbles(lastfm: str):
 @click.option(
     "--path",
     "-p",
-    default="scrobbles.csv",
+    default=f"./exports/scrobbles_{datetime.now():%Y%m%d%H%M}.csv",
     help="sync scrobbles from a local csv file",
-    show_default=True,
 )
 def export(path):
     """Export scrobbles to a csv file"""
@@ -77,17 +78,16 @@ def export(path):
 
 
 @cli.command("import")
-@click.option(
-    "--path",
-    "-p",
-    default="scrobbles.csv",
-    help="sync scrobbles from a local csv file",
-    show_default=True,
-)
+@click.option("--path", "-p", help="sync scrobbles from a local csv file")
 def import_csv(path):
     """Import scrobbles from a csv file"""
+    if not path:
+        path = f"./exports/{os.listdir('./exports')[-1]}"
     logger.bind(path=path).info("Importing scrobbles")
-    scrobbles.import_scrobbles(path)
+    if os.path.exists(path):
+        scrobbles.import_scrobbles(path)
+    else:
+        logger.info("File does not exist")
 
 
 # TODO Fix with new db_session method (wrapped for all functions)
