@@ -91,7 +91,7 @@ def sync_scrobbles(lastfm: str):
 @click.option(
     "--path",
     "-p",
-    default=f"./exports/scrobbles_{datetime.now():%Y%m%d%H%M}.csv",
+    default=f"./exports/scrobbles/{datetime.now():%Y%m%d%H%M}.csv",
     help="sync scrobbles from a local csv file",
 )
 def export(path):
