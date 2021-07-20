@@ -134,6 +134,7 @@ dmypy.json
 !.vscode/launch.json
 
 # test files
+/exports/*
 *.db
 *.sqlite
 *.sqlite3

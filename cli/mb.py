@@ -1,16 +1,18 @@
 import base64
 import os
+import pickle
 import time
 from datetime import datetime
 from hashlib import md5
+from pathlib import Path
 
 import click
+from loguru import logger
 from shared.db.base import db
 from shared.logic import song as song_logic
 from shared.models.songs import SongIn
 from shared.models.tags import TagIn
 from shared.settings import ALBUM_ART_PATH
-from loguru import logger
 
 from cli import musicbeeipc
 
@@ -119,3 +121,17 @@ def sync_data(
             if idx % 500 == 0:
                 db.commit()
     print(time.time() - start)
+
+
+def export_data(
+    export_path, query: str = "", fields=["ArtistPeople", "Title", "Album"]
+):
+    Path(os.path.dirname(export_path)).mkdir(parents=True, exist_ok=True)
+    paths = get_paths(query=query, fields=fields)
+    songs = []
+    with click.progressbar(paths) as click_paths:
+        for idx, path in enumerate(click_paths):
+            songs.append(get_song(path))
+
+    with open(export_path, "wb") as file:
+        pickle.dump(songs, file)
