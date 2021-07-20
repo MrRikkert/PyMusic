@@ -1,4 +1,4 @@
-from app.utils.clean import (
+from shared.utils.clean import (
     clean_album,
     clean_artist,
     reverse_artist,

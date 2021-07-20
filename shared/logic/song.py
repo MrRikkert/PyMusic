@@ -2,13 +2,13 @@ from typing import List
 
 from pony import orm
 
-from app.db.models import SongDb
-from app.exceptions import IntegrityError
-from app.logic import album as album_logic
-from app.logic import artist as artist_logic
-from app.logic import tag as tag_logic
-from app.models.songs import SongIn
-from app.utils.clean import clean_artist, reverse_artist
+from shared.db.models import SongDb
+from shared.exceptions import IntegrityError
+from shared.logic import album as album_logic
+from shared.logic import artist as artist_logic
+from shared.logic import tag as tag_logic
+from shared.models.songs import SongIn
+from shared.utils.clean import clean_artist, reverse_artist
 
 
 def add(
@@ -30,7 +30,7 @@ def add(
         `return_existing` also needs to be `True` for this to work.
         Defaults to `False`.
     - `replace_existing_tags`: `bool`, optional:
-        - Remove all `tag` relationships from the song and the new ones.  
+        - Remove all `tag` relationships from the song and the new ones.
         `update_existing` also need to be `True` for this to work.
         Defaults to `False`.
 

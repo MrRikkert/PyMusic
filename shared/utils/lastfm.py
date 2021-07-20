@@ -1,9 +1,9 @@
 from typing import List
 
 import pylast
-from app.exceptions import LastFmError
-from app.models.songs import ScrobbleLastFm
-from app.settings import LASTFMKEY, LASTFMSECRET
+from shared.exceptions import LastFmError
+from shared.models.songs import ScrobbleLastFm
+from shared.settings import LASTFMKEY, LASTFMSECRET
 from loguru import logger
 
 lastfm = pylast.LastFMNetwork(api_key=LASTFMKEY, api_secret=LASTFMSECRET)

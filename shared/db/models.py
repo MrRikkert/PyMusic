@@ -2,7 +2,7 @@ from datetime import datetime
 
 from pony.orm import Optional, PrimaryKey, Required, Set, composite_key, composite_index
 
-from app.db.base import db
+from shared.db.base import db
 
 
 class ScrobbleDb(db.Entity):

@@ -1,8 +1,8 @@
 from typing import List
 
-from app.db.models import ArtistDb
-from app.exceptions import IntegrityError
-from app.utils.clean import clean_artist, reverse_artist, split_artists
+from shared.db.models import ArtistDb
+from shared.exceptions import IntegrityError
+from shared.utils.clean import clean_artist, reverse_artist, split_artists
 
 
 def get_by_name(name: str) -> ArtistDb:

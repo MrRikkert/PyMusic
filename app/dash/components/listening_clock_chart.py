@@ -9,7 +9,7 @@ from app.dash.utils import (
     get_default_graph,
     set_length_scale,
 )
-from app.db.base import db
+from shared.db.base import db
 from dash.dependencies import Input, Output, State
 from pony.orm import db_session
 

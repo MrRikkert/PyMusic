@@ -2,11 +2,11 @@ import click
 from loguru import logger
 from pony.orm import db_session
 
-from app import settings  # Import settings before anything else
-from app.db.base import db, init_db
+from shared import settings  # Import settings before anything else
+from shared.db.base import db, init_db
 from cli import mb, scrobbles
 from pony import orm
-from app.db.models import ScrobbleDb
+from shared.db.models import ScrobbleDb
 
 
 @click.group()

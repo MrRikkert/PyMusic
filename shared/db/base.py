@@ -1,6 +1,6 @@
 from pony import orm
 
-from app import settings
+from shared import settings
 
 db = orm.Database()
 

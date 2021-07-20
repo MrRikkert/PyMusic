@@ -1,8 +1,8 @@
 import pytest
 from pylast import PyLastError
 
-from app.exceptions import LastFmError
-from app.utils import lastfm
+from shared.exceptions import LastFmError
+from shared.utils import lastfm
 
 
 @pytest.mark.lastfm

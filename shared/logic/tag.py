@@ -1,5 +1,5 @@
-from app.db.models import TagDb
-from app.exceptions import IntegrityError
+from shared.db.models import TagDb
+from shared.exceptions import IntegrityError
 
 
 def get_by_values(tag_type: str, value: str) -> TagDb:

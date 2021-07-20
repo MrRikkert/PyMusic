@@ -2,12 +2,12 @@ import pytest
 from pony import orm
 from pony.orm import db_session
 
-from app.db.base import db
-from app.db.models import AlbumDb, ArtistDb, SongDb, TagDb
-from app.exceptions import IntegrityError
-from app.logic import song as song_logic
-from app.models.songs import SongIn
-from app.models.tags import TagIn
+from shared.db.base import db
+from shared.db.models import AlbumDb, ArtistDb, SongDb, TagDb
+from shared.exceptions import IntegrityError
+from shared.logic import song as song_logic
+from shared.models.songs import SongIn
+from shared.models.tags import TagIn
 from tests.utils import reset_db, mixer
 
 

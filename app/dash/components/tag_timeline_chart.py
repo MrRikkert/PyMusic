@@ -12,7 +12,7 @@ from app.dash.utils import (
     get_default_graph,
     seconds_to_text,
 )
-from app.db.base import db
+from shared.db.base import db
 from dash.dependencies import Input, Output, State
 from dateutil.relativedelta import relativedelta
 from pony.orm import db_session

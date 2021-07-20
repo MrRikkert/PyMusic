@@ -6,9 +6,9 @@ import click
 from loguru import logger
 import pytz
 
-from app.db.base import db
-from app.logic import scrobble
-from app.models.songs import ScrobbleIn
+from shared.db.base import db
+from shared.logic import scrobble
+from shared.models.songs import ScrobbleIn
 
 
 def sync_lastfm_scrobbles(username: str):

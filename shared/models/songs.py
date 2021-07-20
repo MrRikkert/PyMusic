@@ -3,7 +3,7 @@ from typing import List, Optional
 
 from pydantic import BaseModel, Field
 
-from app.models.artists import ArtistLastFm
+from shared.models.artists import ArtistLastFm
 
 
 class BaseSong(BaseModel):
@@ -12,7 +12,7 @@ class BaseSong(BaseModel):
 
 
 class SongIn(BaseSong):
-    from app.models.tags import TagIn
+    from shared.models.tags import TagIn
 
     artist: str = Field(...)
     album: str = Field(...)
@@ -25,7 +25,7 @@ class ScrobbleIn(SongIn):
 
 
 class Song(BaseSong):
-    from app.models.tags import TagIn
+    from shared.models.tags import TagIn
 
     artists: List[str] = Field(..., min_items=1)
     album: str = Field(...)

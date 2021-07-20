@@ -5,7 +5,7 @@ from pony.orm import db_session
 
 from app.dash.app import app
 from app.dash.utils import add_date_clause, convert_dates, get_agg, set_length_scale
-from app.db.base import db
+from shared.db.base import db
 from dash.dependencies import Input, Output
 
 

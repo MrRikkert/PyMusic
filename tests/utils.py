@@ -3,7 +3,7 @@ from mixer.factory import GenFactory
 from mixer.main import faker
 from pony import orm
 
-from app.db.base import db
+from shared.db.base import db
 
 
 class MyFactory(GenFactory):

@@ -4,10 +4,10 @@ import pytest
 from pony import orm
 from pony.orm import db_session
 
-from app.db.models import AlbumDb, ArtistDb, ScrobbleDb, SongDb, TagDb
-from app.logic import scrobble as scrobble_logic
-from app.models.songs import ScrobbleIn
-from app.models.tags import TagIn
+from shared.db.models import AlbumDb, ArtistDb, ScrobbleDb, SongDb, TagDb
+from shared.logic import scrobble as scrobble_logic
+from shared.models.songs import ScrobbleIn
+from shared.models.tags import TagIn
 from tests.utils import reset_db, mixer
 
 

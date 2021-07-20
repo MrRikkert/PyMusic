@@ -5,11 +5,11 @@ from datetime import datetime
 from hashlib import md5
 
 import click
-from app.db.base import db
-from app.logic import song as song_logic
-from app.models.songs import SongIn
-from app.models.tags import TagIn
-from app.settings import ALBUM_ART_PATH
+from shared.db.base import db
+from shared.logic import song as song_logic
+from shared.models.songs import SongIn
+from shared.models.tags import TagIn
+from shared.settings import ALBUM_ART_PATH
 from loguru import logger
 
 from cli import musicbeeipc

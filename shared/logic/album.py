@@ -2,10 +2,10 @@ from hashlib import md5
 import os
 from pony import orm
 
-from app.db.models import AlbumDb
-from app.exceptions import IntegrityError
-from app.logic import artist as artist_logic
-from app.utils.clean import clean_album
+from shared.db.models import AlbumDb
+from shared.exceptions import IntegrityError
+from shared.logic import artist as artist_logic
+from shared.utils.clean import clean_album
 
 
 def get_by_name(name: str) -> AlbumDb:

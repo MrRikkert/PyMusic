@@ -1,9 +1,9 @@
 import os
 
 import pytest
-from app.db.models import AlbumDb, ArtistDb
-from app.exceptions import IntegrityError
-from app.logic import album as album_logic
+from shared.db.models import AlbumDb, ArtistDb
+from shared.exceptions import IntegrityError
+from shared.logic import album as album_logic
 from pony import orm
 from pony.orm import db_session
 from tests.utils import mixer, reset_db
