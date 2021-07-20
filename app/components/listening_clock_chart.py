@@ -10,7 +10,7 @@ from app.utils import (
     set_length_scale,
 )
 from shared.db.base import db
-from dash.dependencies import Input, Output, State
+from dash.dependencies import Input, Output
 from pony.orm import db_session
 
 
