@@ -79,6 +79,21 @@ def export_mb(query, field, path):
 
 
 @cli.command()
+@click.option(
+    "--replace",
+    is_flag=True,
+    default=False,
+    help="Replace all tags stored in the database with the new tags",
+)
+@click.option("--path", "-p", help="sync scrobbles from a local csv file")
+def import_mb(replace, path):
+    if not path:
+        path = "./exports/mb.pickle"
+    logger.bind(params=locals()).info(f"Syncing musicbee library")
+    mb.import_data(replace_existing=replace, export_path=path)
+
+
+@cli.command()
 @click.option("--name", "-n", "lastfm", help="Your LastFM username", required=True)
 def sync_scrobbles(lastfm: str):
     """Syncs all scrobbles from LastFM to the database"""

@@ -135,3 +135,23 @@ def export_data(
 
     with open(export_path, "wb") as file:
         pickle.dump(songs, file)
+
+
+def import_data(replace_existing, export_path):
+    with open(export_path, "rb") as file:
+        songs = pickle.load(file)
+    with click.progressbar(songs) as click_songs:
+        for idx, song in enumerate(click_songs):
+            try:
+                song_logic.add(
+                    song,
+                    return_existing=True,
+                    update_existing=True,
+                    replace_existing_tags=replace_existing,
+                )
+            except Exception as ex:
+                logger.bind(song=song.dict()).exception(
+                    f"Something went wrong while adding a song"
+                )
+            if idx % 500 == 0:
+                db.commit()
