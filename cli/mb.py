@@ -27,6 +27,7 @@ tag_types = {
     "alternate": musicbeeipc.MBMD_Custom6,
     "type": musicbeeipc.MBMD_Custom7,
     "sort_artist": musicbeeipc.MBMD_Custom8,
+    "language": musicbeeipc.MBMD_Custom9,
 }
 
 
