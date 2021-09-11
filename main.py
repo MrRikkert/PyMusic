@@ -73,7 +73,7 @@ def sync_mb(replace, query, field):
 @click.option("--path", "-p", help="sync scrobbles from a local csv file")
 def export_mb(query, field, path):
     if not path:
-        path = "./exports/mb.pickle"
+        path = "./.exports/mb.pickle"
     logger.bind(params=locals()).info(f"Syncing musicbee library")
     mb.export_data(query=query, fields=field, export_path=path)
 
@@ -88,7 +88,7 @@ def export_mb(query, field, path):
 @click.option("--path", "-p", help="sync scrobbles from a local csv file")
 def import_mb(replace, path):
     if not path:
-        path = "./exports/mb.pickle"
+        path = "./.exports/mb.pickle"
     logger.bind(params=locals()).info(f"Syncing musicbee library")
     mb.import_data(replace_existing=replace, export_path=path)
 
@@ -106,7 +106,7 @@ def sync_scrobbles(lastfm: str):
 @click.option(
     "--path",
     "-p",
-    default=f"./exports/scrobbles/{datetime.now():%Y%m%d%H%M}.csv",
+    default=f"./.exports/scrobbles/{datetime.now():%Y%m%d%H%M}.csv",
     help="sync scrobbles from a local csv file",
 )
 def export(path):
@@ -120,7 +120,7 @@ def export(path):
 def import_csv(path):
     """Import scrobbles from a csv file"""
     if not path:
-        path = f"./exports/{os.listdir('./exports')[-1]}"
+        path = f"./.exports/{os.listdir('./.exports')[-1]}"
     logger.bind(path=path).info("Importing scrobbles")
     if os.path.exists(path):
         scrobbles.import_scrobbles(path)
