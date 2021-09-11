@@ -5,10 +5,17 @@ from pony.orm import Optional, PrimaryKey, Required, Set, composite_key, composi
 from shared.db.base import db
 
 
-class ScrobbleDb(db.Entity):
+class BaseMixin(object):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        for k in args:
+            setattr(self, k, args[k])
 
+    def __getitem__(self, item):
+        return getattr(self, item)
+
+
+class ScrobbleDb(db.Entity, BaseMixin):
     _table_ = "scrobble"
     id = PrimaryKey(int, auto=True)
     song = Required("SongDb")
@@ -26,10 +33,7 @@ class ScrobbleDb(db.Entity):
         return f"ScrobbleDb[{self.id}]: {self.date} - {self.song}"
 
 
-class SongDb(db.Entity):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
+class SongDb(db.Entity, BaseMixin):
     _table_ = "song"
     id = PrimaryKey(int, auto=True)
     title = Required(str, index=True)
@@ -45,10 +49,7 @@ class SongDb(db.Entity):
         return f"SongDb[{self.id}]: {self.title} - {', '.join([str(artist) for artist in self.artists])}"
 
 
-class FileDb(db.Entity):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
+class FileDb(db.Entity, BaseMixin):
     _table = "file"
     path = PrimaryKey(str, auto=False)
     song = Required("SongDb")
@@ -69,10 +70,7 @@ class FileDb(db.Entity):
     language = Optional(str, nullable=True)
 
 
-class AlbumDb(db.Entity):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
+class AlbumDb(db.Entity, BaseMixin):
     _table_ = "album"
     id = PrimaryKey(int, auto=True)
     name = Required(str, index=True)
@@ -86,10 +84,7 @@ class AlbumDb(db.Entity):
         return f"AlbumDb[{self.id}]: {self.name} - {self.album_artist}"
 
 
-class ArtistDb(db.Entity):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
+class ArtistDb(db.Entity, BaseMixin):
     _table_ = "artist"
     id = PrimaryKey(int, auto=True)
     name = Required(str, unique=True, index=True)
@@ -101,10 +96,7 @@ class ArtistDb(db.Entity):
         return f"ArtistDb[{self.id}]: {self.name}"
 
 
-class TagDb(db.Entity):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
+class TagDb(db.Entity, BaseMixin):
     _table_ = "tag"
     id = PrimaryKey(int, auto=True)
     tag_type = Required(str)
