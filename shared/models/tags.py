@@ -1,7 +1,8 @@
-from pydantic import BaseModel, Field
+from pydantic import Field
+from shared.models import CustomBaseModel
 
 
-class BaseTag(BaseModel):
+class BaseTag(CustomBaseModel):
     tag_type: str = Field(...)
     value: str = Field(...)
 

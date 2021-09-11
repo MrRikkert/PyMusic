@@ -1,19 +1,9 @@
 from datetime import datetime
 from typing import List, Optional
 
-from pydantic import BaseModel, Field
-
+from pydantic import Field
+from shared.models import CustomBaseModel
 from shared.models.artists import ArtistLastFm
-
-
-class CustomBaseModel(BaseModel):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for k in args:
-            setattr(self, k, args[k])
-
-    def __getitem__(self, item):
-        return getattr(self, item)
 
 
 class BaseSong(CustomBaseModel):
