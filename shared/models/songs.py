@@ -6,7 +6,17 @@ from pydantic import BaseModel, Field
 from shared.models.artists import ArtistLastFm
 
 
-class BaseSong(BaseModel):
+class CustomBaseModel(BaseModel):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for k in args:
+            setattr(self, k, args[k])
+
+    def __getitem__(self, item):
+        return getattr(self, item)
+
+
+class BaseSong(CustomBaseModel):
     title: str = Field(...)
     length: int = Field(None)
 
@@ -50,7 +60,7 @@ class Song(BaseSong):
     tags: List[TagIn] = Field(None)
 
 
-class SongLastFm(BaseModel):
+class SongLastFm(CustomBaseModel):
     title: str = Field(...)
     artist: ArtistLastFm = Field(...)
 
@@ -58,7 +68,7 @@ class SongLastFm(BaseModel):
         orm_mode = True
 
 
-class ScrobbleLastFm(BaseModel):
+class ScrobbleLastFm(CustomBaseModel):
     album: str = Field(None)
     timestamp: datetime = Field(...)
     track: SongLastFm = Field(...)
