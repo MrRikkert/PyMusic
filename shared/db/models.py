@@ -36,12 +36,35 @@ class SongDb(db.Entity):
     title_alt = Required(str)
     length = Optional(int)
     scrobbles = Set(ScrobbleDb)
+    files = Set("FileDb")
     albums = Set("AlbumDb")
     artists = Set("ArtistDb")
     tags = Set("TagDb")
 
     def __str__(self):
         return f"SongDb[{self.id}]: {self.title} - {', '.join([str(artist) for artist in self.artists])}"
+
+
+class FileDb(db.Entity):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    _table = "file"
+    path = PrimaryKey(str, auto=False)
+    song = Required("SongDb")
+    title = Required(str)
+    artist = Required(str)
+    album = Required(str)
+    genre = Optional(str)
+    vocals = Optional(str)
+    series = Optional(str)
+    franchise = Optional(str)
+    op_ed = Optional(str)
+    season = Optional(str)
+    alternate = Optional(str)
+    type = Optional(str)
+    sort_artist = Optional(str)
+    language = Optional(str)
 
 
 class AlbumDb(db.Entity):
