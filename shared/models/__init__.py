@@ -9,3 +9,6 @@ class CustomBaseModel(BaseModel):
 
     def __getitem__(self, item):
         return getattr(self, item)
+
+    def __setitem__(self, attr, value):
+        setattr(self, attr, value)
