@@ -11,6 +11,23 @@ class BaseSong(BaseModel):
     length: int = Field(None)
 
 
+class File(BaseSong):
+    path: str = Field(...)
+    artist: str = Field(...)
+    album: str = Field(...)
+    album_artist: str = Field(None)
+    genre: str = Field(None)
+    vocals: str = Field(None)
+    series: str = Field(None)
+    franchise: str = Field(None)
+    op_ed: str = Field(None)
+    season: str = Field(None)
+    alternate: str = Field(None)
+    type: str = Field(None)
+    sort_artist: str = Field(None)
+    language: str = Field(None)
+
+
 class SongIn(BaseSong):
     from shared.models.tags import TagIn
 

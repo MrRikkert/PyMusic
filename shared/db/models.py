@@ -55,6 +55,7 @@ class FileDb(db.Entity):
     title = Required(str)
     artist = Required(str)
     album = Required(str)
+    album_artist = Required(str)
     genre = Optional(str)
     vocals = Optional(str)
     series = Optional(str)
