@@ -80,6 +80,39 @@ def test_add_file_existing_file_song():
 
 
 @db_session
+def test_add_file_existing_file_song_updated():
+    artist = mixer.blend(ArtistDb, name="artist")
+    song_db = mixer.blend(
+        SongDb,
+        title="title",
+        albums=mixer.blend(AlbumDb, name="album", album_artist=artist),
+        artists=artist,
+        tags=mixer.blend(TagDb, tag_type="genre", value="genre 1"),
+    )
+    mixer.blend(
+        FileDb,
+        path="/music/artist/album/1 - 1 song.flac",
+        song=song_db,
+        genre="genre 1",
+    )
+
+    file = file_logic.add(
+        File(
+            path="/music/artist/album/1 - 1 song.flac",
+            title="title",
+            artist="artist",
+            album="album",
+            album_artist="artist",
+            genre="genre 2",
+        )
+    )
+    assert orm.count(f for f in FileDb) == 1
+    assert orm.count(s for s in SongDb) == 1
+    assert file.genre == "genre 2"
+    assert len(file.song.tags) == 2
+
+
+@db_session
 def test_get_file_existing():
     path = "/music/album/1 - 1 song.flac"
     db_file = mixer.blend(FileDb, path=path)

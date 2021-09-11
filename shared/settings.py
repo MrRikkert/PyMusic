@@ -6,6 +6,19 @@ from loguru import logger
 
 dotenv.load_dotenv()
 
+TAG_LIST = tag_list = [
+    "genre",
+    "vocals",
+    "series",
+    "franchise",
+    "op_ed",
+    "season",
+    "alternate",
+    "type",
+    "sort_artist",
+    "language",
+]
+
 
 config = {
     "handlers": [
