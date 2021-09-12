@@ -1,4 +1,4 @@
-from typing import Union
+from typing import List, Union
 
 from pony import orm
 from shared.db.models import FileDb
@@ -10,6 +10,18 @@ from shared.settings import TAG_LIST
 
 
 def add(file: File) -> FileDb:
+    """Add the given file. Also tries to add the
+    associated song to the database. If the file
+    already exists it will update the given file.
+
+    ## Arguments:
+    - `file`: `File`:
+        - The file you want to add
+
+    ## Returns:
+    - `FileDb`:
+        - The created file object.
+    """
     existing = get(file.path)
 
     if existing:
@@ -42,6 +54,19 @@ def add(file: File) -> FileDb:
 
 
 def update(file: File, existing: FileDb) -> FileDb:
+    """Updates an existing file object using the given new file object.
+    Also updates the associated song.
+
+    ## Arguments:
+    - `file`: `File`:
+        - The new file data
+    - `existing`: `FileDb`:
+        - The existing file object
+
+    ## Returns:
+    - `FileDb`:
+        - Updated file object
+    """
     file_tags = get_tags(file)
     existing_tags = get_tags(existing)
 
@@ -66,7 +91,18 @@ def update(file: File, existing: FileDb) -> FileDb:
     return existing
 
 
-def get_tags(file: Union[File, FileDb]):
+def get_tags(file: Union[File, FileDb]) -> List[TagIn]:
+    """Gets all tags from a `File` or `FileDb` object
+    as `TagIn` objects
+
+    ## Arguments:
+    - `file`: `Union[File, FileDb]`:
+        - The file of which you want the tags
+
+    ## Returns:
+    - `List[TagIn]`:
+        - All the tags from the files as `TagIn` objects
+    """
     tags = []
 
     for tag_type in TAG_LIST:
@@ -79,10 +115,30 @@ def get_tags(file: Union[File, FileDb]):
 
 
 def get(path: str) -> FileDb:
+    """Get file from the database based on the given path.
+
+    ## Arguments:
+    - `path`: `str`:
+        - The path of the file
+
+    ## Returns:
+    - `FileDb`:
+        - The file, returns `None` when no file is found
+    """
     query = orm.select(f for f in FileDb if f.path == path)
     return query.first()
 
 
 def exists(path: str) -> bool:
+    """Checks if a file exists in the database
+
+    ## Arguments:
+    - `path`: `str`:
+        - Path of the file
+
+    ## Returns:
+    - `bool`:
+        - `True` if the file exists and `False` if it doesn't
+    """
     file = get(path)
     return True if file is not None else False

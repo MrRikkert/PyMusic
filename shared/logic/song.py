@@ -84,7 +84,21 @@ def add(
     )
 
 
-def update_from_files(song: SongDb):
+def update_from_files(song: SongDb) -> SongDb:
+    """Updated the tags of the given songs using the tags
+    of the connected files. This will also clear all
+    current tags of the song.
+
+    Nothing will happen if no files are found
+
+    ## Arguments:
+    - `song`: `SongDb`:
+        - The song that needs to be updated
+
+    ## Returns:
+    - `SongDb`:
+        - Given song with updated tags
+    """
     files = orm.select(f for f in FileDb if f.song == song)
 
     if not files:
@@ -99,6 +113,7 @@ def update_from_files(song: SongDb):
                     tag_type=tag.tag_type, value=tag.value, return_existing=True
                 )
             )
+    return song
 
 
 def get(title: str, artists: List[str]) -> SongDb:
