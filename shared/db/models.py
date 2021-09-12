@@ -53,7 +53,7 @@ class SongDb(db.Entity, BaseMixin):
 
 
 class FileDb(db.Entity, BaseMixin):
-    _table = "file"
+    _table_ = "file"
     path = PrimaryKey(str, auto=False)
     song = Required("SongDb")
     title = Required(str)
