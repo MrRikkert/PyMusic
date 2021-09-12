@@ -245,6 +245,7 @@ def test_top_plays_min_max_date():
     assert songs[0]["plays"] == 5
 
 
+@db_session
 def test_get_last_scrobble():
     date1 = datetime.now()
     date2 = date1 + timedelta(days=1)
@@ -254,6 +255,7 @@ def test_get_last_scrobble():
     assert last.date == date2
 
 
+@db_session
 def test_get_last_scrobble_no_scrobbles():
     last = scrobble_logic.get_last_scrobble()
     assert last == None
