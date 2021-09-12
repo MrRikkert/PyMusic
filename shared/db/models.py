@@ -54,7 +54,8 @@ class SongDb(db.Entity, BaseMixin):
 
 class FileDb(db.Entity, BaseMixin):
     _table_ = "file"
-    path = PrimaryKey(str, auto=False)
+    id = PrimaryKey(int, auto=True)
+    path = Required(str, index=True)
     song = Required("SongDb")
     title = Required(str)
     length = Required(int)
