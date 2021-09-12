@@ -3,7 +3,7 @@ from pony import orm
 from pony.orm import db_session
 
 from shared.db.base import db
-from shared.db.models import AlbumDb, ArtistDb, SongDb, TagDb
+from shared.db.models import AlbumDb, ArtistDb, FileDb, SongDb, TagDb
 from shared.exceptions import IntegrityError
 from shared.logic import song as song_logic
 from shared.models.songs import SongIn
@@ -354,3 +354,24 @@ def test_add_songs_same_title_different_artist():
     )
     assert db_song_1 == db_song_3
     assert not db_song_1 == db_song_2
+
+
+@db_session
+def test_update_from_files():
+    song_db = mixer.blend(
+        SongDb,
+        artists=mixer.blend(ArtistDb, name="artist"),
+        tags=[
+            mixer.blend(TagDb, tag_type="season", value="season 0"),
+            mixer.blend(TagDb, tag_type="series", value="series 1"),
+        ],
+    )
+    db.flush()
+    mixer.blend(FileDb, song=song_db, season="season 1")
+    mixer.blend(FileDb, song=song_db, season="season 2")
+    song_logic.update_from_files(song_db)
+
+    assert orm.count(t for t in TagDb) == 4
+    assert orm.count(s for s in SongDb) == 1
+    assert orm.count(f for f in FileDb) == 2
+    assert len(song_db.tags) == 2
