@@ -15,7 +15,7 @@ def add(file: File) -> FileDb:
     if existing:
         return update(file, existing)
 
-    return FileDb(
+    file_db = FileDb(
         song=song_logic.add(
             SongIn(
                 title=file.title,
@@ -34,17 +34,11 @@ def add(file: File) -> FileDb:
         artist=file.artist,
         album=file.album,
         album_artist=file.album_artist,
-        genre=file.genre,
-        vocals=file.vocals,
-        series=file.series,
-        franchise=file.franchise,
-        op_ed=file.op_ed,
-        season=file.season,
-        alternate=file.alternate,
-        type=file.type,
-        sort_artist=file.sort_artist,
-        language=file.language,
     )
+    for tag in TAG_LIST:
+        file_db[tag] = file[tag]
+
+    return file_db
 
 
 def update(file: File, existing: FileDb) -> FileDb:
