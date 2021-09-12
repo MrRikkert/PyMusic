@@ -375,3 +375,22 @@ def test_update_from_files():
     assert orm.count(s for s in SongDb) == 1
     assert orm.count(f for f in FileDb) == 2
     assert len(song_db.tags) == 2
+
+
+@db_session
+def test_update_from_files_no_files():
+    song_db = mixer.blend(
+        SongDb,
+        artists=mixer.blend(ArtistDb, name="artist"),
+        tags=[
+            mixer.blend(TagDb, tag_type="season", value="season 0"),
+            mixer.blend(TagDb, tag_type="series", value="series 1"),
+        ],
+    )
+    db.flush()
+    song_logic.update_from_files(song_db)
+
+    assert orm.count(t for t in TagDb) == 2
+    assert orm.count(s for s in SongDb) == 1
+    assert orm.count(f for f in FileDb) == 0
+    assert len(song_db.tags) == 2
