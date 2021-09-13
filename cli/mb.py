@@ -9,11 +9,12 @@ from pathlib import Path
 import click
 from loguru import logger
 from shared.db.base import db
-from shared.logic import song as song_logic
 from shared.logic import file as file_logic
+from shared.logic import song as song_logic
 from shared.models.songs import File, SongIn
 from shared.models.tags import TagIn
 from shared.settings import ALBUM_ART_PATH
+from shared.utils.file import get_normalized_path
 
 from cli import musicbeeipc
 
@@ -69,7 +70,7 @@ def get_file(path: str) -> File:
     album_artist = mbipc.library_get_file_tag(path, musicbeeipc.MBMD_AlbumArtistRaw)
 
     file = File(
-        path=path,
+        path=get_normalized_path(path),
         title=mbipc.library_get_file_tag(path, musicbeeipc.MBMD_TrackTitle),
         length=mb_duration_to_seconds(
             mbipc.library_get_file_property(path, musicbeeipc.MBFP_Duration)
