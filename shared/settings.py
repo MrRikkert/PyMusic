@@ -105,3 +105,5 @@ if os.getenv("ALBUM_ART_PATH"):
     ALBUM_ART_PATH = os.getenv("ALBUM_ART_PATH")
 if os.getenv("IMG_URL"):
     IMG_URL = os.getenv("IMG_URL")
+if os.getenv("MUSIC_PATH"):
+    MUSIC_PATH = os.getenv("MUSIC_PATH")
