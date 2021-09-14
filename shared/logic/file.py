@@ -1,12 +1,9 @@
-from typing import List, Union
-
 from pony import orm
 from shared.db.models import FileDb
 from shared.logic import song as song_logic
-from shared.logic import tag as tag_logic
 from shared.models.songs import File, SongIn
-from shared.models.tags import TagIn
 from shared.settings import TAG_LIST
+from shared.utils.file import get_tags
 
 
 def add(file: File) -> FileDb:
@@ -89,29 +86,6 @@ def update(file: File, existing: FileDb) -> FileDb:
         )
 
     return existing
-
-
-def get_tags(file: Union[File, FileDb]) -> List[TagIn]:
-    """Gets all tags from a `File` or `FileDb` object
-    as `TagIn` objects
-
-    ## Arguments:
-    - `file`: `Union[File, FileDb]`:
-        - The file of which you want the tags
-
-    ## Returns:
-    - `List[TagIn]`:
-        - All the tags from the files as `TagIn` objects
-    """
-    tags = []
-
-    for tag_type in TAG_LIST:
-        tag_str = file[tag_type]
-        if tag_str is not None:
-            for tag in tag_str.split(";"):
-                if tag:
-                    tags.append(TagIn(tag_type=tag_type.strip(), value=tag.strip()))
-    return tags
 
 
 def get(path: str) -> FileDb:

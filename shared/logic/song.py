@@ -1,15 +1,14 @@
 from typing import List, Union
 
 from pony import orm
-
 from shared.db.models import FileDb, SongDb
 from shared.exceptions import IntegrityError
 from shared.logic import album as album_logic
 from shared.logic import artist as artist_logic
-from shared.logic import file as file_logic
 from shared.logic import tag as tag_logic
 from shared.models.songs import SongIn
 from shared.utils.clean import clean_artist, reverse_artist
+from shared.utils.file import get_tags
 
 
 def add(
@@ -106,7 +105,7 @@ def update_from_files(song: SongDb) -> SongDb:
 
     song.tags.clear()
     for file in files:
-        tags = file_logic.get_tags(file)
+        tags = get_tags(file)
         for tag in tags:
             song.tags.add(
                 tag_logic.add(
