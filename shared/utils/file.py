@@ -30,7 +30,8 @@ def get_normalized_path(path: str, rel_path: str = None) -> str:
     """
     if not rel_path:
         rel_path = MUSIC_PATH
-    return os.path.relpath(path, rel_path)
+    path = os.path.relpath(path, rel_path)
+    return path.replace("\\", "/")
 
 
 def get_tags(file: Union[File, FileDb]) -> List[TagIn]:
