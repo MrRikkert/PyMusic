@@ -44,14 +44,14 @@ def clean_album(album: str) -> str:
         r"""
         (
             (-\s*)?             # match optional leading '-'
-            [                   
+            [
                 \(\[]           # match opening of '(' or '['
                 (disc|cd|disk)  # match words like disk and cd
                 .*              # match any character after the word and before the closing
                 [\)\]
             ]                   # match closing of '(' or '['
         )$ |
-        ( 
+        (
             (-\s)?              # match optional leading '-'
             (cd|disk|disc)      # match words like disk and cd
             .*                 # match any character after the word

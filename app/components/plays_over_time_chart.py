@@ -63,7 +63,7 @@ def _build_query(date_range, min_date, max_date, playtime, filter_date=True):
         {get_agg(playtime)}(s.length) as "Time"
     FROM scrobble sc
     INNER JOIN song s
-	    ON sc.song = s.id
+        ON sc.song = s.id
     :date:
     GROUP BY {', '.join(group_columns)}
     ORDER BY {' DESC, '.join(group_columns)} DESC

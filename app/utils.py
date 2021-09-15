@@ -105,5 +105,5 @@ def seconds_to_text(total_seconds):
             return f"{floor(days)} days, {round(hours)} hours"
         else:
             return f"{floor(weeks)} weeks, {round(days)} days"
-    except:
+    except Exception:
         return None

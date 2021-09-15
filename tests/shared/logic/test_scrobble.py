@@ -138,7 +138,7 @@ def test_scrobble_multiple_scrobbles_of_one_sone():
         artists=mixer.blend(ArtistDb, name="artist"),
         tags=mixer.blend(TagDb, tag_type="type", value="value"),
     )
-    scrobble = scrobble_logic.scrobble(
+    scrobble_logic.scrobble(
         ScrobbleIn(
             title="title",
             length=1,
@@ -148,7 +148,7 @@ def test_scrobble_multiple_scrobbles_of_one_sone():
             date=datetime.now(),
         )
     )
-    scrobble = scrobble_logic.scrobble(
+    scrobble_logic.scrobble(
         ScrobbleIn(
             title="title",
             length=1,
@@ -258,7 +258,7 @@ def test_get_last_scrobble():
 @db_session
 def test_get_last_scrobble_no_scrobbles():
     last = scrobble_logic.get_last_scrobble()
-    assert last == None
+    assert last == None  # noqa will fail without explicit None check
 
 
 @db_session

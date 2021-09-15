@@ -99,9 +99,9 @@ def sync_lastfm_scrobbles(username: str):
                     title=_scrobble.track.title,
                 )
             )
-        except Exception as e:
+        except Exception:
             logger.bind(scrobble=_scrobble.dict()).exception(
-                f"Something went wrong while adding a scrobble"
+                "Something went wrong while adding a scrobble"
             )
     return len(scrobbles)
 

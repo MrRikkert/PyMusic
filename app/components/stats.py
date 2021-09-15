@@ -1,4 +1,3 @@
-
 import dash_bootstrap_components as dbc
 import dash_html_components as html
 import pandas as pd
@@ -157,7 +156,7 @@ def __get_average_playtime(min_date, date_range, max_date):
     SELECT SUM(s.length) AS playtime
     FROM scrobble sc
     INNER JOIN song s
-	    ON sc.song = s.id
+        ON sc.song = s.id
     :date:
     GROUP BY EXTRACT({date_range} FROM sc.date)
     ORDER BY EXTRACT({date_range} FROM sc.date) DESC

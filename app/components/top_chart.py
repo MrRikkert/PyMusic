@@ -59,7 +59,7 @@ def _top_tag(df, scale, className, playtime):
         xaxis_title = f"Total Playtime ({scale})"
     else:
         title = "Top tag (plays)"
-        xaxis_title = f"Total Plays"
+        xaxis_title = "Total Plays"
 
     return _get_graph(
         df=df,
@@ -85,7 +85,7 @@ def _top_artist(df, scale, className, playtime):
         xaxis_title = f"Total Playtime ({scale})"
     else:
         title = "Top artist (plays)"
-        xaxis_title = f"Total Plays"
+        xaxis_title = "Total Plays"
 
     return _get_graph(
         df=df,
@@ -112,7 +112,7 @@ def _top_album(df, scale, className, playtime):
         xaxis_title = f"Total Playtime ({scale})"
     else:
         title = "Top albums (plays)"
-        xaxis_title = f"Total Plays"
+        xaxis_title = "Total Plays"
 
     return _get_graph(
         df=df,

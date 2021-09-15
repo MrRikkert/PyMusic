@@ -51,7 +51,7 @@ def wrap_cli():
 )
 def sync_mb(replace, query, field):
     """Sync MusicBee data to the database"""
-    logger.bind(params=locals()).info(f"Syncing musicbee library")
+    logger.bind(params=locals()).info("Syncing musicbee library")
     mb.sync_data(replace_existing=replace, query=query, fields=field)
 
 
@@ -74,7 +74,7 @@ def sync_mb(replace, query, field):
 def export_mb(query, field, path):
     if not path:
         path = "./.exports/mb.pickle"
-    logger.bind(params=locals()).info(f"Syncing musicbee library")
+    logger.bind(params=locals()).info("Syncing musicbee library")
     mb.export_data(query=query, fields=field, export_path=path)
 
 
@@ -89,7 +89,7 @@ def export_mb(query, field, path):
 def import_mb(replace, path):
     if not path:
         path = "./.exports/mb.pickle"
-    logger.bind(params=locals()).info(f"Syncing musicbee library")
+    logger.bind(params=locals()).info("Syncing musicbee library")
     mb.import_data(replace_existing=replace, export_path=path)
 
 
@@ -131,37 +131,6 @@ def import_csv(path):
 @cli.command()
 def reset_tags():
     songs.reset_all_tags()
-
-
-# TODO Fix with new db_session method (wrapped for all functions)
-# @cli.command()
-# def renew():
-#     """Re-creates the database.
-#     1. Backup scrobbles
-#     2. Delete all tables
-#     3. Create tables
-#     4. Restore scrobbles
-#     5. Import music from musicbee
-#     """
-#     logger.info("Re creating database")
-#     click.confirm("Are you sure you want to delete everything?")
-#     init_db()
-#     with db_session:
-#         click.echo("Start backing-up scrobbles")
-#         scrobbles.export_scrobbles("backup.csv")
-
-#     click.echo("Dropping all tables")
-#     db.drop_all_tables(with_all_data=True)
-
-#     click.echo("Creating tables")
-#     db.create_tables()
-
-#     with db_session:
-#         click.echo("Importing scrobbles")
-#         scrobbles.import_scrobbles("backup.csv")
-
-#         click.echo("Retrieving MusicBee data")
-#         mb.sync_data()
 
 
 @cli.command()

@@ -98,7 +98,7 @@ def get_albums():
 
     logger.info("Filtering albums")
     for path, album in zip(paths, albums):
-        if not album in _albums:
+        if album not in _albums:
             _albums.append(album)
             _paths.append(path)
 
@@ -132,9 +132,9 @@ def sync_data(
             song = get_song(path)
             try:
                 file_logic.add(get_file(path))
-            except Exception as ex:
+            except Exception:
                 logger.bind(song=song.dict()).exception(
-                    f"Something went wrong while adding a song"
+                    "Something went wrong while adding a song"
                 )
             if idx % 500 == 0:
                 db.commit()
@@ -167,9 +167,9 @@ def import_data(replace_existing, export_path):
                     update_existing=True,
                     replace_existing_tags=replace_existing,
                 )
-            except Exception as ex:
+            except Exception:
                 logger.bind(song=song.dict()).exception(
-                    f"Something went wrong while adding a song"
+                    "Something went wrong while adding a song"
                 )
             if idx % 500 == 0:
                 db.commit()
