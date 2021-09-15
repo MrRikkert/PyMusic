@@ -66,6 +66,7 @@ HASH_ALGORITHMS = ["bcrypt"]
 # LastFM
 LASTFMKEY = ""
 LASTFMSECRET = ""
+MUSIC_PATH = ""
 
 # --------------------------------------------------------------------------------------
 
