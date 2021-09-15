@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from pony.orm import Optional, PrimaryKey, Required, Set, composite_key, composite_index
+from pony.orm import Optional, PrimaryKey, Required, Set, composite_index, composite_key
 
 from shared.db.base import db
 

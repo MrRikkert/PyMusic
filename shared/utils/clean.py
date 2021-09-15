@@ -3,7 +3,6 @@ from typing import List
 
 import pykakasi
 
-
 kks = pykakasi.kakasi()
 
 

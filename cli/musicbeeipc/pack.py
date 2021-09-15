@@ -8,9 +8,9 @@
 
 import struct
 from ctypes import *
-from . constants import *
-from . structs import *
 
+from .constants import *
+from .structs import *
 
 # --------------------------------------------------------------------------------
 # All strings are encoded in UTF-16 little endian

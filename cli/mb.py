@@ -8,6 +8,8 @@ from pathlib import Path
 
 import click
 from loguru import logger
+
+from cli import musicbeeipc
 from shared.db.base import db
 from shared.logic import file as file_logic
 from shared.logic import song as song_logic
@@ -15,8 +17,6 @@ from shared.models.songs import File, SongIn
 from shared.models.tags import TagIn
 from shared.settings import ALBUM_ART_PATH
 from shared.utils.file import get_normalized_path
-
-from cli import musicbeeipc
 
 mbipc = musicbeeipc.MusicBeeIPC()
 tag_types = {

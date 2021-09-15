@@ -7,6 +7,7 @@ from pathlib import Path
 import click
 import pytz
 from loguru import logger
+
 from shared.db.base import db
 from shared.logic import scrobble
 from shared.models.songs import ScrobbleIn

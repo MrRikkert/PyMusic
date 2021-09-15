@@ -8,7 +8,7 @@ from shared.db.models import AlbumDb, ArtistDb, ScrobbleDb, SongDb, TagDb
 from shared.logic import scrobble as scrobble_logic
 from shared.models.songs import ScrobbleIn
 from shared.models.tags import TagIn
-from tests.utils import reset_db, mixer
+from tests.utils import mixer, reset_db
 
 
 def setup_function():

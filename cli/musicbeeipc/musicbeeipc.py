@@ -7,13 +7,15 @@
 #----------------------------------------------------------#
 
 import array
+from ctypes import *
+
 from win32api import SendMessage
 from win32gui import FindWindow
-from ctypes import *
-from . enums import *
-from . structs import *
-from . pack import *
-from . unpack import *
+
+from .enums import *
+from .pack import *
+from .structs import *
+from .unpack import *
 
 
 class MusicBeeIPC:

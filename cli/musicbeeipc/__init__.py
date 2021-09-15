@@ -6,5 +6,5 @@
 #- See LICENSE_MusicBeeIPCSDK for more information.       -#
 #----------------------------------------------------------#
 
-from . enums import *
-from . musicbeeipc import MusicBeeIPC
+from .enums import *
+from .musicbeeipc import MusicBeeIPC

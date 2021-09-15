@@ -16,6 +16,7 @@ pytest-optional-tests = "*"
 pytest-dotenv = "*"
 wcwidth = "*"
 jupyter = "*"
+isort = "*"
 
 [packages]
 pylast = "==4.2.1"

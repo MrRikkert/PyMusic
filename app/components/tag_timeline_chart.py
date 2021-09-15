@@ -4,6 +4,10 @@ import dash_bootstrap_components as dbc
 import numpy as np
 import pandas as pd
 import plotly.express as px
+from dash.dependencies import Input, Output, State
+from dateutil.relativedelta import relativedelta
+from pony.orm import db_session
+
 from app.app import app
 from app.utils import (
     add_date_clause,
@@ -13,9 +17,6 @@ from app.utils import (
     seconds_to_text,
 )
 from shared.db.base import db
-from dash.dependencies import Input, Output, State
-from dateutil.relativedelta import relativedelta
-from pony.orm import db_session
 
 
 def get_layout():

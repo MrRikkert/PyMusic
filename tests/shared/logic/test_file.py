@@ -8,7 +8,7 @@ from shared.exceptions import IntegrityError
 from shared.logic import file as file_logic
 from shared.models.songs import File, SongIn
 from shared.models.tags import TagIn
-from tests.utils import reset_db, mixer
+from tests.utils import mixer, reset_db
 
 
 def setup_function():

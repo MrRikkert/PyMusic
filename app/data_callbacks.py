@@ -1,12 +1,12 @@
 import dash_core_components as dcc
 import dash_html_components as html
 import pandas as pd
+from dash.dependencies import Input, Output
 from pony.orm import db_session
 
 from app.app import app
 from app.utils import add_date_clause, convert_dates, get_agg, set_length_scale
 from shared.db.base import db
-from dash.dependencies import Input, Output
 
 
 def get_layout():

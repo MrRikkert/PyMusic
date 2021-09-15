@@ -1,13 +1,11 @@
 import pytest
-
-
 from pony import orm
 from pony.orm import db_session
 
-from shared.logic import artist as artist_logic
 from shared.db.models import ArtistDb
-from tests.utils import reset_db, mixer
 from shared.exceptions import IntegrityError
+from shared.logic import artist as artist_logic
+from tests.utils import mixer, reset_db
 
 
 def setup_function():

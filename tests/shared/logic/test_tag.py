@@ -2,10 +2,10 @@ import pytest
 from pony import orm
 from pony.orm import db_session
 
-from shared.logic import tag as tag_logic
 from shared.db.models import TagDb
-from tests.utils import reset_db, mixer
 from shared.exceptions import IntegrityError
+from shared.logic import tag as tag_logic
+from tests.utils import mixer, reset_db
 
 
 def setup_function():

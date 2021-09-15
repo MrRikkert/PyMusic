@@ -1,9 +1,10 @@
 import dash_bootstrap_components as dbc
 import pandas as pd
 import plotly.express as px
+from dash.dependencies import Input, Output, State
+
 from app.app import app
 from app.utils import get_default_graph
-from dash.dependencies import Input, Output, State
 
 
 def get_layout(_type, reverse=False):
