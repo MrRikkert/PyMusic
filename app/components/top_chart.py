@@ -1,9 +1,10 @@
 import dash_bootstrap_components as dbc
 import pandas as pd
 import plotly.express as px
+from dash.dependencies import Input, Output, State
+
 from app.app import app
 from app.utils import get_default_graph
-from dash.dependencies import Input, Output, State
 
 
 def get_layout(_type, reverse=False):
@@ -58,7 +59,7 @@ def _top_tag(df, scale, className, playtime):
         xaxis_title = f"Total Playtime ({scale})"
     else:
         title = "Top tag (plays)"
-        xaxis_title = f"Total Plays"
+        xaxis_title = "Total Plays"
 
     return _get_graph(
         df=df,
@@ -84,7 +85,7 @@ def _top_artist(df, scale, className, playtime):
         xaxis_title = f"Total Playtime ({scale})"
     else:
         title = "Top artist (plays)"
-        xaxis_title = f"Total Plays"
+        xaxis_title = "Total Plays"
 
     return _get_graph(
         df=df,
@@ -111,7 +112,7 @@ def _top_album(df, scale, className, playtime):
         xaxis_title = f"Total Playtime ({scale})"
     else:
         title = "Top albums (plays)"
-        xaxis_title = f"Total Plays"
+        xaxis_title = "Total Plays"
 
     return _get_graph(
         df=df,

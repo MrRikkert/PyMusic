@@ -1,14 +1,10 @@
-import pytest
 from pony import orm
 from pony.orm import db_session
 
-from shared.db.base import db
 from shared.db.models import AlbumDb, ArtistDb, FileDb, SongDb, TagDb
-from shared.exceptions import IntegrityError
 from shared.logic import file as file_logic
-from shared.models.songs import File, SongIn
-from shared.models.tags import TagIn
-from tests.utils import reset_db, mixer
+from shared.models.songs import File
+from tests.utils import mixer, reset_db
 
 
 def setup_function():

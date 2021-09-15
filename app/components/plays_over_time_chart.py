@@ -1,7 +1,12 @@
 from datetime import datetime
+
 import dash_bootstrap_components as dbc
 import pandas as pd
 import plotly.express as px
+from dash.dependencies import Input, Output, State
+from dateutil.relativedelta import relativedelta
+from pony.orm import db_session
+
 from app.app import app
 from app.utils import (
     add_date_clause,
@@ -12,9 +17,6 @@ from app.utils import (
     set_length_scale,
 )
 from shared.db.base import db
-from dash.dependencies import Input, Output, State
-from dateutil.relativedelta import relativedelta
-from pony.orm import db_session
 
 
 def get_layout():
@@ -61,7 +63,7 @@ def _build_query(date_range, min_date, max_date, playtime, filter_date=True):
         {get_agg(playtime)}(s.length) as "Time"
     FROM scrobble sc
     INNER JOIN song s
-	    ON sc.song = s.id
+        ON sc.song = s.id
     :date:
     GROUP BY {', '.join(group_columns)}
     ORDER BY {' DESC, '.join(group_columns)} DESC

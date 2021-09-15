@@ -2,11 +2,12 @@ from datetime import datetime
 from typing import Dict, List
 
 import pytz
+from loguru import logger
+from pony import orm
+
 from shared.db.models import ScrobbleDb
 from shared.models.songs import ScrobbleIn, SongIn
 from shared.utils import lastfm
-from loguru import logger
-from pony import orm
 
 
 def scrobble(scrobble: ScrobbleIn) -> ScrobbleDb:
@@ -22,7 +23,8 @@ def scrobble(scrobble: ScrobbleIn) -> ScrobbleDb:
     - `ScrobbleDb`:
         - The created scrobble
     """
-    from shared.logic import song as song_logic, album as album_logic
+    from shared.logic import album as album_logic
+    from shared.logic import song as song_logic
 
     query = orm.select(s for s in ScrobbleDb)
     query = query.filter(lambda s: s.title == scrobble.title.lower())
@@ -97,11 +99,10 @@ def sync_lastfm_scrobbles(username: str):
                     title=_scrobble.track.title,
                 )
             )
-        except Exception as e:
+        except Exception:
             logger.bind(scrobble=_scrobble.dict()).exception(
-                f"Something went wrong while adding a scrobble"
+                "Something went wrong while adding a scrobble"
             )
-            pass
     return len(scrobbles)
 
 

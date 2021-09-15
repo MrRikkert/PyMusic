@@ -26,14 +26,14 @@ config = {
             "sink": ".logs/{time:YYYY-MM-DD}.log",
             "rotation": "1 day",
             "retention": "7 days",
-            "format": "{time:YYYY-MM-DD HH:mm:ss} | {level: <8} | {file}:{function}:{line} | {message} | data={extra}",
+            "format": "{time:YYYY-MM-DD HH:mm:ss} | {level: <8} | {file}:{function}:{line} | {message} | data={extra}",  # noqa
             "backtrace": True,
             "diagnose": True,
         },
         {
             "sink": sys.stderr,
             # lambda to prevent loguru from appending the exception message
-            "format": lambda record: "{time:YYYY-MM-DD HH:mm:ss} | {level} | {message} | Check the logs for more details\n",
+            "format": lambda record: "{time:YYYY-MM-DD HH:mm:ss} | {level} | {message} | Check the logs for more details\n",  # noqa
             "backtrace": False,
             "diagnose": False,
             "level": "ERROR",

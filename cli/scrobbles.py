@@ -7,6 +7,7 @@ from pathlib import Path
 import click
 import pytz
 from loguru import logger
+
 from shared.db.base import db
 from shared.logic import scrobble
 from shared.models.songs import ScrobbleIn
@@ -55,10 +56,10 @@ def import_scrobbles(path: str):
                             title=row[0], artist=row[1], album=row[2], date=row[3]
                         )
                     )
-                except Exception as e:
+                except Exception:
                     logger.bind(
                         scrobble=f"title={row[0]}, artist={row[1]}, album={row[2]}, date={row[3]}"
-                    ).exception(f"Something went wrong while adding a scrobble")
+                    ).exception("Something went wrong while adding a scrobble")
                 if idx % 500 == 0:
                     db.commit()
     print(time.time() - start)

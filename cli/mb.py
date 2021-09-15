@@ -8,6 +8,8 @@ from pathlib import Path
 
 import click
 from loguru import logger
+
+from cli import musicbeeipc
 from shared.db.base import db
 from shared.logic import file as file_logic
 from shared.logic import song as song_logic
@@ -15,8 +17,6 @@ from shared.models.songs import File, SongIn
 from shared.models.tags import TagIn
 from shared.settings import ALBUM_ART_PATH
 from shared.utils.file import get_normalized_path
-
-from cli import musicbeeipc
 
 mbipc = musicbeeipc.MusicBeeIPC()
 tag_types = {
@@ -98,7 +98,7 @@ def get_albums():
 
     logger.info("Filtering albums")
     for path, album in zip(paths, albums):
-        if not album in _albums:
+        if album not in _albums:
             _albums.append(album)
             _paths.append(path)
 
@@ -132,9 +132,9 @@ def sync_data(
             song = get_song(path)
             try:
                 file_logic.add(get_file(path))
-            except Exception as ex:
+            except Exception:
                 logger.bind(song=song.dict()).exception(
-                    f"Something went wrong while adding a song"
+                    "Something went wrong while adding a song"
                 )
             if idx % 500 == 0:
                 db.commit()
@@ -167,9 +167,9 @@ def import_data(replace_existing, export_path):
                     update_existing=True,
                     replace_existing_tags=replace_existing,
                 )
-            except Exception as ex:
+            except Exception:
                 logger.bind(song=song.dict()).exception(
-                    f"Something went wrong while adding a song"
+                    "Something went wrong while adding a song"
                 )
             if idx % 500 == 0:
                 db.commit()

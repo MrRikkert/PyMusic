@@ -4,6 +4,7 @@ from datetime import datetime
 import click
 from loguru import logger
 from pony import orm
+
 from shared.db.models import SongDb
 from shared.logic import song as song_logic
 
@@ -15,8 +16,8 @@ def reset_all_tags():
         for song in songs:
             try:
                 song_logic.update_from_files(song)
-            except Exception as ex:
+            except Exception:
                 logger.bind(song=song.dict()).exception(
-                    f"Something went wrong during the reset"
+                    "Something went wrong during the reset"
                 )
     print(time.time() - start)

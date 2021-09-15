@@ -8,9 +8,10 @@
 
 import mmap
 import struct
-from . constants import *
-from . structs import *
-    
+
+from .constants import *
+from .structs import *
+
 
 def open_mmf(lr):
     if not lr:

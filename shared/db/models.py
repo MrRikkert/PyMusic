@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from pony.orm import Optional, PrimaryKey, Required, Set, composite_key, composite_index
+from pony.orm import Optional, PrimaryKey, Required, Set, composite_index, composite_key
 
 from shared.db.base import db
 
@@ -49,7 +49,7 @@ class SongDb(db.Entity, BaseMixin):
     tags = Set("TagDb")
 
     def __str__(self):
-        return f"SongDb[{self.id}]: {self.title} - {', '.join([str(artist) for artist in self.artists])}"
+        return f"SongDb[{self.id}]: {self.title} - {', '.join([str(artist) for artist in self.artists])}"  # noqa
 
 
 class FileDb(db.Entity, BaseMixin):

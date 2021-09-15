@@ -2,10 +2,10 @@ import pytest
 from pony import orm
 from pony.orm import db_session
 
-from shared.logic import tag as tag_logic
 from shared.db.models import TagDb
-from tests.utils import reset_db, mixer
 from shared.exceptions import IntegrityError
+from shared.logic import tag as tag_logic
+from tests.utils import mixer, reset_db
 
 
 def setup_function():
@@ -23,7 +23,7 @@ def test_get_tag_existing():
 
 @db_session
 def test_get_tag_existing_case_difference():
-    db_tag = mixer.blend(TagDb, tag_type="Type", value="Value")
+    mixer.blend(TagDb, tag_type="Type", value="Value")
     tag = tag_logic.get_by_values(tag_type="type", value="value")
     assert tag is None
 

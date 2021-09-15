@@ -1,11 +1,13 @@
+import platform
+
 import pytest
 from pony.orm import db_session
+
 from shared.db.models import FileDb, SongDb
 from shared.models.songs import File
 from shared.settings import TAG_LIST
 from shared.utils.file import get_normalized_path, get_tags
 from tests.utils import mixer, reset_db
-import platform
 
 
 def setup_function():

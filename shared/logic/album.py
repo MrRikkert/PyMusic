@@ -1,5 +1,6 @@
-from hashlib import md5
 import os
+from hashlib import md5
+
 from pony import orm
 
 from shared.db.models import AlbumDb
