@@ -30,7 +30,11 @@ def get_normalized_path(path: str, rel_path: str = None) -> str:
     """
     if not rel_path:
         rel_path = MUSIC_PATH
-    path = os.path.relpath(path, rel_path)
+    # path = os.path.relpath(path, rel_path)
+    path = os.path.join(
+        os.path.relpath(os.path.dirname(path), os.path.dirname(rel_path)),
+        os.path.basename(path),
+    )
     return path.replace("\\", "/")
 
 
