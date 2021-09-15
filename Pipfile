@@ -17,6 +17,7 @@ pytest-dotenv = "*"
 wcwidth = "*"
 jupyter = "*"
 isort = "*"
+autoflake = "*"
 
 [packages]
 pylast = "==4.2.1"
