@@ -1,14 +1,14 @@
-from typing import List
+from typing import List, Union
 
 from pony import orm
-
-from shared.db.models import SongDb
+from shared.db.models import FileDb, SongDb
 from shared.exceptions import IntegrityError
 from shared.logic import album as album_logic
 from shared.logic import artist as artist_logic
 from shared.logic import tag as tag_logic
 from shared.models.songs import SongIn
 from shared.utils.clean import clean_artist, reverse_artist
+from shared.utils.file import get_tags
 
 
 def add(
@@ -81,6 +81,38 @@ def add(
         ),
         artists=[artist_logic.add(artist, return_existing=True) for artist in artists],
     )
+
+
+def update_from_files(song: SongDb) -> SongDb:
+    """Updated the tags of the given songs using the tags
+    of the connected files. This will also clear all
+    current tags of the song.
+
+    Nothing will happen if no files are found
+
+    ## Arguments:
+    - `song`: `SongDb`:
+        - The song that needs to be updated
+
+    ## Returns:
+    - `SongDb`:
+        - Given song with updated tags
+    """
+    files = orm.select(f for f in FileDb if f.song == song)
+
+    if not files:
+        return song
+
+    song.tags.clear()
+    for file in files:
+        tags = get_tags(file)
+        for tag in tags:
+            song.tags.add(
+                tag_logic.add(
+                    tag_type=tag.tag_type, value=tag.value, return_existing=True
+                )
+            )
+    return song
 
 
 def get(title: str, artists: List[str]) -> SongDb:

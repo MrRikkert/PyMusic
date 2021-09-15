@@ -6,6 +6,19 @@ from loguru import logger
 
 dotenv.load_dotenv()
 
+TAG_LIST = tag_list = [
+    "genre",
+    "vocals",
+    "series",
+    "franchise",
+    "op_ed",
+    "season",
+    "alternate",
+    "type",
+    "sort_artist",
+    "language",
+]
+
 
 config = {
     "handlers": [
@@ -53,6 +66,7 @@ HASH_ALGORITHMS = ["bcrypt"]
 # LastFM
 LASTFMKEY = ""
 LASTFMSECRET = ""
+MUSIC_PATH = ""
 
 # --------------------------------------------------------------------------------------
 
@@ -92,3 +106,5 @@ if os.getenv("ALBUM_ART_PATH"):
     ALBUM_ART_PATH = os.getenv("ALBUM_ART_PATH")
 if os.getenv("IMG_URL"):
     IMG_URL = os.getenv("IMG_URL")
+if os.getenv("MUSIC_PATH"):
+    MUSIC_PATH = os.getenv("MUSIC_PATH")

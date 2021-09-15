@@ -1,14 +1,31 @@
 from datetime import datetime
 from typing import List, Optional
 
-from pydantic import BaseModel, Field
-
+from pydantic import Field
+from shared.models import CustomBaseModel
 from shared.models.artists import ArtistLastFm
 
 
-class BaseSong(BaseModel):
+class BaseSong(CustomBaseModel):
     title: str = Field(...)
     length: int = Field(None)
+
+
+class File(BaseSong):
+    path: str = Field(...)
+    artist: str = Field(...)
+    album: str = Field(...)
+    album_artist: str = Field(None)
+    genre: str = Field(None)
+    vocals: str = Field(None)
+    series: str = Field(None)
+    franchise: str = Field(None)
+    op_ed: str = Field(None)
+    season: str = Field(None)
+    alternate: str = Field(None)
+    type: str = Field(None)
+    sort_artist: str = Field(None)
+    language: str = Field(None)
 
 
 class SongIn(BaseSong):
@@ -33,7 +50,7 @@ class Song(BaseSong):
     tags: List[TagIn] = Field(None)
 
 
-class SongLastFm(BaseModel):
+class SongLastFm(CustomBaseModel):
     title: str = Field(...)
     artist: ArtistLastFm = Field(...)
 
@@ -41,7 +58,7 @@ class SongLastFm(BaseModel):
         orm_mode = True
 
 
-class ScrobbleLastFm(BaseModel):
+class ScrobbleLastFm(CustomBaseModel):
     album: str = Field(None)
     timestamp: datetime = Field(...)
     track: SongLastFm = Field(...)

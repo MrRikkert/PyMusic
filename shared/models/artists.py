@@ -1,7 +1,8 @@
-from pydantic import BaseModel, Field
+from pydantic import Field
+from shared.models import CustomBaseModel
 
 
-class ArtistLastFm(BaseModel):
+class ArtistLastFm(CustomBaseModel):
     name: str = Field(...)
 
     class Config:
