@@ -12,6 +12,9 @@ steps:
       # Check met deploy op de juiste versies en gebruikt dev packages voor tests
       - pipenv install --system --deploy --dev --ignore-pipfile
       - pytest
+      - flake8
+      - autoflake -r --remove-all-unused-imports --remove-unused-variables .
+      - isort . -c
     when:
       branch:
         exclude:
@@ -37,6 +40,9 @@ steps:
       - export LASTFM_SECRET=$LASTFM_SECRET
       # Draai ook de lastfm network tests
       - pytest --run-optional-tests=lastfm
+      - flake8
+      - autoflake -r --remove-all-unused-imports --remove-unused-variables .
+      - isort . -c
     when:
       branch:
         - master
