@@ -1,16 +1,14 @@
 # Import settings before anything else
-import shared.settings  # isort:skip
+import shared.settings  # noqa isort:skip
 import os
 from datetime import datetime
 
 import click
 from loguru import logger
-from pony import orm
 from pony.orm import db_session
 
 from cli import mb, scrobbles, songs
-from shared.db.base import db, init_db
-from shared.db.models import ScrobbleDb
+from shared.db.base import init_db
 
 
 @click.group()

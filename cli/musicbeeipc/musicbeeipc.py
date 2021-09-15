@@ -6,7 +6,6 @@
 #- See LICENSE_MusicBeeIPCSDK for more information.       -#
 #----------------------------------------------------------#
 
-import array
 from ctypes import *
 
 from win32api import SendMessage

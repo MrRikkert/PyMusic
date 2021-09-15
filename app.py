@@ -1,5 +1,5 @@
 # Import settings before anything else
-import shared.settings  # isort:skip
+import shared.settings  # noqa isort:skip
 from app import pages
 from app.app import app
 from shared.db.base import init_db

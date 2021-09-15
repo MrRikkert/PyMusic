@@ -103,7 +103,6 @@ def sync_lastfm_scrobbles(username: str):
             logger.bind(scrobble=_scrobble.dict()).exception(
                 f"Something went wrong while adding a scrobble"
             )
-            pass
     return len(scrobbles)
 
 
