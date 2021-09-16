@@ -15,7 +15,7 @@ def setup_function():
 
 
 @pytest.mark.skipif(
-    platform.system() == "Linux", reason="Linux fails with windows-like paths"
+    platform.system() != "Windows", reason="Linux/MacOs fail with windows-like paths"
 )
 def test_get_normalized_path_windows():
     rel_path = "C:\\music"
@@ -26,7 +26,7 @@ def test_get_normalized_path_windows():
 
 
 @pytest.mark.skipif(
-    platform.system() == "Linux", reason="Linux fails with windows-like paths"
+    platform.system() != "Windows", reason="Linux/MacOs fail with windows-like paths"
 )
 def test_get_normalized_path_windows_trailing_slash():
     rel_path = "C:\\music\\"
