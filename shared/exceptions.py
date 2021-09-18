@@ -13,3 +13,11 @@ class LastFmError(Exception):
     ## examples:
     - user not found
     """
+
+
+class PlatformException(Exception):
+    """Raise when a function is unsupported on the platform
+
+    ## examples:
+    - Windows package on Linux/macOS
+    """

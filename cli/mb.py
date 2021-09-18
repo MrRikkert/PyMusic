@@ -9,7 +9,6 @@ from pathlib import Path
 import click
 from loguru import logger
 
-from cli import musicbeeipc
 from shared.db.base import db
 from shared.logic import file as file_logic
 from shared.logic import song as song_logic
@@ -18,7 +17,17 @@ from shared.models.tags import TagIn
 from shared.settings import ALBUM_ART_PATH
 from shared.utils.file import get_normalized_path
 
-mbipc = musicbeeipc.MusicBeeIPC()
+# Can only be used on windows
+try:
+    from cli import musicbeeipc
+
+    mbipc = musicbeeipc.MusicBeeIPC()
+except ImportError:
+    from cli.musicbeeipc_mock import Mock
+
+    # Mock class that raises an exception on usage
+    mbipc = Mock()
+
 tag_types = {
     "genre": musicbeeipc.MBMD_Genre,
     "vocals": musicbeeipc.MBMD_Custom1,
