@@ -25,7 +25,6 @@ pydantic = "*"
 python-multipart = "*"
 pony = "*"
 python-dotenv = "*"
-psycopg2 = "*"
 pypiwin32 = {version = "*",sys_platform = "== 'win32'"}
 pywin32 = {version = "*",sys_platform = "== 'win32'"}
 click = "*"
@@ -38,6 +37,7 @@ pandas = "*"
 dash = "*"
 dash-bootstrap-components = "*"
 python-dateutil = "*"
+psycopg2-binary = "*"
 
 [requires]
 python_version = "3.9"
