@@ -4,6 +4,8 @@ import dash
 import plotly.graph_objects as go
 import plotly.io as pio
 
+from flask import Flask
+
 pio.templates["myname"] = go.layout.Template(
     layout=dict(
         dragmode=False,
@@ -20,4 +22,5 @@ pio.templates.default = "plotly_dark+myname"
 
 assets_path = os.getcwd() + "/app/assets/"
 
-app = dash.Dash(__name__, assets_folder=assets_path)
+server = Flask(__name__)
+app = dash.Dash(server=server, assets_folder=assets_path)

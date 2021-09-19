@@ -1,7 +1,7 @@
 # Import settings before anything else
 import shared.settings  # noqa isort:skip
 from app import pages
-from app.app import app
+from app.app import app, server  # noqa
 from shared.db.base import init_db
 
 app.layout = pages.get_layout()
