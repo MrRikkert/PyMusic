@@ -3,7 +3,6 @@ import os
 import dash
 import plotly.graph_objects as go
 import plotly.io as pio
-
 from flask import Flask
 
 pio.templates["myname"] = go.layout.Template(
