@@ -13,6 +13,7 @@ RUN pipenv install --deploy --ignore-pipfile
 COPY . .
 
 EXPOSE 8080
+ENV DB_PROVIDER="postgres"
 ENV DB_POSTGRES_USER="postgres"
 ENV DB_POSTGRES_PASSWORD="postgres"
 ENV DB_POSTGRES_PASSWORD="0.0.0.0"
