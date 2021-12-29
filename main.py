@@ -134,7 +134,8 @@ def export(path):
 def import_csv(path):
     """Import scrobbles from a csv file"""
     if not path:
-        path = f"./.exports/{os.listdir('./.exports')[-1]}"
+        path = f"./.exports/scrobbles/{os.listdir('./.exports/scrobbles')[-1]}"
+        print(path)
     logger.bind(path=path).info("Importing scrobbles")
     if os.path.exists(path):
         scrobbles.import_scrobbles(path)
