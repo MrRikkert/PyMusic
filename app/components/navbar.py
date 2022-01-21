@@ -1,0 +1,135 @@
+import dash_bootstrap_components as dbc
+import pandas as pd
+from dash import Input, Output, State, html
+from pony.orm import db_session
+
+from app.app import app
+from shared.db.base import db
+
+
+def get_layout():
+    # collapse = dbc.Row(
+    #     [
+    #         dbc.Col(
+    #             dcc.DatePickerRange(
+    #                 id="my-date-picker-range",
+    #                 minimum_nights=5,
+    #                 min_date_allowed=date(1995, 8, 5),
+    #                 max_date_allowed=date(2017, 9, 19),
+    #                 initial_visible_month=date(2017, 8, 5),
+    #                 end_date=date(2017, 8, 25),
+    #                 className="dbc",
+    #             )
+    #         )
+    #     ],
+    #     className="g-0 ms-auto flex-nowrap mt-3 mt-md-0",
+    #     align="center",
+    # )
+
+    collapse = [
+        dbc.Nav(id="test"),
+        html.Div([], className="ml-auto flex-nowrap mt-3 mt-md-0"),
+        dbc.Checklist(
+            options=[{"label": "Use playtime?", "value": 1}],
+            value=[1],
+            id="use-playtime",
+            inline=True,
+        ),
+        dbc.Select(
+            "date-range-select",
+            options=[
+                {"label": "Week", "value": "week"},
+                {"label": "Month", "value": "month"},
+                {"label": "Year", "value": "year"},
+            ],
+            value="week",
+            style={"width": "7rem"},
+        ),
+        dbc.Select(
+            "date-select",
+            options=[{"label": f"option_{idx}", "value": idx} for idx in range(100)],
+            className="right",
+            style={"width": "15rem"},
+        ),
+    ]
+
+    return dbc.Navbar(
+        dbc.Container(
+            [
+                html.A(
+                    # Use row and col to control vertical alignment of logo / brand
+                    dbc.Row(
+                        [
+                            dbc.Col(
+                                html.Img(
+                                    src="https://images.plot.ly/logo/new-branding/plotly-logomark.png",
+                                    height="30px",
+                                )
+                            ),
+                            dbc.Col(dbc.NavbarBrand("Navbar", className="ms-2")),
+                        ],
+                        align="center",
+                        className="g-0",
+                    ),
+                    href="https://plotly.com",
+                    style={"textDecoration": "none"},
+                ),
+                dbc.NavbarToggler(id="navbar-toggler", n_clicks=0),
+                dbc.Collapse(
+                    collapse, id="navbar-collapse", is_open=False, navbar=True
+                ),
+            ]
+        ),
+        color="dark",
+        dark=True,
+    )
+
+
+@app.callback(
+    Output("date-select", "options"),
+    Output("date-select", "value"),
+    Input("date-range-select", "value"),
+)
+@db_session
+def fill_options(value):
+    sql = """
+    SELECT
+        MAX(sc.date) max_date,
+        MIN(sc.date) min_date
+    FROM scrobble sc
+    """
+    df = pd.read_sql_query(sql, db.get_connection())
+    min_date = pd.to_datetime(df.min_date[0])
+    max_date = pd.to_datetime(df.max_date[0])
+
+    if value == "week":
+        freq = "W-MON"
+        frmt = r"Week %W, %Y"
+    elif value == "month":
+        freq = "MS"
+        frmt = r"%b %Y"
+        min_date = min_date + pd.offsets.MonthBegin(-1)
+    elif value == "year":
+        freq = "YS"
+        frmt = "%Y"
+        min_date = min_date + pd.offsets.YearBegin(-1)
+
+    dates = pd.date_range(start=min_date, end=max_date, freq=freq, normalize=True)
+    dates = dates.sort_values(ascending=False)[1:]
+    options = [
+        {"label": date.strftime(frmt), "value": date.strftime(r"%Y-%m-%d")}
+        for date in dates
+    ]
+    return options, options[0]["value"]
+
+
+# add callback for toggling the collapse on small screens
+@app.callback(
+    Output("navbar-collapse", "is_open"),
+    [Input("navbar-toggler", "n_clicks")],
+    [State("navbar-collapse", "is_open")],
+)
+def toggle_navbar_collapse(n, is_open):
+    if n:
+        return not is_open
+    return is_open

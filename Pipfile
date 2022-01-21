@@ -39,6 +39,7 @@ dash-bootstrap-components = "*"
 python-dateutil = "*"
 psycopg2-binary = "*"
 gunicorn = {version = "*",sys_platform = "== 'linux'"}
+dash-bootstrap-templates = "*"
 
 [requires]
 python_version = "3.9"
