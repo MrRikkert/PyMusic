@@ -2,6 +2,8 @@ from datetime import datetime, timedelta
 from math import floor
 
 from dateutil.relativedelta import relativedelta
+from shared.db.base import db
+import pandas as pd
 
 
 def get_min_max_date(min_date, date_range):
@@ -12,7 +14,7 @@ def get_min_max_date(min_date, date_range):
         max_date = min_date + relativedelta(months=1)
     elif date_range == "year":
         max_date = min_date + relativedelta(years=1)
-    return min_date, max_date
+    return min_date.date(), max_date.date()
 
 
 def add_date_clause(
@@ -26,6 +28,13 @@ def add_date_clause(
             condition = "AND " + condition
         return sql.replace(":date:", condition)
     return sql.replace(":date:", "")
+
+
+def get_df_from_sql(sql, min_date, max_date, where=True):
+    sql = add_date_clause(sql, min_date, max_date, where=where)
+    return pd.read_sql_query(
+        sql, db.get_connection(), params={"min_date": min_date, "max_date": max_date}
+    )
 
 
 def get_agg(playtime):
