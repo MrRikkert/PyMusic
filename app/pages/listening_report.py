@@ -1,6 +1,7 @@
 import dash_bootstrap_components as dbc
 from dash import html
 
+from app import stores
 from app.components import navbar, stats, titlebar
 from app.components.charts import play_over_time, top_chart
 
@@ -26,5 +27,6 @@ def get_layout():
                 fluid=False,
                 id="main-content",
             ),
+            stores.get_layout(),
         ]
     )
