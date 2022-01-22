@@ -1,6 +1,8 @@
 import dash_bootstrap_components as dbc
-from app.components import navbar, titlebar, stats
 from dash import html
+
+from app.components import navbar, stats, titlebar
+from app.components.charts import play_over_time
 
 
 def get_layout():
@@ -18,6 +20,7 @@ def get_layout():
                             dbc.Col(stats.get_layout("daily_playtime"), xs=12, lg=3),
                         ]
                     ),
+                    dbc.Row(dbc.Col(play_over_time.get_layout())),
                 ],
                 fluid=False,
                 id="main-content",

@@ -1,9 +1,12 @@
 from datetime import datetime, timedelta
 from math import floor
 
-from dateutil.relativedelta import relativedelta
-from shared.db.base import db
 import pandas as pd
+import plotly.express as px
+from dash import dcc
+from dateutil.relativedelta import relativedelta
+
+from shared.db.base import db
 
 
 def get_min_max_date(min_date, date_range):
@@ -30,10 +33,13 @@ def add_date_clause(
     return sql.replace(":date:", "")
 
 
-def get_df_from_sql(sql, min_date, max_date, where=True):
+def get_df_from_sql(sql, min_date, max_date, where=True, parse_dates=[]):
     sql = add_date_clause(sql, min_date, max_date, where=where)
     return pd.read_sql_query(
-        sql, db.get_connection(), params={"min_date": min_date, "max_date": max_date}
+        sql,
+        db.get_connection(),
+        params={"min_date": min_date, "max_date": max_date},
+        parse_dates=parse_dates,
     )
 
 
@@ -70,3 +76,26 @@ def seconds_to_text(total_seconds):
             return f"{floor(weeks)} weeks, {round(days)} days"
     except Exception:
         return None
+
+
+def get_default_graph(id: str, className=""):
+    fig = px.bar(template="darkly")
+    return dcc.Graph(figure=fig, id=id, className=className, style={"height": "100%"})
+
+
+def set_length_scale(df, column, playtime):
+    if playtime:
+        if df.iloc[-1][column] > 172_800:
+            df[column] = df[column] / (24 * 60 * 60)
+            scale = "days"
+        elif df.iloc[-1][column] > 7200:
+            df[column] = df[column] / (60 * 60)
+            scale = "hours"
+        elif df.iloc[-1][column] > 120:
+            df[column] = df[column] / 60
+            scale = "minutes"
+        else:
+            scale = "seconds"
+    else:
+        scale = "Plays"
+    return (df, scale)
