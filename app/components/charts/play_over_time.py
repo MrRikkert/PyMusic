@@ -27,7 +27,7 @@ def get_layout():
                 color="light",
                 outline=True,
                 className="plays-over-time",
-                style={"height": "250px"},
+                style={"height": "220px"},
             ),
         )
 
