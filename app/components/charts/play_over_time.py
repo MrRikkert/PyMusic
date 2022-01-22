@@ -1,7 +1,6 @@
 from datetime import datetime
 
 import dash_bootstrap_components as dbc
-import pandas as pd
 import plotly.express as px
 from dash import Input, Output, State
 from dateutil.relativedelta import relativedelta
@@ -16,7 +15,6 @@ from app.utils import (
     min_date_to_last_range,
     set_length_scale,
 )
-from shared.db.base import db
 
 
 def get_layout():
