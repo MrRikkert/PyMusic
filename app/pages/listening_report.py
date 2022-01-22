@@ -3,7 +3,7 @@ from dash import html
 
 from app import stores
 from app.components import navbar, stats, titlebar, top_image
-from app.components.charts import play_over_time, top_chart
+from app.components.charts import play_over_time, top_chart, vocals
 
 
 def get_layout():
@@ -64,6 +64,7 @@ def get_layout():
                             ),
                         ]
                     ),
+                    dbc.Row([dbc.Col(vocals.get_layout(), xs=12)]),
                 ],
                 fluid=False,
                 id="main-content",
