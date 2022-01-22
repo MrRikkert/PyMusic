@@ -44,27 +44,3 @@ These paramaters are defined in `tox.ini` so you only need to run the bare `flak
 ### Formatter
 
 Formatting is done using `black` with default settings
-
-### SASS
-
-For automatic SASS compilation I use the [compile hero](https://github.com/Wscats/compile-hero/blob/master/README.md) VS Code extension
-
-## Dash
-
-### Bootstrap
-
-You need to include your own [bootstrap (4.6)](https://getbootstrap.com/docs/4.6/getting-started/download/) SASS files in the assets folder and the theme to use (DARKLY as default). You need to mimick the below file strcuture
-
-```text
-assets/
-├── bootstrap/
-│   ├── scss/                   // Bootstrap scss folder
-│   │   └── ...
-│   └── [theme]/                // Theme folder
-│       ├── _bootswatch.scss
-│       └── _variables.scss
-│
-└── style.scss
-```
-
-See [Dash Bootstrap themes](https://dash-bootstrap-components.opensource.faculty.ai/docs/themes/) for more info
