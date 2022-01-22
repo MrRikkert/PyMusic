@@ -8,26 +8,8 @@ from shared.db.base import db
 
 
 def get_layout():
-    # collapse = dbc.Row(
-    #     [
-    #         dbc.Col(
-    #             dcc.DatePickerRange(
-    #                 id="my-date-picker-range",
-    #                 minimum_nights=5,
-    #                 min_date_allowed=date(1995, 8, 5),
-    #                 max_date_allowed=date(2017, 9, 19),
-    #                 initial_visible_month=date(2017, 8, 5),
-    #                 end_date=date(2017, 8, 25),
-    #                 className="dbc",
-    #             )
-    #         )
-    #     ],
-    #     className="g-0 ms-auto flex-nowrap mt-3 mt-md-0",
-    #     align="center",
-    # )
-
     collapse = [
-        dbc.Nav(id="test"),
+        dbc.Nav(id="navbar-options"),
         html.Div([], className="ml-auto flex-nowrap mt-3 mt-md-0"),
         dbc.Checklist(
             options=[{"label": "Use playtime?", "value": 1}],
@@ -61,10 +43,7 @@ def get_layout():
                     dbc.Row(
                         [
                             dbc.Col(
-                                html.Img(
-                                    src="https://images.plot.ly/logo/new-branding/plotly-logomark.png",
-                                    height="30px",
-                                )
+                                html.Img(src="/assets/img/logo.png", height="30px")
                             ),
                             dbc.Col(dbc.NavbarBrand("Navbar", className="ms-2")),
                         ],
@@ -82,6 +61,7 @@ def get_layout():
         ),
         color="dark",
         dark=True,
+        id="navbar",
     )
 
 
