@@ -14,7 +14,9 @@ def get_layout():
                 style={"font-size": "2rem", "margin-bottom": "0px"},
             )
         ),
-        className="xs-3 mx-auto text-center font-weight-bold",
+        color="light",
+        outline=True,
+        className="mx-auto text-center font-weight-bold",
     )
 
 
