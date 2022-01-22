@@ -55,7 +55,7 @@ def _get_graph(df, x, y, title, xaxis_title, className=""):
     State("top-mixed-chart", "className"),
 )
 @db_session
-def _top_tag(df, scale, playtime, className):
+def _top_mixed(df, scale, playtime, className):
     df = pd.read_json(df, orient="split")
     if playtime:
         title = "Top tag (playtime)"
@@ -68,6 +68,32 @@ def _top_tag(df, scale, playtime, className):
         df=df,
         x="Time",
         y="Name",
+        title=title,
+        xaxis_title=xaxis_title,
+        className=className,
+    )
+
+
+@app.callback(
+    Output("top-artist-chart", "figure"),
+    Input("top-artists", "data"),
+    State("top-artists-scale", "data"),
+    State("use-playtime", "value"),
+    State("top-artist-chart", "className"),
+)
+def _top_artist(df, scale, playtime, className):
+    df = pd.read_json(df, orient="split")
+    if playtime:
+        title = "Top artist (playtime)"
+        xaxis_title = f"Total Playtime ({scale})"
+    else:
+        title = "Top artist (plays)"
+        xaxis_title = "Total Plays"
+
+    return _get_graph(
+        df=df,
+        x="Time",
+        y="Artist",
         title=title,
         xaxis_title=xaxis_title,
         className=className,

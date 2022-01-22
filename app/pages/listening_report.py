@@ -24,8 +24,30 @@ def get_layout():
                     dbc.Row(dbc.Col(play_over_time.get_layout())),
                     dbc.Row(
                         [
-                            dbc.Col(top_chart.get_layout("mixed"), xs=12, lg=9),
-                            dbc.Col(top_image.get_layout("mixed"), xs=12, lg=3),
+                            dbc.Col(
+                                top_image.get_layout("mixed"),
+                                xs={"size": 12, "order": "first"},
+                                lg={"size": 3, "order": "last"},
+                            ),
+                            dbc.Col(
+                                top_chart.get_layout("mixed"),
+                                xs={"size": 12, "order": "last"},
+                                lg={"size": 9, "order": "first"},
+                            ),
+                        ]
+                    ),
+                    dbc.Row(
+                        [
+                            dbc.Col(
+                                top_image.get_layout("artist"),
+                                xs={"size": 12, "order": "first"},
+                                lg={"size": 3, "order": "first"},
+                            ),
+                            dbc.Col(
+                                top_chart.get_layout("artist", reverse=False),
+                                xs={"size": 12, "order": "last"},
+                                lg={"size": 9, "order": "first"},
+                            ),
                         ]
                     ),
                 ],

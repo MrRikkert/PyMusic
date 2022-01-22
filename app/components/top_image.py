@@ -109,3 +109,16 @@ def _top_image_mixed_stats(df, date_range, min_date, playtime):
     art = IMG_URL + df_art.art
 
     return (df.iloc[-1]["Name"], art)
+
+
+@app.callback(
+    Output("top-artist-image-name", "children"),
+    Output("top-artist-image-art", "src"),
+    Input("top-artists", "data"),
+)
+def _top_image_artist_stats(df):
+    df = pd.read_json(df, orient="split")
+
+    top = df.iloc[-1]
+    art = IMG_URL + top.Art
+    return (top.Artist, art)
