@@ -99,7 +99,7 @@ def _top_image_mixed_stats(df, date_range, min_date, playtime):
         ON s_t.songdb = s.id
     INNER JOIN tag t
         ON s_t.tagdb = t.id
-    WHERE t.value = '{df.iloc[-1]["Name"]}'
+    WHERE t.value = '{df.iloc[-1]["Name"].replace("'", "''")}'
         :date:
     GROUP BY art
     ORDER BY {get_agg(playtime)}(s.length) DESC
