@@ -36,7 +36,7 @@ def get_layout():
                                 lg={"size": 3, "order": "last"},
                             ),
                             dbc.Col(
-                                top_chart.get_layout("mixed"),
+                                top_chart.get_layout("mixed", reverse=True),
                                 xs={"size": 12, "order": "last"},
                                 lg={"size": 9, "order": "first"},
                             ),
@@ -64,7 +64,7 @@ def get_layout():
                                 lg={"size": 3, "order": "last"},
                             ),
                             dbc.Col(
-                                top_chart.get_layout("album"),
+                                top_chart.get_layout("album", reverse=True),
                                 xs={"size": 12, "order": "last"},
                                 lg={"size": 9, "order": "first"},
                             ),
