@@ -18,7 +18,7 @@ def get_layout(_type):
         "color": "black",
         "font-weight": "bold",
     }
-    img_style = {"object-fit": "cover"}
+    img_style = {"object-fit": "cover", "height": "220px"}
     artist_style = {"font-size": "1rem", "color": "#111", "font-weight": "400"}
     name_style = {
         "position": "absolute",
@@ -122,3 +122,17 @@ def _top_image_artist_stats(df):
     top = df.iloc[-1]
     art = IMG_URL + top.Art
     return (top.Artist, art)
+
+
+@app.callback(
+    Output("top-album-image-name", "children"),
+    Output("top-album-image-art", "src"),
+    Output("top-album-image-artist", "children"),
+    Input("top-albums", "data"),
+)
+def _top_image_album_stats(df):
+    df = pd.read_json(df, orient="split")
+
+    top = df.iloc[-1]
+    art = IMG_URL + top.Art
+    return (top.Album, art, top.Artist)

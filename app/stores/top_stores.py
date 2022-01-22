@@ -117,3 +117,46 @@ def _top_artists(date_range, min_date, playtime):
     df = df.sort_values("Time", ascending=True)
     df, scale = set_length_scale(df, "Time", playtime)
     return df.to_json(date_format="iso", orient="split"), scale
+
+
+@app.callback(
+    Output("top-albums", "data"),
+    Output("top-albums-scale", "data"),
+    Input("date-range-select", "value"),
+    Input("date-select", "value"),
+    Input("use-playtime", "value"),
+)
+@db_session
+def _top_albums(date_range, min_date, playtime):
+    sql = f"""
+    SELECT
+        al.name_alt AS "album",
+        al.art,
+        ar.name_alt AS "artist",
+        {get_agg(playtime)}(s.length) AS "length"
+    FROM scrobble sc
+    INNER JOIN song s
+        ON s.id = sc.song
+    INNER JOIN album al
+        ON sc.album = al.id
+    LEFT JOIN artist ar
+        ON ar.id = al.album_artist
+    WHERE "length" IS NOT NULL :date:
+    GROUP BY al.name_alt, al.art, ar.name_alt
+    ORDER BY "length" DESC
+    LIMIT 5
+    """
+    min_date, max_date = get_min_max_date(min_date, date_range)
+    df = get_df_from_sql(sql, min_date, max_date, where=False)
+
+    df = df.rename(
+        columns={
+            df.columns[0]: "Album",
+            df.columns[1]: "Art",
+            df.columns[2]: "Artist",
+            df.columns[3]: "Time",
+        }
+    )
+    df = df.sort_values("Time", ascending=True)
+    df, scale = set_length_scale(df, "Time", playtime)
+    return df.to_json(date_format="iso", orient="split"), scale

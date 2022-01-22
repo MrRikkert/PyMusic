@@ -98,3 +98,30 @@ def _top_artist(df, scale, playtime, className):
         xaxis_title=xaxis_title,
         className=className,
     )
+
+
+@app.callback(
+    Output("top-album-chart", "figure"),
+    Input("top-albums", "data"),
+    State("top-albums-scale", "data"),
+    State("use-playtime", "value"),
+    State("top-album-chart", "className"),
+)
+def _top_album(df, scale, playtime, className):
+    df = pd.read_json(df, orient="split")
+
+    if playtime:
+        title = "Top albums (Playtime)"
+        xaxis_title = f"Total Playtime ({scale})"
+    else:
+        title = "Top albums (plays)"
+        xaxis_title = "Total Plays"
+
+    return _get_graph(
+        df=df,
+        x="Time",
+        y="Album",
+        title=title,
+        xaxis_title=xaxis_title,
+        className=className,
+    )

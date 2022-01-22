@@ -50,6 +50,20 @@ def get_layout():
                             ),
                         ]
                     ),
+                    dbc.Row(
+                        [
+                            dbc.Col(
+                                top_image.get_layout("album"),
+                                xs={"size": 12, "order": "first"},
+                                lg={"size": 3, "order": "last"},
+                            ),
+                            dbc.Col(
+                                top_chart.get_layout("album"),
+                                xs={"size": 12, "order": "last"},
+                                lg={"size": 9, "order": "first"},
+                            ),
+                        ]
+                    ),
                 ],
                 fluid=False,
                 id="main-content",
