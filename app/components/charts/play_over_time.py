@@ -2,7 +2,7 @@ from datetime import datetime
 
 import dash_bootstrap_components as dbc
 import plotly.express as px
-from dash import Input, Output, State
+from dash import Input, Output
 from dateutil.relativedelta import relativedelta
 from pony.orm import db_session
 
@@ -145,11 +145,10 @@ def _get_line_chart(date_range, min_date, playtime, max_date):
     Output("plays-line-chart", "figure"),
     Input("date-select", "value"),
     Input("use-playtime", "value"),
-    State("date-range-select", "value"),
 )
 @db_session
-def _plays_bar_chart(min_date, playtime, date_range):
-    min_date, max_date = get_min_max_date(min_date)
+def _plays_bar_chart(min_date, playtime):
+    min_date, max_date, date_range = get_min_max_date(min_date)
 
     if date_range == "week":
         min_date_total, max_date_total = min_date - relativedelta(months=6), min_date

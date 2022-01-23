@@ -1,5 +1,5 @@
 import dash_bootstrap_components as dbc
-from dash import Input, Output, State, html
+from dash import Input, Output, html
 from pony.orm import db_session
 
 from app.app import app
@@ -52,11 +52,10 @@ def get_layout(_type):
     Output("stats-total-scrobbles", "children"),
     Output("stats-total-scrobbles-old", "children"),
     Input("date-select", "value"),
-    State("date-range-select", "value"),
 )
 @db_session
-def __get_total_scrobbles(min_date, date_range):
-    min_date, max_date = get_min_max_date(min_date)
+def __get_total_scrobbles(min_date):
+    min_date, max_date, date_range = get_min_max_date(min_date)
     min_date = min_date_to_last_range(min_date, date_range)
 
     sql = f"""
@@ -77,11 +76,10 @@ def __get_total_scrobbles(min_date, date_range):
     Output("stats-scrobbles-per-day", "children"),
     Output("stats-scrobbles-per-day-old", "children"),
     Input("date-select", "value"),
-    State("date-range-select", "value"),
 )
 @db_session
-def __get_average_scrobbles(min_date, date_range):
-    min_date, max_date = get_min_max_date(min_date)
+def __get_average_scrobbles(min_date):
+    min_date, max_date, date_range = get_min_max_date(min_date)
     min_date = min_date_to_last_range(min_date, date_range)
 
     days = (max_date - min_date).days
@@ -104,11 +102,10 @@ def __get_average_scrobbles(min_date, date_range):
     Output("stats-total-playtime", "children"),
     Output("stats-total-playtime-old", "children"),
     Input("date-select", "value"),
-    State("date-range-select", "value"),
 )
 @db_session
-def __get_playtime(min_date, date_range):
-    min_date, max_date = get_min_max_date(min_date)
+def __get_playtime(min_date):
+    min_date, max_date, date_range = get_min_max_date(min_date)
     min_date = min_date_to_last_range(min_date, date_range)
 
     sql = f"""
@@ -134,11 +131,10 @@ def __get_playtime(min_date, date_range):
     Output("stats-daily-playtime", "children"),
     Output("stats-daily-playtime-old", "children"),
     Input("date-select", "value"),
-    State("date-range-select", "value"),
 )
 @db_session
-def __get_average_playtime(min_date, date_range):
-    min_date, max_date = get_min_max_date(min_date)
+def __get_average_playtime(min_date):
+    min_date, max_date, date_range = get_min_max_date(min_date)
     min_date = min_date_to_last_range(min_date, date_range)
 
     days = (max_date - min_date).days

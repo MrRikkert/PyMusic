@@ -88,16 +88,19 @@ def fill_options(value):
         freq = "W-MON"
         frmt = r"Week %W, %Y"
         timedelta = relativedelta(days=7)
+        date_range = "week"
     elif value == "month":
         freq = "MS"
         frmt = r"%b %Y"
         timedelta = relativedelta(months=1)
         min_date = min_date + pd.offsets.MonthBegin(-1)
+        date_range = "month"
     elif value == "year":
         freq = "YS"
         frmt = "%Y"
         timedelta = relativedelta(years=1)
         min_date = min_date + pd.offsets.YearBegin(-1)
+        date_range = "year"
 
     dates = pd.date_range(start=min_date, end=max_date, freq=freq, normalize=True)
     dates = dates.sort_values(ascending=False)[1:]
@@ -108,6 +111,7 @@ def fill_options(value):
                 {
                     "min_date": date.strftime(r"%Y-%m-%d"),
                     "max_date": (date + timedelta).strftime(r"%Y-%m-%d"),
+                    "date_range": date_range,
                 }
             ),
         }

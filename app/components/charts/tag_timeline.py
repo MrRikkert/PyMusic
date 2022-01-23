@@ -116,11 +116,10 @@ def _add_scatter(fig):
     Output("tag-timeline", "figure"),
     Input("date-select", "value"),
     Input("use-playtime", "value"),
-    State("date-range-select", "value"),
 )
 @db_session
-def _plays_bar_chart(min_date, playtime, date_range):
-    min_date, max_date = get_min_max_date(min_date)
+def _plays_bar_chart(min_date, playtime):
+    min_date, max_date, date_range = get_min_max_date(min_date)
     min_date, resample, frmt, group, title = _get_vars(date_range, min_date)
     df = _get_data(playtime, min_date, max_date, group, resample, frmt)
 

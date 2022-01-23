@@ -80,7 +80,7 @@ def get_layout(_type):
 )
 @db_session
 def _top_image_mixed_stats(df, min_date, playtime):
-    min_date, max_date = get_min_max_date(min_date)
+    min_date, max_date, _ = get_min_max_date(min_date)
     df = pd.read_json(df, orient="split")
 
     sql = f"""

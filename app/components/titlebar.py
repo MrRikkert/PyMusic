@@ -1,5 +1,5 @@
 import dash_bootstrap_components as dbc
-from dash import Input, Output, State, html
+from dash import Input, Output, html
 
 from app.app import app
 from app.utils import get_min_max_date
@@ -20,13 +20,9 @@ def get_layout():
     )
 
 
-@app.callback(
-    Output("titlebar-title", "children"),
-    Input("date-select", "value"),
-    State("date-range-select", "value"),
-)
-def __get_total_scrobbles(min_date, date_range):
-    min_date, max_date = get_min_max_date(min_date)
+@app.callback(Output("titlebar-title", "children"), Input("date-select", "value"))
+def __get_total_scrobbles(min_date):
+    min_date, _, date_range = get_min_max_date(min_date)
 
     if date_range == "week":
         frmt = "Week %W, %Y"

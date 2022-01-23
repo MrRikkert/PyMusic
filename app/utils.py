@@ -14,7 +14,7 @@ def get_min_max_date(dates):
     dates = json.loads(dates)
     min_date = datetime.strptime(dates["min_date"], "%Y-%m-%d").date()
     max_date = datetime.strptime(dates["max_date"], "%Y-%m-%d").date()
-    return min_date, max_date
+    return min_date, max_date, dates["date_range"]
 
 
 def add_date_clause(

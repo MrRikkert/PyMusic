@@ -46,7 +46,7 @@ def _vocal_chart(playtime, min_date):
         :date:
     GROUP BY t.value
     """
-    min_date, max_date = get_min_max_date(min_date)
+    min_date, max_date, _ = get_min_max_date(min_date)
     df = get_df_from_sql(sql, min_date, max_date, where=False)
 
     df, scale = set_length_scale(df, "time", playtime)
