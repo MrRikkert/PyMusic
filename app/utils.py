@@ -79,7 +79,7 @@ def seconds_to_text(total_seconds):
 
 
 def get_default_graph(id: str, className=""):
-    fig = px.bar(template="darkly")
+    fig = px.bar()
     return dcc.Graph(figure=fig, id=id, className=className, style={"height": "100%"})
 
 
