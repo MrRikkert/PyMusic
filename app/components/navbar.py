@@ -70,6 +70,7 @@ def get_layout():
 @app.callback(
     Output("date-select", "options"),
     Output("date-select", "value"),
+    Output("date-select", "class_name"),
     Input("date-range-select", "value"),
 )
 @db_session
@@ -89,18 +90,21 @@ def fill_options(value):
         frmt = r"Week %W, %Y"
         timedelta = relativedelta(days=7)
         date_range = "week"
+        selector_visibility = "visible"
     elif value == "month":
         freq = "MS"
         frmt = r"%b %Y"
         timedelta = relativedelta(months=1)
         min_date = min_date + pd.offsets.MonthBegin(-1)
         date_range = "month"
+        selector_visibility = "visible"
     elif value == "year":
         freq = "YS"
         frmt = "%Y"
         timedelta = relativedelta(years=1)
         min_date = min_date + pd.offsets.YearBegin(-1)
         date_range = "year"
+        selector_visibility = "visible"
 
     dates = pd.date_range(start=min_date, end=max_date, freq=freq, normalize=True)
     dates = dates.sort_values(ascending=False)[1:]
@@ -117,7 +121,7 @@ def fill_options(value):
         }
         for date in dates
     ]
-    return options, options[0]["value"]
+    return options, options[0]["value"], selector_visibility
 
 
 # add callback for toggling the collapse on small screens
