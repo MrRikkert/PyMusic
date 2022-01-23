@@ -18,7 +18,7 @@ def get_layout(_type):
         "color": "black",
         "font-weight": "bold",
     }
-    img_style = {"object-fit": "cover", "height": "220px"}
+    img_style = {"object-fit": "cover"}
     artist_style = {"font-size": "1rem", "color": "#111", "font-weight": "400"}
     name_style = {
         "position": "absolute",
@@ -53,7 +53,7 @@ def get_layout(_type):
             ],
             color="light",
             outline=True,
-            style={"height": "auto"},
+            class_name="n4 image",
         )
 
     if _type == "mixed":

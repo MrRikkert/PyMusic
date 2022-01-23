@@ -9,3 +9,66 @@
 .card-body {
     padding: 5px;
 }
+
+
+@media (min-width: 576px) {
+    .n4 {
+        height: auto;
+    }
+
+    .n4.image {
+        height: auto;
+    }
+
+    .n4 img {
+        height: auto;
+    }
+}
+
+
+@media (min-width: 992px) {
+    .n2 {
+        height: 110px;
+    }
+
+    .n4 {
+        height: 220px;
+    }
+
+    .n5 {
+        height: 275px;
+    }
+
+    .n6 {
+        height: 330px;
+    }
+
+    .n4 img {
+        height: 220px;
+    }
+}
+
+
+@media (min-width: 1200px) {
+    .n4 {
+        height: 265px;
+    }
+
+    .n6 {
+        height: 365px;
+    }
+
+    .n4 img {
+        height: 265px;
+    }
+}
+
+@media (min-width: 1400px) {
+    .n4 {
+        height: 310px;
+    }
+
+    .n4 img {
+        height: 310px;
+    }
+}

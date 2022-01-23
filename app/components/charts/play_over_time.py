@@ -24,7 +24,7 @@ def get_layout():
                 dbc.CardBody(get_default_graph(id="plays-line-chart")),
                 color="light",
                 outline=True,
-                style={"height": "220px"},
+                class_name="n4",
             ),
         )
 

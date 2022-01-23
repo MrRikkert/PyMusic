@@ -34,7 +34,7 @@ def get_layout(_type):
                 ),
                 color="light",
                 outline=True,
-                className="text-center",
+                class_name="text-center n3",
             ),
         )
 
