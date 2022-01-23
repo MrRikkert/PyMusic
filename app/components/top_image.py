@@ -40,6 +40,7 @@ def get_layout(_type):
                     id=art_id,
                     top=True,
                     style=img_style,
+                    class_name="img-fluid",
                 ),
                 html.Div(
                     [
