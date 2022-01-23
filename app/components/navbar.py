@@ -30,7 +30,6 @@ def get_layout():
         dbc.Select(
             "date-select",
             options=[{"label": f"option_{idx}", "value": idx} for idx in range(100)],
-            className="right",
             style={"width": "15rem"},
         ),
     ]

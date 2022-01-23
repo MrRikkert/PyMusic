@@ -19,7 +19,6 @@ def get_layout():
             dbc.CardBody(get_default_graph(id="vocal-dist-chart")),
             color="light",
             outline=True,
-            className="vocal-chart",
             style={"height": "110px"},
         ),
     )

@@ -34,7 +34,7 @@ def get_layout(_type):
     def get_card(title, name_id, art_id, artist_id=None):
         return dbc.Card(
             [
-                html.Div(title, className="title", style=title_style),
+                html.Div(title, style=title_style),
                 dbc.CardImg(
                     src="/assets/img/placeholder_album_art.png",
                     id=art_id,
@@ -44,17 +44,15 @@ def get_layout(_type):
                 html.Div(
                     [
                         html.Div(id=name_id),
-                        html.Div(id=artist_id, className="artist", style=artist_style)
+                        html.Div(id=artist_id, style=artist_style)
                         if artist_id
                         else None,
                     ],
-                    className="name",
                     style=name_style,
                 ),
             ],
             color="light",
             outline=True,
-            className="top-image",
             style={"height": "auto"},
         )
 

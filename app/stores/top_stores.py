@@ -11,10 +11,9 @@ from app.utils import get_agg, get_df_from_sql, get_min_max_date, set_length_sca
     Input("date-range-select", "value"),
     Input("date-select", "value"),
     Input("use-playtime", "value"),
-    Input("top-mixed-chart", "className"),
 )
 @db_session
-def _top_mixed(date_range, min_date, playtime, className):
+def _top_mixed(date_range, min_date, playtime):
     sql = f"""
     SELECT
         CASE
