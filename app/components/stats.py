@@ -56,7 +56,7 @@ def get_layout(_type):
 )
 @db_session
 def __get_total_scrobbles(min_date, date_range):
-    min_date, max_date = get_min_max_date(min_date, date_range)
+    min_date, max_date = get_min_max_date(min_date)
     min_date = min_date_to_last_range(min_date, date_range)
 
     sql = f"""
@@ -81,7 +81,7 @@ def __get_total_scrobbles(min_date, date_range):
 )
 @db_session
 def __get_average_scrobbles(min_date, date_range):
-    min_date, max_date = get_min_max_date(min_date, date_range)
+    min_date, max_date = get_min_max_date(min_date)
     min_date = min_date_to_last_range(min_date, date_range)
 
     days = (max_date - min_date).days
@@ -108,7 +108,7 @@ def __get_average_scrobbles(min_date, date_range):
 )
 @db_session
 def __get_playtime(min_date, date_range):
-    min_date, max_date = get_min_max_date(min_date, date_range)
+    min_date, max_date = get_min_max_date(min_date)
     min_date = min_date_to_last_range(min_date, date_range)
 
     sql = f"""
@@ -138,7 +138,7 @@ def __get_playtime(min_date, date_range):
 )
 @db_session
 def __get_average_playtime(min_date, date_range):
-    min_date, max_date = get_min_max_date(min_date, date_range)
+    min_date, max_date = get_min_max_date(min_date)
     min_date = min_date_to_last_range(min_date, date_range)
 
     days = (max_date - min_date).days

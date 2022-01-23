@@ -1,6 +1,9 @@
+import json
+
 import dash_bootstrap_components as dbc
 import pandas as pd
 from dash import Input, Output, State, html
+from dateutil.relativedelta import relativedelta
 from pony.orm import db_session
 
 from app.app import app
@@ -84,19 +87,30 @@ def fill_options(value):
     if value == "week":
         freq = "W-MON"
         frmt = r"Week %W, %Y"
+        timedelta = relativedelta(days=7)
     elif value == "month":
         freq = "MS"
         frmt = r"%b %Y"
+        timedelta = relativedelta(months=1)
         min_date = min_date + pd.offsets.MonthBegin(-1)
     elif value == "year":
         freq = "YS"
         frmt = "%Y"
+        timedelta = relativedelta(years=1)
         min_date = min_date + pd.offsets.YearBegin(-1)
 
     dates = pd.date_range(start=min_date, end=max_date, freq=freq, normalize=True)
     dates = dates.sort_values(ascending=False)[1:]
     options = [
-        {"label": date.strftime(frmt), "value": date.strftime(r"%Y-%m-%d")}
+        {
+            "label": date.strftime(frmt),
+            "value": json.dumps(
+                {
+                    "min_date": date.strftime(r"%Y-%m-%d"),
+                    "max_date": (date + timedelta).strftime(r"%Y-%m-%d"),
+                }
+            ),
+        }
         for date in dates
     ]
     return options, options[0]["value"]

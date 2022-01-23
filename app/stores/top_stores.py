@@ -51,7 +51,7 @@ def _top_mixed(date_range, min_date, playtime):
     ORDER BY plays DESC
     LIMIT 5
     """
-    min_date, max_date = get_min_max_date(min_date, date_range)
+    min_date, max_date = get_min_max_date(min_date)
     df = get_df_from_sql(sql, min_date, max_date)
 
     df = df.rename(
@@ -107,7 +107,7 @@ def _top_artists(date_range, min_date, playtime):
     ORDER BY "length" DESC
     LIMIT 5
     """
-    min_date, max_date = get_min_max_date(min_date, date_range)
+    min_date, max_date = get_min_max_date(min_date)
     df = get_df_from_sql(sql, min_date, max_date, where=False)
 
     df = df.rename(
@@ -145,7 +145,7 @@ def _top_albums(date_range, min_date, playtime):
     ORDER BY "length" DESC
     LIMIT 5
     """
-    min_date, max_date = get_min_max_date(min_date, date_range)
+    min_date, max_date = get_min_max_date(min_date)
     df = get_df_from_sql(sql, min_date, max_date, where=False)
 
     df = df.rename(

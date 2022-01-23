@@ -28,10 +28,9 @@ def get_layout():
     Output("vocal-dist-chart", "figure"),
     Input("use-playtime", "value"),
     Input("date-select", "value"),
-    State("date-range-select", "value"),
 )
 @db_session
-def _vocal_chart(playtime, min_date, date_range):
+def _vocal_chart(playtime, min_date):
     sql = f"""
     SELECT
         t.value,
@@ -47,7 +46,7 @@ def _vocal_chart(playtime, min_date, date_range):
         :date:
     GROUP BY t.value
     """
-    min_date, max_date = get_min_max_date(min_date, date_range)
+    min_date, max_date = get_min_max_date(min_date)
     df = get_df_from_sql(sql, min_date, max_date, where=False)
 
     df, scale = set_length_scale(df, "time", playtime)

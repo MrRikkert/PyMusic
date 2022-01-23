@@ -26,7 +26,7 @@ def get_layout():
     State("date-range-select", "value"),
 )
 def __get_total_scrobbles(min_date, date_range):
-    min_date, max_date = get_min_max_date(min_date, date_range)
+    min_date, max_date = get_min_max_date(min_date)
 
     if date_range == "week":
         frmt = "Week %W, %Y"

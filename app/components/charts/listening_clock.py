@@ -26,12 +26,11 @@ def get_layout():
 
 @app.callback(
     Output("listening-clock", "figure"),
-    Input("date-range-select", "value"),
     Input("date-select", "value"),
     Input("use-playtime", "value"),
 )
 @db_session
-def _listening_clock(date_range, min_date, playtime):
+def _listening_clock(min_date, playtime):
     sql = f"""
     SELECT
         EXTRACT(HOUR FROM DATE) AS "hour",
@@ -42,7 +41,7 @@ def _listening_clock(date_range, min_date, playtime):
     :date:
     GROUP BY "hour"
     """
-    min_date, max_date = get_min_max_date(min_date, date_range)
+    min_date, max_date = get_min_max_date(min_date)
     df = get_df_from_sql(sql, min_date, max_date)
     df["hour"] = df.hour * 15
     df, scale = set_length_scale(df, "time", playtime)

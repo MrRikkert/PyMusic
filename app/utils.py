@@ -1,3 +1,4 @@
+import json
 from datetime import datetime, timedelta
 from math import floor
 
@@ -9,15 +10,11 @@ from dateutil.relativedelta import relativedelta
 from shared.db.base import db
 
 
-def get_min_max_date(min_date, date_range):
-    min_date = datetime.strptime(min_date, "%Y-%m-%d")
-    if date_range == "week":
-        max_date = min_date + timedelta(days=7)
-    elif date_range == "month":
-        max_date = min_date + relativedelta(months=1)
-    elif date_range == "year":
-        max_date = min_date + relativedelta(years=1)
-    return min_date.date(), max_date.date()
+def get_min_max_date(dates):
+    dates = json.loads(dates)
+    min_date = datetime.strptime(dates["min_date"], "%Y-%m-%d").date()
+    max_date = datetime.strptime(dates["max_date"], "%Y-%m-%d").date()
+    return min_date, max_date
 
 
 def add_date_clause(

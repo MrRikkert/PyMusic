@@ -75,13 +75,12 @@ def get_layout(_type):
     Output("top-mixed-image-name", "children"),
     Output("top-mixed-image-art", "src"),
     Input("top-tags", "data"),
-    State("date-range-select", "value"),
     State("date-select", "value"),
     State("use-playtime", "value"),
 )
 @db_session
-def _top_image_mixed_stats(df, date_range, min_date, playtime):
-    min_date, max_date = get_min_max_date(min_date, date_range)
+def _top_image_mixed_stats(df, min_date, playtime):
+    min_date, max_date = get_min_max_date(min_date)
     df = pd.read_json(df, orient="split")
 
     sql = f"""

@@ -149,7 +149,7 @@ def _get_line_chart(date_range, min_date, playtime, max_date):
 )
 @db_session
 def _plays_bar_chart(min_date, playtime, date_range):
-    min_date, max_date = get_min_max_date(min_date, date_range)
+    min_date, max_date = get_min_max_date(min_date)
 
     if date_range == "week":
         min_date_total, max_date_total = min_date - relativedelta(months=6), min_date
