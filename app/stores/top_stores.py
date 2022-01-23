@@ -15,48 +15,77 @@ from app.utils import get_agg, get_df_from_sql, get_min_max_date, set_length_sca
 def _top_mixed(min_date, playtime):
     sql = f"""
     SELECT
-        CASE
-            WHEN franchise IS NOT NULL THEN 'franchise'
-            WHEN sort_artist IS NOT NULL THEN 'sort_artist'
-            WHEN "type" IS NOT NULL THEN 'type'
-        END AS "tag_type",
-        CASE
-            WHEN franchise IS NOT NULL THEN franchise
-            WHEN sort_artist IS NOT NULL THEN sort_artist
-            WHEN "type" IS NOT NULL THEN "type"
-        END AS "name",
-        {get_agg(playtime)}(agg) plays
+        "tag_type",
+        "name",
+        "plays",
+        (
+            SELECT art
+            FROM album a
+            INNER JOIN albumdb_songdb a_s
+                ON a_s.albumdb = a.id
+            INNER JOIN song s
+                ON a_s.songdb = s.id
+            INNER JOIN scrobble sc
+                ON sc.song = s.id
+            INNER JOIN songdb_tagdb s_t
+                ON s_t.songdb = s.id
+            INNER JOIN tag t
+                ON s_t.tagdb = t.id
+            :date: AND t.value = y."name"
+            GROUP BY art
+            ORDER BY {get_agg(playtime)}(s.length) DESC
+            LIMIT 1
+        ) AS art
     FROM (
         SELECT
-            MIN(s.length) AS agg,
-            MIN(franchise.value) AS franchise,
-            MIN(sort_artist.value) AS sort_artist,
-            MIN("type".value) AS "type"
-        FROM scrobble sc
-        INNER JOIN song s
-            ON s.id = sc.song
-        INNER JOIN songdb_tagdb st
-            ON s.id = st.songdb
-        LEFT JOIN tag franchise
-            ON franchise.id = st.tagdb AND franchise.tag_type = 'franchise'
-        LEFT JOIN tag sort_artist
-            ON sort_artist.id = st.tagdb AND sort_artist.tag_type = 'sort_artist'
-        LEFT JOIN tag "type"
-            ON "type".id = st.tagdb AND "type".tag_type = 'type'
-        :date:
-        GROUP BY sc.id
-    ) x
-    GROUP BY tag_type, "name", "type"
-    ORDER BY plays DESC
-    LIMIT 5
+            CASE
+                WHEN franchise IS NOT NULL THEN 'franchise'
+                WHEN sort_artist IS NOT NULL THEN 'sort_artist'
+                WHEN "type" IS NOT NULL THEN 'type'
+            END AS "tag_type",
+            CASE
+                WHEN franchise IS NOT NULL THEN franchise
+                WHEN sort_artist IS NOT NULL THEN sort_artist
+                WHEN "type" IS NOT NULL THEN "type"
+            END AS "name",
+            {get_agg(playtime)}(agg) plays
+        FROM (
+            SELECT
+                MIN(s.length) AS agg,
+                MIN(franchise.value) AS franchise,
+                MIN(sort_artist.value) AS sort_artist,
+                MIN("type".value) AS "type"
+            FROM scrobble sc
+            INNER JOIN song s
+                ON s.id = sc.song
+            INNER JOIN songdb_tagdb st
+                ON s.id = st.songdb
+            LEFT JOIN tag franchise
+                ON franchise.id = st.tagdb AND franchise.tag_type = 'franchise'
+            LEFT JOIN tag sort_artist
+                ON sort_artist.id = st.tagdb AND sort_artist.tag_type = 'sort_artist'
+            LEFT JOIN tag "type"
+                ON "type".id = st.tagdb AND "type".tag_type = 'type'
+            :date:
+            GROUP BY sc.id
+        ) x
+        GROUP BY tag_type, "name", "type"
+        ORDER BY plays DESC
+        LIMIT 5
+    ) y
     """
     min_date, max_date, _ = get_min_max_date(min_date)
     df = get_df_from_sql(sql, min_date, max_date)
 
     df = df.rename(
-        columns={df.columns[0]: "Type", df.columns[1]: "Name", df.columns[2]: "Time"}
+        columns={
+            df.columns[0]: "Type",
+            df.columns[1]: "Name",
+            df.columns[2]: "Time",
+            df.columns[3]: "Art",
+        }
     )
-    df = df.sort_values("Time", ascending=True)
+    df["seconds"] = df["Time"]
     df, scale = set_length_scale(df, "Time", playtime)
     return df.to_json(date_format="iso", orient="split"), scale
 
@@ -111,7 +140,7 @@ def _top_artists(min_date, playtime):
     df = df.rename(
         columns={df.columns[0]: "Artist", df.columns[1]: "Time", df.columns[2]: "Art"}
     )
-    df = df.sort_values("Time", ascending=True)
+    df["seconds"] = df["Time"]
     df, scale = set_length_scale(df, "Time", playtime)
     return df.to_json(date_format="iso", orient="split"), scale
 
@@ -153,6 +182,6 @@ def _top_albums(min_date, playtime):
             df.columns[3]: "Time",
         }
     )
-    df = df.sort_values("Time", ascending=True)
+    df["seconds"] = df["Time"]
     df, scale = set_length_scale(df, "Time", playtime)
     return df.to_json(date_format="iso", orient="split"), scale

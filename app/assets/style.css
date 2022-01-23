@@ -7,16 +7,12 @@
 }
 
 .card-body {
-    padding: 5px;
+    padding: 0px;
 }
 
 
 @media (min-width: 576px) {
     .n4 {
-        height: auto;
-    }
-
-    .n4.image {
         height: auto;
     }
 }
@@ -38,6 +34,10 @@
     .n6 {
         height: 330px;
     }
+
+    .n4 img {
+        max-height: 218px;
+    }
 }
 
 
@@ -49,10 +49,18 @@
     .n6 {
         height: 365px;
     }
+
+    .n4 img {
+        max-height: 263px;
+    }
 }
 
 @media (min-width: 1400px) {
     .n4 {
         height: 310px;
+    }
+
+    .n4 img {
+        max-height: 308px;
     }
 }

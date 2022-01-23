@@ -2,7 +2,7 @@ import dash_bootstrap_components as dbc
 from dash import html
 
 from app import stores
-from app.components import navbar, stats, titlebar, top_image
+from app.components import navbar, stats, titlebar, top_image, top_image_chart
 from app.components.charts import (
     listening_clock,
     play_over_time,
@@ -25,6 +25,13 @@ def get_layout():
                             dbc.Col(stats.get_layout("daily_scrobbles"), xs=12, lg=3),
                             dbc.Col(stats.get_layout("total_playtime"), xs=12, lg=3),
                             dbc.Col(stats.get_layout("daily_playtime"), xs=12, lg=3),
+                        ]
+                    ),
+                    dbc.Row(
+                        [
+                            dbc.Col(top_image_chart.get_layout("mixed"), xs=12, lg=4),
+                            dbc.Col(top_image_chart.get_layout("artist"), xs=12, lg=4),
+                            dbc.Col(top_image_chart.get_layout("album"), xs=12, lg=4),
                         ]
                     ),
                     dbc.Row(dbc.Col(play_over_time.get_layout())),
