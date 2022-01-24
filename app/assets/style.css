@@ -11,6 +11,18 @@
 }
 
 
+.top-chart-image-top-image-box {
+    position: relative;
+    width: 100%;
+}
+
+.top-chart-image-top-image-box:before {
+    content: "";
+    display: block;
+    padding-top: 100%;
+}
+
+
 @media (min-width: 576px) {
     .n4 {
         height: auto;

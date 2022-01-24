@@ -43,12 +43,23 @@ def get_layout(_type):
                     ),
                     html.Div(
                         [
-                            dbc.CardImg(
-                                src="/assets/img/placeholder_album_art.png",
-                                id=id + "-top-image",
-                                top=True,
-                                style={"object-fit": "cover"},
-                                class_name="img-fluid",
+                            html.Div(
+                                dbc.CardImg(
+                                    src="/assets/img/placeholder_album_art.png",
+                                    id=id + "-top-image",
+                                    top=True,
+                                    style={
+                                        "object-fit": "cover",
+                                        "position": "absolute",
+                                        "top": "0",
+                                        "left": "0",
+                                        "bottom": "0",
+                                        "right": "0",
+                                        "height": "100%",
+                                    },
+                                    class_name="img-fluid",
+                                ),
+                                className="top-chart-image-top-image-box",
                             ),
                             html.Div(
                                 [
