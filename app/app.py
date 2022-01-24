@@ -32,4 +32,5 @@ app = dash.Dash(
     server=server,
     assets_folder=assets_path,
     external_stylesheets=[dbc.themes.DARKLY, dbc_css],
+    suppress_callback_exceptions=True,
 )
