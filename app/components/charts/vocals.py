@@ -1,6 +1,6 @@
 import dash_bootstrap_components as dbc
 import plotly.express as px
-from dash import Input, Output, State
+from dash import Input, Output
 from pony.orm import db_session
 
 from app.app import app
@@ -32,19 +32,39 @@ def get_layout():
 @db_session
 def _vocal_chart(playtime, min_date):
     sql = f"""
-    SELECT
-        t.value,
-        {get_agg(playtime)}(s.length) AS time
-    FROM scrobble sc
-    INNER JOIN song s
-        ON sc.song = s.id
-    INNER JOIN songdb_tagdb s_t
-        ON s_t.songdb = s.id
-    INNER JOIN tag t
-        ON s_t.tagdb = t.id
-    WHERE t.tag_type = 'vocals'
-        :date:
-    GROUP BY t.value
+    WITH vocals AS (
+        SELECT
+            t.value,
+            {get_agg(playtime)}(s.length) AS "time"
+        FROM scrobble sc
+        INNER JOIN song s
+            ON sc.song = s.id
+        INNER JOIN songdb_tagdb s_t
+            ON s_t.songdb = s.id
+        INNER JOIN tag t
+            ON s_t.tagdb = t.id
+            WHERE (
+                t.tag_type = 'vocals'
+                OR t.tag_type = 'language'
+            ) AND t.value != 'Vocals'
+            :date:
+        GROUP BY t.value
+    )
+
+    SELECT "value", SUM("time") AS "time"
+    FROM (
+        SELECT CASE
+                WHEN vocals."time" / (SELECT SUM("time") FROM vocals) * 100 > 1 THEN vocals.value
+                ELSE 'Other'
+            END AS "value",
+            "time"
+        FROM vocals
+    ) x
+    GROUP BY "value"
+    ORDER BY
+        value = 'Instrumental' DESC,
+        value = 'Other' ASC,
+        "time" DESC
     """
     min_date, max_date, _ = get_min_max_date(min_date)
     df = get_df_from_sql(sql, min_date, max_date, where=False)
@@ -64,12 +84,13 @@ def _vocal_chart(playtime, min_date):
         title="Vocals/Instrumental distribution",
         text=df.apply(lambda row: f"{row.value} - {row.percent:.1f}%", axis=1),
         custom_data=["value", df.time, df.scale],
+        color_discrete_sequence=["#0567a4", "#0795ED", "#62c7e3", "#9ff7ff"],
     )
 
     fig.update_layout(
         xaxis=dict(visible=False, range=[0, 100], fixedrange=True),
         yaxis=dict(visible=False, fixedrange=True),
-        uniformtext=dict(minsize=13, mode="show"),
+        uniformtext=dict(minsize=13, mode="hide"),
         showlegend=False,
     )
 
