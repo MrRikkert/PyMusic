@@ -2,10 +2,10 @@ import os
 
 import dash
 import dash_bootstrap_components as dbc
+import plotly.graph_objects as go
+import plotly.io as pio
 from dash_bootstrap_templates import load_figure_template
 from flask import Flask
-import plotly.io as pio
-import plotly.graph_objects as go
 
 assets_path = os.getcwd() + "/app/assets/"
 dbc_css = (

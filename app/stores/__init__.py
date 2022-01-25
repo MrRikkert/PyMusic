@@ -1,4 +1,5 @@
 from dash import dcc, html
+
 from app.stores import top_stores  # noqa
 
 
