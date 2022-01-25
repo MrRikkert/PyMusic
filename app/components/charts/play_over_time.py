@@ -1,22 +1,20 @@
 from datetime import datetime
 
 import dash_bootstrap_components as dbc
-import pandas as pd
 import plotly.express as px
-from dash.dependencies import Input, Output, State
+from dash import Input, Output
 from dateutil.relativedelta import relativedelta
 from pony.orm import db_session
 
 from app.app import app
 from app.utils import (
-    add_date_clause,
-    convert_dates,
     get_agg,
     get_default_graph,
+    get_df_from_sql,
+    get_min_max_date,
     min_date_to_last_range,
     set_length_scale,
 )
-from shared.db.base import db
 
 
 def get_layout():
@@ -26,14 +24,14 @@ def get_layout():
                 dbc.CardBody(get_default_graph(id="plays-line-chart")),
                 color="light",
                 outline=True,
-                className="plays-over-time",
+                class_name="n4",
             ),
         )
 
     return get_card()
 
 
-def _build_query(date_range, min_date, max_date, playtime, filter_date=True):
+def _get_df(date_range, min_date, max_date, playtime, filter_date=True):
     if date_range == "week":
         select = """
             EXTRACT(year from DATE) AS "Year",
@@ -69,22 +67,11 @@ def _build_query(date_range, min_date, max_date, playtime, filter_date=True):
     ORDER BY {' DESC, '.join(group_columns)} DESC
     """
 
-    if filter_date:
-        sql = add_date_clause(sql, min_date, max_date, where=True)
-    else:
-        sql = sql.replace(":date:", "")
-    return sql
+    return get_df_from_sql(sql, min_date, max_date, parse_dates=["Date"])
 
 
 def _get_bar_chart(date_range, min_date, playtime, max_date):
-    sql = _build_query(date_range, min_date, max_date, playtime)
-
-    df = pd.read_sql_query(
-        sql,
-        db.get_connection(),
-        params={"min_date": min_date, "max_date": max_date},
-        parse_dates=["Date"],
-    )
+    df = _get_df(date_range, min_date, max_date, playtime)
 
     if date_range == "week":
         frmt = "%a"
@@ -120,13 +107,7 @@ def _get_bar_chart(date_range, min_date, playtime, max_date):
 
 
 def _get_line_chart(date_range, min_date, playtime, max_date):
-    sql_total = _build_query(date_range, min_date, max_date, playtime)
-    df = pd.read_sql_query(
-        sql_total,
-        db.get_connection(),
-        params={"min_date": min_date, "max_date": max_date},
-        parse_dates=["Date"],
-    )
+    df = _get_df(date_range, min_date, max_date, playtime)
 
     if len(df) == 0:
         return None
@@ -164,11 +145,11 @@ def _get_line_chart(date_range, min_date, playtime, max_date):
     Output("plays-line-chart", "figure"),
     Input("date-select", "value"),
     Input("use-playtime", "value"),
-    State("date-range-select", "value"),
 )
-@convert_dates
 @db_session
-def _plays_bar_chart(min_date, playtime, date_range, max_date):
+def _plays_bar_chart(min_date, playtime):
+    min_date, max_date, date_range = get_min_max_date(min_date)
+
     if date_range == "week":
         min_date_total, max_date_total = min_date - relativedelta(months=6), min_date
         min_date = min_date_to_last_range(min_date, date_range)

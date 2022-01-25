@@ -1,5 +1,0 @@
-@use 'bootstrap';
-
-@function get-container-widths($key: "md") {
-    @return map-get(bootstrap.$container-max-widths, $key);
-}

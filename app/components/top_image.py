@@ -1,41 +1,65 @@
 import dash_bootstrap_components as dbc
-import dash_html_components as html
 import pandas as pd
-from dash.dependencies import Input, Output, State
+from dash import Input, Output, State, html
 from pony.orm import db_session
 
 from app.app import app
-from app.utils import add_date_clause, convert_dates, get_agg
-from shared.db.base import db
+from app.utils import get_agg, get_df_from_sql, get_min_max_date
 from shared.settings import IMG_URL
 
 
 def get_layout(_type):
+    title_style = {
+        "position": "absolute",
+        "padding": "5px 10px",
+        "border-radius": "10px",
+        "margin": "5px",
+        "background-color": "rgba(255,255,255,0.4)",
+        "color": "black",
+        "font-weight": "bold",
+    }
+    img_style = {"object-fit": "cover"}
+    artist_style = {"font-size": "1rem", "color": "#111", "font-weight": "400"}
+    name_style = {
+        "position": "absolute",
+        "bottom": "0px",
+        "padding": "5px 10px",
+        "font-size": "1.1rem",
+        "font-weight": "bold",
+        "background-color": "rgba(255,255,255,0.4)",
+        "color": "black",
+        "width": "100%",
+    }
+
     def get_card(title, name_id, art_id, artist_id=None):
         return dbc.Card(
             [
-                html.Div(title, className="title"),
+                html.Div(title, style=title_style),
                 dbc.CardImg(
-                    src="/assets/img/placeholder_album_art.png", id=art_id, top=True
+                    src="/assets/img/placeholder_album_art.png",
+                    id=art_id,
+                    top=True,
+                    style=img_style,
+                    class_name="img-fluid",
                 ),
                 html.Div(
                     [
                         html.Div(id=name_id),
-                        html.Div(id=artist_id, className="artist")
+                        html.Div(id=artist_id, style=artist_style)
                         if artist_id
                         else None,
                     ],
-                    className="name",
+                    style=name_style,
                 ),
             ],
             color="light",
             outline=True,
-            className="top-image",
+            class_name="n4 image",
         )
 
-    if _type == "series":
-        name_id = "top-series-image-name"
-        art_id = "top-series-image-art"
+    if _type == "mixed":
+        name_id = "top-mixed-image-name"
+        art_id = "top-mixed-image-art"
         return get_card("Top tag", name_id, art_id)
     elif _type == "album":
         name_id = "top-album-image-name"
@@ -49,16 +73,15 @@ def get_layout(_type):
 
 
 @app.callback(
-    Output("top-series-image-name", "children"),
-    Output("top-series-image-art", "src"),
+    Output("top-mixed-image-name", "children"),
+    Output("top-mixed-image-art", "src"),
     Input("top-tags", "data"),
-    State("date-range-select", "value"),
     State("date-select", "value"),
     State("use-playtime", "value"),
 )
-@convert_dates
 @db_session
-def _top_image_tags_stats(df, date_range, min_date, playtime, max_date):
+def _top_image_mixed_stats(df, min_date, playtime):
+    min_date, max_date, _ = get_min_max_date(min_date)
     df = pd.read_json(df, orient="split")
 
     sql = f"""
@@ -74,21 +97,29 @@ def _top_image_tags_stats(df, date_range, min_date, playtime, max_date):
         ON s_t.songdb = s.id
     INNER JOIN tag t
         ON s_t.tagdb = t.id
-    WHERE t.value = %(tag)s
+    WHERE t.value = '{df.iloc[-1]["Name"].replace("'", "''")}'
         :date:
     GROUP BY art
     ORDER BY {get_agg(playtime)}(s.length) DESC
     LIMIT 1
     """
-    sql = add_date_clause(sql, min_date, max_date, where=False)
-    df_art = pd.read_sql_query(
-        sql,
-        db.get_connection(),
-        params={"min_date": min_date, "max_date": max_date, "tag": df.iloc[-1]["Name"]},
-    ).iloc[0]
+    df_art = get_df_from_sql(sql, min_date, max_date, where=False).iloc[0]
     art = IMG_URL + df_art.art
 
     return (df.iloc[-1]["Name"], art)
+
+
+@app.callback(
+    Output("top-artist-image-name", "children"),
+    Output("top-artist-image-art", "src"),
+    Input("top-artists", "data"),
+)
+def _top_image_artist_stats(df):
+    df = pd.read_json(df, orient="split")
+
+    top = df.iloc[-1]
+    art = IMG_URL + top.Art
+    return (top.Artist, art)
 
 
 @app.callback(
@@ -103,16 +134,3 @@ def _top_image_album_stats(df):
     top = df.iloc[-1]
     art = IMG_URL + top.Art
     return (top.Album, art, top.Artist)
-
-
-@app.callback(
-    Output("top-artist-image-name", "children"),
-    Output("top-artist-image-art", "src"),
-    Input("top-artists", "data"),
-)
-def _top_image_artist_stats(df):
-    df = pd.read_json(df, orient="split")
-
-    top = df.iloc[-1]
-    art = IMG_URL + top.Art
-    return (top.Artist, art)

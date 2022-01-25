@@ -1,35 +1,20 @@
+import json
 from datetime import datetime, timedelta
-from inspect import getfullargspec
 from math import floor
 
-import dash_core_components as dcc
+import pandas as pd
 import plotly.express as px
+from dash import dcc
 from dateutil.relativedelta import relativedelta
 
+from shared.db.base import db
 
-def convert_dates(func):
-    argspec = getfullargspec(func)
 
-    def wrap(*args, **kwargs):
-        date_range_idx = argspec.args.index("date_range")
-        min_date_idx = argspec.args.index("min_date")
-
-        args = list(args)
-
-        min_date = datetime.strptime(args[min_date_idx], "%Y-%m-%d")
-        date_range = args[date_range_idx]
-
-        if date_range == "week":
-            max_date = min_date + timedelta(days=7)
-        elif date_range == "month":
-            max_date = min_date + relativedelta(months=1)
-        elif date_range == "year":
-            max_date = min_date + relativedelta(years=1)
-
-        args[min_date_idx] = min_date
-        return func(*args, **kwargs, max_date=max_date)
-
-    return wrap
+def get_min_max_date(dates):
+    dates = json.loads(dates)
+    min_date = datetime.strptime(dates["min_date"], "%Y-%m-%d").date()
+    max_date = datetime.strptime(dates["max_date"], "%Y-%m-%d").date()
+    return min_date, max_date, dates["date_range"]
 
 
 def add_date_clause(
@@ -45,33 +30,14 @@ def add_date_clause(
     return sql.replace(":date:", "")
 
 
-def set_length_scale(df, column, playtime):
-    if playtime:
-        if df.iloc[-1][column] > 172_800:
-            df[column] = df[column] / (24 * 60 * 60)
-            scale = "days"
-        elif df.iloc[-1][column] > 7200:
-            df[column] = df[column] / (60 * 60)
-            scale = "hours"
-        elif df.iloc[-1][column] > 120:
-            df[column] = df[column] / 60
-            scale = "minutes"
-        else:
-            scale = "seconds"
-    else:
-        scale = "Plays"
-    return (df, scale)
-
-
-def get_default_graph(id: str, className=""):
-    fig = px.bar()
-    fig.update_layout(
-        margin=dict(l=10, r=10, b=10, t=40),
-        plot_bgcolor="rgba(0, 0, 0, 0)",
-        paper_bgcolor="rgba(0, 0, 0, 0)",
-        template="plotly_dark",
+def get_df_from_sql(sql, min_date, max_date, where=True, parse_dates=[]):
+    sql = add_date_clause(sql, min_date, max_date, where=where)
+    return pd.read_sql_query(
+        sql,
+        db.get_connection(),
+        params={"min_date": min_date, "max_date": max_date},
+        parse_dates=parse_dates,
     )
-    return dcc.Graph(figure=fig, id=id, className=className, style={"height": "100%"})
 
 
 def get_agg(playtime):
@@ -107,3 +73,26 @@ def seconds_to_text(total_seconds):
             return f"{floor(weeks)} weeks, {round(days)} days"
     except Exception:
         return None
+
+
+def get_default_graph(id: str, className=""):
+    fig = px.bar()
+    return dcc.Graph(figure=fig, id=id, className=className, style={"height": "100%"})
+
+
+def set_length_scale(df, column, playtime):
+    if playtime:
+        if df.iloc[-1][column] > 172_800:
+            df[column] = df[column] / (24 * 60 * 60)
+            scale = "days"
+        elif df.iloc[-1][column] > 7200:
+            df[column] = df[column] / (60 * 60)
+            scale = "hours"
+        elif df.iloc[-1][column] > 120:
+            df[column] = df[column] / 60
+            scale = "minutes"
+        else:
+            scale = "seconds"
+    else:
+        scale = "Plays"
+    return (df, scale)

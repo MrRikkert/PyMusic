@@ -1,18 +1,16 @@
 import dash_bootstrap_components as dbc
-import pandas as pd
 import plotly.express as px
-from dash.dependencies import Input, Output
+from dash import Input, Output
 from pony.orm import db_session
 
 from app.app import app
 from app.utils import (
-    add_date_clause,
-    convert_dates,
     get_agg,
     get_default_graph,
+    get_df_from_sql,
+    get_min_max_date,
     set_length_scale,
 )
-from shared.db.base import db
 
 
 def get_layout():
@@ -21,20 +19,18 @@ def get_layout():
             dbc.CardBody(get_default_graph(id="listening-clock")),
             color="light",
             outline=True,
-            className="listening-clock",
+            class_name="n6",
         ),
     )
 
 
 @app.callback(
     Output("listening-clock", "figure"),
-    Input("date-range-select", "value"),
     Input("date-select", "value"),
     Input("use-playtime", "value"),
 )
-@convert_dates
 @db_session
-def _listening_clock(date_range, min_date, playtime, max_date):
+def _listening_clock(min_date, playtime):
     sql = f"""
     SELECT
         EXTRACT(HOUR FROM DATE) AS "hour",
@@ -45,13 +41,10 @@ def _listening_clock(date_range, min_date, playtime, max_date):
     :date:
     GROUP BY "hour"
     """
-    sql = add_date_clause(sql, min_date, max_date, where=True)
-
-    df = pd.read_sql_query(
-        sql, db.get_connection(), params={"min_date": min_date, "max_date": max_date}
-    )
+    min_date, max_date, _ = get_min_max_date(min_date)
+    df = get_df_from_sql(sql, min_date, max_date)
     df["hour"] = df.hour * 15
-    df, scale = set_length_scale(df, "time", playtime)
+    df, _ = set_length_scale(df, "time", playtime)
 
     if playtime:
         title = "Listening clock (Playtime)"

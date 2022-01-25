@@ -1,7 +1,8 @@
 import dash_bootstrap_components as dbc
 import pandas as pd
 import plotly.express as px
-from dash.dependencies import Input, Output, State
+from dash import Input, Output, State
+from pony.orm import db_session
 
 from app.app import app
 from app.utils import get_default_graph
@@ -14,7 +15,7 @@ def get_layout(_type, reverse=False):
                 dbc.CardBody(get_default_graph(id=id, className=className)),
                 color="light",
                 outline=True,
-                className="top-chart",
+                class_name="n4",
             ),
         )
 
@@ -49,10 +50,11 @@ def _get_graph(df, x, y, title, xaxis_title, className=""):
     Output("top-mixed-chart", "figure"),
     Input("top-tags", "data"),
     State("top-tags-scale", "data"),
-    State("top-mixed-chart", "className"),
     State("use-playtime", "value"),
+    State("top-mixed-chart", "className"),
 )
-def _top_tag(df, scale, className, playtime):
+@db_session
+def _top_mixed(df, scale, playtime, className):
     df = pd.read_json(df, orient="split")
     if playtime:
         title = "Top tag (playtime)"
@@ -75,10 +77,10 @@ def _top_tag(df, scale, className, playtime):
     Output("top-artist-chart", "figure"),
     Input("top-artists", "data"),
     State("top-artists-scale", "data"),
-    State("top-artist-chart", "className"),
     State("use-playtime", "value"),
+    State("top-artist-chart", "className"),
 )
-def _top_artist(df, scale, className, playtime):
+def _top_artist(df, scale, playtime, className):
     df = pd.read_json(df, orient="split")
     if playtime:
         title = "Top artist (playtime)"
@@ -101,10 +103,10 @@ def _top_artist(df, scale, className, playtime):
     Output("top-album-chart", "figure"),
     Input("top-albums", "data"),
     State("top-albums-scale", "data"),
-    State("top-album-chart", "className"),
     State("use-playtime", "value"),
+    State("top-album-chart", "className"),
 )
-def _top_album(df, scale, className, playtime):
+def _top_album(df, scale, playtime, className):
     df = pd.read_json(df, orient="split")
 
     if playtime:

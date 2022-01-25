@@ -1,21 +1,19 @@
-
 import dash_bootstrap_components as dbc
 import numpy as np
 import pandas as pd
 import plotly.express as px
-from dash.dependencies import Input, Output, State
+from dash import Input, Output
 from dateutil.relativedelta import relativedelta
 from pony.orm import db_session
 
 from app.app import app
 from app.utils import (
-    add_date_clause,
-    convert_dates,
     get_agg,
     get_default_graph,
+    get_df_from_sql,
+    get_min_max_date,
     seconds_to_text,
 )
-from shared.db.base import db
 
 
 def get_layout():
@@ -24,7 +22,7 @@ def get_layout():
             dbc.CardBody(get_default_graph(id="tag-timeline")),
             color="light",
             outline=True,
-            className="tag-timeline",
+            class_name="n6",
         ),
     )
 
@@ -67,14 +65,7 @@ def _get_data(playtime, min_date, max_date, group, resample, frmt):
             :date:
         GROUP BY {group}, t.value
     """
-    sql = add_date_clause(sql, min_date, max_date, where=False)
-
-    df = pd.read_sql_query(
-        sql,
-        db.get_connection(),
-        params={"min_date": min_date, "max_date": max_date},
-        parse_dates=["date"],
-    )
+    df = get_df_from_sql(sql, min_date, max_date, where=False)
 
     # Fill missing dates with NaNs
     # make lines disconnect when a group dissapears for a time frame
@@ -89,7 +80,7 @@ def _get_data(playtime, min_date, max_date, group, resample, frmt):
         .reset_index()
     )
     df["time"] = df["time"].replace(0, np.NaN)
-    df = df.loc[df.date < max_date]
+    df = df.loc[df.date < pd.to_datetime(max_date)]
     df["rank"] = df.groupby(pd.Grouper(key="date", freq=resample))["time"].rank(
         ascending=False, method="first"
     )
@@ -125,11 +116,10 @@ def _add_scatter(fig):
     Output("tag-timeline", "figure"),
     Input("date-select", "value"),
     Input("use-playtime", "value"),
-    State("date-range-select", "value"),
 )
-@convert_dates
 @db_session
-def _plays_bar_chart(min_date, playtime, date_range, max_date):
+def _plays_bar_chart(min_date, playtime):
+    min_date, max_date, date_range = get_min_max_date(min_date)
     min_date, resample, frmt, group, title = _get_vars(date_range, min_date)
     df = _get_data(playtime, min_date, max_date, group, resample, frmt)
 

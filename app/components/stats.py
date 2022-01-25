@@ -1,17 +1,14 @@
 import dash_bootstrap_components as dbc
-import dash_html_components as html
-import pandas as pd
-from dash.dependencies import Input, Output, State
+from dash import Input, Output, html
 from pony.orm import db_session
 
 from app.app import app
 from app.utils import (
-    add_date_clause,
-    convert_dates,
+    get_df_from_sql,
+    get_min_max_date,
     min_date_to_last_range,
     seconds_to_text,
 )
-from shared.db.base import db
 
 
 def get_layout(_type):
@@ -20,17 +17,24 @@ def get_layout(_type):
             dbc.Card(
                 dbc.CardBody(
                     [
-                        html.H1(title, className="card-title"),
-                        html.Span("Loading...", id=id, className="main-stat"),
+                        html.H1(
+                            title,
+                            className="mb-0 text-light",
+                            style={"font-size": "1.2rem"},
+                        ),
+                        html.Span("Loading...", style={"font-size": "1.5rem"}, id=id),
                         html.Span(
-                            "Loading...", id=f"{id}-old", className="main-stat-old"
+                            "Loading...",
+                            className="text-light",
+                            style={"font-size": "1rem"},
+                            id=f"{id}-old",
                         ),
                     ],
-                    className="d-flex align-items-center justify-content-center",
+                    class_name="d-flex flex-column",
                 ),
                 color="light",
                 outline=True,
-                className="general-stats",
+                class_name="text-center n3",
             ),
         )
 
@@ -48,11 +52,10 @@ def get_layout(_type):
     Output("stats-total-scrobbles", "children"),
     Output("stats-total-scrobbles-old", "children"),
     Input("date-select", "value"),
-    State("date-range-select", "value"),
 )
-@convert_dates
 @db_session
-def __get_total_scrobbles(min_date, date_range, max_date):
+def __get_total_scrobbles(min_date):
+    min_date, max_date, date_range = get_min_max_date(min_date)
     min_date = min_date_to_last_range(min_date, date_range)
 
     sql = f"""
@@ -62,11 +65,7 @@ def __get_total_scrobbles(min_date, date_range, max_date):
     GROUP BY EXTRACT({date_range} FROM sc.date)
     ORDER BY EXTRACT({date_range} FROM sc.date) DESC
     """
-    sql = add_date_clause(sql, min_date, max_date, where=True)
-
-    df = pd.read_sql_query(
-        sql, db.get_connection(), params={"min_date": min_date, "max_date": max_date}
-    )
+    df = get_df_from_sql(sql, min_date, max_date)
 
     if len(df) > 1:
         return df.iloc[0].plays, f"vs. {df.iloc[1].plays} (last {date_range})"
@@ -77,44 +76,36 @@ def __get_total_scrobbles(min_date, date_range, max_date):
     Output("stats-scrobbles-per-day", "children"),
     Output("stats-scrobbles-per-day-old", "children"),
     Input("date-select", "value"),
-    State("date-range-select", "value"),
 )
-@convert_dates
 @db_session
-def __get_average_scrobbles(min_date, date_range, max_date):
-    days = (max_date - min_date).days
+def __get_average_scrobbles(min_date):
+    min_date, max_date, date_range = get_min_max_date(min_date)
     min_date = min_date_to_last_range(min_date, date_range)
 
+    days = (max_date - min_date).days
+
     sql = f"""
-    SELECT COUNT(*) as plays
+    SELECT ROUND(COUNT(*) / {days}) as plays
     FROM scrobble sc
     :date:
     GROUP BY EXTRACT({date_range} FROM sc.date)
     ORDER BY EXTRACT({date_range} FROM sc.date) DESC
     """
-    sql = add_date_clause(sql, min_date, max_date, where=True)
-
-    df = pd.read_sql_query(
-        sql, db.get_connection(), params={"min_date": min_date, "max_date": max_date}
-    )
+    df = get_df_from_sql(sql, min_date, max_date)
 
     if len(df) > 1:
-        return (
-            round(df.iloc[0].plays / days),
-            f"vs. {round(df.iloc[1].plays / days)} (last {date_range})",
-        )
-    return round(df.iloc[0].plays / days), None
+        return (df.iloc[0].plays, f"vs. {df.iloc[1].plays:.0f} (last {date_range})")
+    return round(df.iloc[0].plays), None
 
 
 @app.callback(
     Output("stats-total-playtime", "children"),
     Output("stats-total-playtime-old", "children"),
     Input("date-select", "value"),
-    State("date-range-select", "value"),
 )
-@convert_dates
 @db_session
-def __get_playtime(min_date, date_range, max_date):
+def __get_playtime(min_date):
+    min_date, max_date, date_range = get_min_max_date(min_date)
     min_date = min_date_to_last_range(min_date, date_range)
 
     sql = f"""
@@ -126,12 +117,8 @@ def __get_playtime(min_date, date_range, max_date):
     GROUP BY EXTRACT({date_range} FROM sc.date)
     ORDER BY EXTRACT({date_range} FROM sc.date) DESC
     """
+    df = get_df_from_sql(sql, min_date, max_date)
 
-    sql = add_date_clause(sql, min_date, max_date, where=True)
-
-    df = pd.read_sql_query(
-        sql, db.get_connection(), params={"min_date": min_date, "max_date": max_date}
-    )
     if len(df) > 1:
         return (
             seconds_to_text(df.iloc[0].length),
@@ -144,16 +131,16 @@ def __get_playtime(min_date, date_range, max_date):
     Output("stats-daily-playtime", "children"),
     Output("stats-daily-playtime-old", "children"),
     Input("date-select", "value"),
-    State("date-range-select", "value"),
 )
-@convert_dates
 @db_session
-def __get_average_playtime(min_date, date_range, max_date):
-    days = (max_date - min_date).days
+def __get_average_playtime(min_date):
+    min_date, max_date, date_range = get_min_max_date(min_date)
     min_date = min_date_to_last_range(min_date, date_range)
 
+    days = (max_date - min_date).days
+
     sql = f"""
-    SELECT SUM(s.length) AS playtime
+    SELECT SUM(s.length) / {days} AS playtime
     FROM scrobble sc
     INNER JOIN song s
         ON sc.song = s.id
@@ -161,15 +148,11 @@ def __get_average_playtime(min_date, date_range, max_date):
     GROUP BY EXTRACT({date_range} FROM sc.date)
     ORDER BY EXTRACT({date_range} FROM sc.date) DESC
     """
-    sql = add_date_clause(sql, min_date, max_date, where=True)
-
-    df = pd.read_sql_query(
-        sql, db.get_connection(), params={"min_date": min_date, "max_date": max_date}
-    )
+    df = get_df_from_sql(sql, min_date, max_date)
 
     if len(df) > 1:
         return (
-            seconds_to_text(df.iloc[0].playtime / days),
-            f"vs. {seconds_to_text(df.iloc[1].playtime / days)} (last {date_range})",
+            seconds_to_text(df.iloc[0].playtime),
+            f"vs. {seconds_to_text(df.iloc[1].playtime)} (last {date_range})",
         )
-    return seconds_to_text(df.iloc[0].playtime / days), None
+    return seconds_to_text(df.iloc[0].playtime), None
