@@ -2,7 +2,7 @@ import dash_bootstrap_components as dbc
 import numpy as np
 import pandas as pd
 import plotly.express as px
-from dash import Input, Output, State
+from dash import Input, Output
 from dateutil.relativedelta import relativedelta
 from pony.orm import db_session
 
