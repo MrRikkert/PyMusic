@@ -40,6 +40,9 @@ python-dateutil = "*"
 psycopg2-binary = "*"
 gunicorn = {version = "*",sys_platform = "== 'linux'"}
 dash-bootstrap-templates = "*"
+altair = "*"
+scipy = "*"
+dash-alternative-viz = {git = "https://github.com/plotly/dash-alternative-viz.git"}
 
 [requires]
 python_version = "3.9"

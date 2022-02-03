@@ -3,7 +3,13 @@ from dash import html
 
 from app import stores
 from app.components import navbar, stats, titlebar, top_image_chart
-from app.components.charts import listening_clock, play_over_time, tag_timeline, vocals
+from app.components.charts import (
+    listening_clock,
+    play_over_time,
+    streamgraph,
+    tag_timeline,
+    vocals,
+)
 
 
 def get_layout():
@@ -36,6 +42,7 @@ def get_layout():
                             dbc.Col(tag_timeline.get_layout(), xs=12, lg=8),
                         ]
                     ),
+                    dbc.Row([dbc.Col(streamgraph.get_layout(), xs=12)]),
                 ],
                 fluid=False,
                 id="main-content",
