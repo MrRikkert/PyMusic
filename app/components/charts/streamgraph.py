@@ -253,6 +253,7 @@ def get_layout():
                     "position": "relative",
                     "left": "calc(-1 * (95vw - 100%)/2)",
                 },
+                class_name="align-items-center",
             ),
         )
 
@@ -330,7 +331,7 @@ def _get_streamgraph(playtime):
             _df["length"] = (
                 _df["length"]
                 .rolling(
-                    window=45,
+                    window=60,
                     win_type="gaussian",
                     closed="neither",
                     center=True,
