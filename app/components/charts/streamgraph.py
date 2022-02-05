@@ -247,7 +247,12 @@ def get_layout():
                 dbc.CardBody(dav.VegaLite(id="streamgraph")),
                 color="light",
                 outline=True,
-                style={"overflow": "auto"},
+                style={
+                    "overflow": "auto",
+                    "width": "95vw",
+                    "position": "relative",
+                    "left": "calc(-1 * (95vw - 100%)/2)",
+                },
             ),
         )
 
@@ -279,7 +284,7 @@ def _get_streamgraph(playtime):
             {get_agg(playtime)}(agg) plays
         FROM (
             SELECT
-                date_trunc('month', sc.date) as "date",
+                date_trunc('week', sc.date) as "date",
                 MIN(s.length) AS agg,
                 MIN(franchise.value) AS franchise,
                 MIN(sort_artist.value) AS sort_artist,
