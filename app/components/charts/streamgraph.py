@@ -346,7 +346,7 @@ def _get_streamgraph(playtime):
     df = pd.concat(dfs).reset_index(drop=True)
 
     alt.data_transformers.disable_max_rows()
-    alt.renderers.set_embed_options(theme="dark")
+    alt.themes.enable("dark")
     return (
         alt.Chart(df)
         .mark_area()
