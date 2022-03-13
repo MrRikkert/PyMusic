@@ -117,6 +117,21 @@ def test_add_artist_existing_with_return_existing():
 
 
 @db_session
+def test_add_artist_update_existing():
+    db_artist = mixer.blend(ArtistDb, name="artist")
+    assert orm.count(a for a in ArtistDb) == 1
+
+    artist = artist_logic.add(
+        "Artist (CV. Voice Actor)", return_existing=True, update_existing=True
+    )
+    assert orm.count(a for a in ArtistDb) == 2
+    assert artist is not None
+    assert db_artist.id == artist.id
+    assert artist.character_voice is not None
+    assert artist.character_voice.name == "voice actor"
+
+
+@db_session
 def test_split_artist():
     artist = "artist1, artist2 & artist3 ; artist4 vs artist5 & artist6 feat. artist7"
     artists = artist_logic.split(artist)

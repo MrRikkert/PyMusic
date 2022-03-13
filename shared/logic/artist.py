@@ -2,7 +2,12 @@ from typing import List
 
 from shared.db.models import ArtistDb
 from shared.exceptions import IntegrityError
-from shared.utils.clean import clean_artist, reverse_artist, split_artists
+from shared.utils.clean import (
+    clean_artist,
+    get_character_voice,
+    reverse_artist,
+    split_artists,
+)
 
 
 def get_by_name(name: str) -> ArtistDb:
@@ -53,7 +58,7 @@ def exists(name: str) -> bool:
     return True if artist is not None else False
 
 
-def add(name: str, return_existing: bool = False) -> ArtistDb:
+def add(name: str, return_existing: bool = False, update_existing=False) -> ArtistDb:
     """Add artist to the database
 
     ## Arguments:
@@ -75,6 +80,9 @@ def add(name: str, return_existing: bool = False) -> ArtistDb:
     if existing is not None:
         if not return_existing:
             raise IntegrityError("artist already exists")
+        elif update_existing:
+            cv = get_character_voice(name)
+            existing.character_voice = ArtistDb(name=cv.lower(), name_alt=cv)
         return existing
     name, cv = clean_artist(name, return_character_voice=True)
     if cv:
