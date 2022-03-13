@@ -1,10 +1,10 @@
 from shared.utils.clean import (
     clean_album,
     clean_artist,
+    get_character_voice,
     reverse_artist,
     romanise_text,
     split_artists,
-    get_character_voice,
 )
 from tests.utils import reset_db
 
