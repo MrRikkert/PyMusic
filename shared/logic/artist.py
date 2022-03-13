@@ -76,8 +76,10 @@ def add(name: str, return_existing: bool = False) -> ArtistDb:
         if not return_existing:
             raise IntegrityError("artist already exists")
         return existing
-    name = clean_artist(name)
-    return ArtistDb(name=name.lower(), name_alt=name)
+    name, cv = clean_artist(name, return_character_voice=True)
+    if cv:
+        cv = add(cv, return_existing=True)
+    return ArtistDb(name=name.lower(), name_alt=name, character_voice=cv)
 
 
 def split(name: str) -> List[str]:

@@ -95,8 +95,9 @@ def test_add_artist_cased_alt_name():
 @db_session
 def test_add_artist_cleaned_name():
     artist = artist_logic.add("hallo (cv. test)")
-    assert orm.count(a for a in ArtistDb) == 1
+    assert orm.count(a for a in ArtistDb) == 2
     assert artist.name == "hallo"
+    assert artist.character_voice.name == "test"
 
 
 @db_session
