@@ -91,4 +91,6 @@ def test_clean_album():
 
 def test_romanise_text():
     assert romanise_text("岡部啓一") == "okabe keiichi"
+    assert romanise_text("岡部啓一：something") == "okabe keiichi : something"
     assert romanise_text("John Doe") == "John Doe"
+    assert romanise_text("John： Doe") == "John： Doe"

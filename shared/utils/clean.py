@@ -15,8 +15,14 @@ def split_artists(artist: str) -> List[str]:
 
 
 def romanise_text(text: str) -> str:
-    result = [result["hepburn"] for result in kks.convert(text)]
-    return " ".join(result).strip()
+    is_japanese = re.search(
+        r"[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\uff66-\uff9f]",
+        text,
+    )
+    if is_japanese:
+        result = [result["hepburn"] for result in kks.convert(text)]
+        return " ".join(result).strip()
+    return text
 
 
 def clean_artist(
