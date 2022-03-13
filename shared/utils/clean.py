@@ -22,11 +22,11 @@ def romanise_text(text: str) -> str:
 def clean_artist(
     artist: str, romanise: bool = True, return_character_voice=False
 ) -> Union[str, Tuple[str, str]]:
-    # https://regex101.com/r/WwGZfe/1
+    # https://regex101.com/r/qrmQEh/1
 
     # Remove everything between brackets
     _artist = re.sub(
-        r"[\(\[](?:(?:c\.?v\.?)?(?:v\.?o\.?)?(?:)?[.:])?(.*?)[\)\]]",
+        r"[\(\[](?:(?:c\.?v\.?)?(?:v\.?o\.?)?(?:)?[.:：])?(.*)[\)\]]",
         "",
         artist,
         flags=re.IGNORECASE,
@@ -39,9 +39,9 @@ def clean_artist(
 
 
 def get_character_voice(artist: str, romanise: bool = True) -> str:
-    # https://regex101.com/r/WwGZfe/1
+    # https://regex101.com/r/qrmQEh/1
     cv = re.search(
-        r"[\(\[](?:(?:c\.?v\.?)?(?:v\.?o\.?)?(?:)?[.:])?(.*?)[\)\]]",
+        r"[\(\[](?:(?:c\.?v\.?)?(?:v\.?o\.?)?(?:)?[.:：])?(.*)[\)\]]",
         artist,
         flags=re.IGNORECASE,
     )

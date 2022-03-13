@@ -45,6 +45,10 @@ def test_get_character_voice():
     assert get_character_voice("Cocoa [C.V. Ayane Sakura]") == "Ayane Sakura"
     assert get_character_voice("Elizabeth (Vo. Yumi Uchiyama)") == "Yumi Uchiyama"
     assert get_character_voice("Elizabeth (V.o. Yumi Uchiyama)") == "Yumi Uchiyama"
+    assert (
+        get_character_voice("Ayanokouji Cheriel (CV: Toujou Nozomi (Kusuda Aina))")
+        == "Toujou Nozomi (Kusuda Aina)"
+    )
 
 
 def test_reverse_artist():

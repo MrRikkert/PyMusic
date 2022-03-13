@@ -101,6 +101,21 @@ def test_add_artist_cleaned_name():
 
 
 @db_session
+def test_add_artist_nested_character_voice():
+    artist = artist_logic.add("Ayanokouji Cheriel (CV: Toujou Nozomi (Kusuda Aina))")
+    assert orm.count(a for a in ArtistDb) == 3
+    assert artist.name == "Ayanokouji Cheriel".lower()
+
+    cv = artist.character_voice
+    assert cv is not None
+    assert cv.name == "Toujou Nozomi".lower()
+
+    cv = cv.character_voice
+    assert cv is not None
+    assert cv.name == "Kusuda Aina".lower()
+
+
+@db_session
 def test_add_artist_existing():
     db_artist = mixer.blend(ArtistDb)
     with pytest.raises(IntegrityError):
