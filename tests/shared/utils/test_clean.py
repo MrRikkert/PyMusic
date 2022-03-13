@@ -31,11 +31,11 @@ def test_clean_artist():
 def test_clean_artist_return_character_voice():
     artist, cv = clean_artist("Nishikino Maki (CV. Pile)", return_character_voice=True)
     assert artist == "Nishikino Maki"
-    assert cv == "(CV. Pile)"
+    assert cv == "Pile"
 
     artist, cv = clean_artist("Cocoa [CV. Ayane Sakura]", return_character_voice=True)
     assert artist == "Cocoa"
-    assert cv == "[CV. Ayane Sakura]"
+    assert cv == "Ayane Sakura"
 
 
 def test_get_character_voice():
