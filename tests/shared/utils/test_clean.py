@@ -27,6 +27,16 @@ def test_clean_artist():
     assert clean_artist("BNSI [中西哲一]") == "BNSI"
 
 
+def test_clean_artist_return_character_voice():
+    artist, cv = clean_artist("Nishikino Maki (CV. Pile)", return_character_voice=True)
+    assert artist == "Nishikino Maki"
+    assert cv == "(CV. Pile)"
+
+    artist, cv = clean_artist("Cocoa [CV. Ayane Sakura]", return_character_voice=True)
+    assert artist == "Cocoa"
+    assert cv == "[CV. Ayane Sakura]"
+
+
 def test_reverse_artist():
     assert reverse_artist("Keiichi Okabe") == "Okabe Keiichi"
     assert reverse_artist("first second third") is None

@@ -19,14 +19,22 @@ def romanise_text(text: str) -> str:
     return " ".join(result).strip()
 
 
-def clean_artist(artist: str, romanise: bool = True) -> str:
-    # https://regex101.com/r/lthmZQ/1
+def clean_artist(
+    artist: str, romanise: bool = True, return_character_voice=False
+) -> str:
+    # https://regex101.com/r/hvFPAS/1
     # return re.sub(r"[\(\[](cv[.:])?.*?[\)\]]", "", artist, flags=re.IGNORECASE).strip()
 
     # Remove everything between brackets
-    _artist = re.sub(r"[\(\[].*?[\)\]]", "", artist, flags=re.IGNORECASE).strip()
+    regex = r"([\(\[](cv[.:])?.*?[\)\]])"
+    _artist = re.sub(regex, "", artist, flags=re.IGNORECASE).strip()
     if romanise:
         _artist = romanise_text(_artist)
+    if return_character_voice:
+        cv = re.search(regex, artist, flags=re.IGNORECASE)
+        if cv:
+            cv = cv.group(1).strip()
+        return _artist, cv
     return _artist
 
 
