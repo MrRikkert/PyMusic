@@ -38,6 +38,15 @@ def clean_artist(
     return _artist
 
 
+def get_character_voice(artist: str, romanise: bool = True):
+    cv = re.search(r"([\(\[](cv[.:])?(.*?)[\)\]])", artist, flags=re.IGNORECASE)
+    if cv:
+        cv = cv.group(3).strip()
+        if romanise:
+            cv = romanise_text(cv)
+    return cv
+
+
 def reverse_artist(artist: str) -> str:
     names = artist.split(" ")
     if not len(names) == 2:

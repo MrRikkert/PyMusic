@@ -4,6 +4,7 @@ from shared.utils.clean import (
     reverse_artist,
     romanise_text,
     split_artists,
+    get_character_voice,
 )
 from tests.utils import reset_db
 
@@ -35,6 +36,11 @@ def test_clean_artist_return_character_voice():
     artist, cv = clean_artist("Cocoa [CV. Ayane Sakura]", return_character_voice=True)
     assert artist == "Cocoa"
     assert cv == "[CV. Ayane Sakura]"
+
+
+def test_get_character_voice():
+    assert get_character_voice("Nishikino Maki (CV. Pile)") == "Pile"
+    assert get_character_voice("Cocoa [CV. Ayane Sakura]") == "Ayane Sakura"
 
 
 def test_reverse_artist():
