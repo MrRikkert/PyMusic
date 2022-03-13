@@ -1,5 +1,5 @@
 import re
-from typing import List
+from typing import List, Tuple, Union
 
 import pykakasi
 
@@ -21,7 +21,7 @@ def romanise_text(text: str) -> str:
 
 def clean_artist(
     artist: str, romanise: bool = True, return_character_voice=False
-) -> str:
+) -> Union[str, Tuple[str, str]]:
     # https://regex101.com/r/vimAtZ/1
 
     # Remove everything between brackets
@@ -35,7 +35,7 @@ def clean_artist(
     return _artist
 
 
-def get_character_voice(artist: str, romanise: bool = True):
+def get_character_voice(artist: str, romanise: bool = True) -> str:
     # https://regex101.com/r/vimAtZ/1
     cv = re.search(r"([\(\[](cv[.:])?(.*?)[\)\]])", artist, flags=re.IGNORECASE)
     if cv:
