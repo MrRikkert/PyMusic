@@ -23,7 +23,6 @@ def clean_artist(
     artist: str, romanise: bool = True, return_character_voice=False
 ) -> str:
     # https://regex101.com/r/vimAtZ/1
-    # return re.sub(r"[\(\[](cv[.:])?.*?[\)\]]", "", artist, flags=re.IGNORECASE).strip()
 
     # Remove everything between brackets
     _artist = re.sub(
@@ -37,6 +36,7 @@ def clean_artist(
 
 
 def get_character_voice(artist: str, romanise: bool = True):
+    # https://regex101.com/r/vimAtZ/1
     cv = re.search(r"([\(\[](cv[.:])?(.*?)[\)\]])", artist, flags=re.IGNORECASE)
     if cv:
         cv = cv.group(3).strip()
