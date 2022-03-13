@@ -40,7 +40,11 @@ def test_clean_artist_return_character_voice():
 
 def test_get_character_voice():
     assert get_character_voice("Nishikino Maki (CV. Pile)") == "Pile"
+    assert get_character_voice("Nishikino Maki (C.V. Pile)") == "Pile"
     assert get_character_voice("Cocoa [CV. Ayane Sakura]") == "Ayane Sakura"
+    assert get_character_voice("Cocoa [C.V. Ayane Sakura]") == "Ayane Sakura"
+    assert get_character_voice("Elizabeth (Vo. Yumi Uchiyama)") == "Yumi Uchiyama"
+    assert get_character_voice("Elizabeth (V.o. Yumi Uchiyama)") == "Yumi Uchiyama"
 
 
 def test_reverse_artist():

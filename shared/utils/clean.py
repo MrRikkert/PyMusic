@@ -22,11 +22,14 @@ def romanise_text(text: str) -> str:
 def clean_artist(
     artist: str, romanise: bool = True, return_character_voice=False
 ) -> Union[str, Tuple[str, str]]:
-    # https://regex101.com/r/vimAtZ/1
+    # https://regex101.com/r/WwGZfe/1
 
     # Remove everything between brackets
     _artist = re.sub(
-        r"([\(\[](cv[.:])?(.*?)[\)\]])", "", artist, flags=re.IGNORECASE
+        r"[\(\[](?:(?:c\.?v\.?)?(?:v\.?o\.?)?(?:)?[.:])?(.*?)[\)\]]",
+        "",
+        artist,
+        flags=re.IGNORECASE,
     ).strip()
     if romanise:
         _artist = romanise_text(_artist)
@@ -36,10 +39,14 @@ def clean_artist(
 
 
 def get_character_voice(artist: str, romanise: bool = True) -> str:
-    # https://regex101.com/r/vimAtZ/1
-    cv = re.search(r"([\(\[](cv[.:])?(.*?)[\)\]])", artist, flags=re.IGNORECASE)
+    # https://regex101.com/r/WwGZfe/1
+    cv = re.search(
+        r"[\(\[](?:(?:c\.?v\.?)?(?:v\.?o\.?)?(?:)?[.:])?(.*?)[\)\]]",
+        artist,
+        flags=re.IGNORECASE,
+    )
     if cv:
-        cv = cv.group(3).strip()
+        cv = cv.group(1).strip()
         if romanise:
             cv = romanise_text(cv)
     return cv
