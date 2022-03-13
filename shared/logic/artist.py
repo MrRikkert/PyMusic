@@ -66,6 +66,11 @@ def add(name: str, return_existing: bool = False, update_existing=False) -> Arti
         - Name of the artist
     - `return_existing`: `bool`, optional:
         - Return existing database object when found or not. Defaults to `False`.
+    - `update_existing`: `bool`, optional:
+        - Update the existing artist when found or not.
+        Only updates the `character_voice` property
+        `return_existing` also needs to be `True` for this to work.
+        Defaults to `False`.
 
     ## Raises:
     - `IntegrityError`:
