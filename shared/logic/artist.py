@@ -88,7 +88,7 @@ def add(name: str, return_existing: bool = False, update_existing=True) -> Artis
         elif update_existing:
             cv = get_character_voice(name)
             if cv:
-                existing.character_voice = ArtistDb(name=cv.lower(), name_alt=cv)
+                existing.character_voice = add(name=cv, return_existing=True)
         return existing
     name, cv = clean_artist(name, return_character_voice=True)
     if cv:
