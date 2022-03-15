@@ -58,7 +58,7 @@ def exists(name: str) -> bool:
     return True if artist is not None else False
 
 
-def add(name: str, return_existing: bool = False, update_existing=False) -> ArtistDb:
+def add(name: str, return_existing: bool = False, update_existing=True) -> ArtistDb:
     """Add artist to the database
 
     ## Arguments:
