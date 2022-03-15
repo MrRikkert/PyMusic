@@ -4,6 +4,19 @@ from typing import List, Tuple, Union
 import pykakasi
 
 kks = pykakasi.kakasi()
+cv_regex = re.compile(
+    r"""
+        [\(\[]              # Match opening (square) bracket
+        (?:                 # Optional non-capturing group
+            (?:c\.?v\.?)?   # Optionally match cv or c.v.
+            (?:v\.?o\.?)?   # Optionally match vo or v.o.
+            [.:：]          # Match some character that end the previous abbreviations
+        )?                  # Closing optional non-capturing group
+        (.*)                # The main capturing group: i.e. the voice actor
+        [\)\]]              # Match closing (square) bracket
+    """,
+    flags=re.VERBOSE | re.IGNORECASE,
+)
 
 
 def split_artists(artist: str) -> List[str]:
@@ -31,12 +44,7 @@ def clean_artist(
     # https://regex101.com/r/qrmQEh/1
 
     # Remove everything between brackets
-    _artist = re.sub(
-        r"[\(\[](?:(?:c\.?v\.?)?(?:v\.?o\.?)?(?:)?[.:：])?(.*)[\)\]]",
-        "",
-        artist,
-        flags=re.IGNORECASE,
-    ).strip()
+    _artist = cv_regex.sub("", artist).strip()
     if romanise:
         _artist = romanise_text(_artist)
     if return_character_voice:
@@ -46,11 +54,7 @@ def clean_artist(
 
 def get_character_voice(artist: str, romanise: bool = True) -> str:
     # https://regex101.com/r/qrmQEh/1
-    cv = re.search(
-        r"[\(\[](?:(?:c\.?v\.?)?(?:v\.?o\.?)?(?:)?[.:：])?(.*)[\)\]]",
-        artist,
-        flags=re.IGNORECASE,
-    )
+    cv = cv_regex.search(artist)
     if cv:
         cv = cv.group(1).strip()
         if romanise:
@@ -82,7 +86,7 @@ def clean_album(album: str) -> str:
         (
             (-\s)?              # match optional leading '-'
             (cd|disk|disc)      # match words like disk and cd
-            .*                 # match any character after the word
+            .*                  # match any character after the word
             \d{1,}              # match any digit
         )
         """,
