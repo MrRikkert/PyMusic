@@ -87,7 +87,8 @@ def add(name: str, return_existing: bool = False, update_existing=True) -> Artis
             raise IntegrityError("artist already exists")
         elif update_existing:
             cv = get_character_voice(name)
-            existing.character_voice = ArtistDb(name=cv.lower(), name_alt=cv)
+            if cv:
+                existing.character_voice = ArtistDb(name=cv.lower(), name_alt=cv)
         return existing
     name, cv = clean_artist(name, return_character_voice=True)
     if cv:
