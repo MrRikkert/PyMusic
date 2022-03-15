@@ -95,8 +95,24 @@ def test_add_artist_cased_alt_name():
 @db_session
 def test_add_artist_cleaned_name():
     artist = artist_logic.add("hallo (cv. test)")
-    assert orm.count(a for a in ArtistDb) == 1
+    assert orm.count(a for a in ArtistDb) == 2
     assert artist.name == "hallo"
+    assert artist.character_voice.name == "test"
+
+
+@db_session
+def test_add_artist_nested_character_voice():
+    artist = artist_logic.add("Ayanokouji Cheriel (CV: Toujou Nozomi (Kusuda Aina))")
+    assert orm.count(a for a in ArtistDb) == 3
+    assert artist.name == "Ayanokouji Cheriel".lower()
+
+    cv = artist.character_voice
+    assert cv is not None
+    assert cv.name == "Toujou Nozomi".lower()
+
+    cv = cv.character_voice
+    assert cv is not None
+    assert cv.name == "Kusuda Aina".lower()
 
 
 @db_session
@@ -113,6 +129,21 @@ def test_add_artist_existing_with_return_existing():
     assert orm.count(a for a in ArtistDb) == 1
     assert artist is not None
     assert db_artist.id == artist.id
+
+
+@db_session
+def test_add_artist_update_existing():
+    db_artist = mixer.blend(ArtistDb, name="artist")
+    assert orm.count(a for a in ArtistDb) == 1
+
+    artist = artist_logic.add(
+        "Artist (CV. Voice Actor)", return_existing=True, update_existing=True
+    )
+    assert orm.count(a for a in ArtistDb) == 2
+    assert artist is not None
+    assert db_artist.id == artist.id
+    assert artist.character_voice is not None
+    assert artist.character_voice.name == "voice actor"
 
 
 @db_session

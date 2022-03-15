@@ -2,7 +2,12 @@ from typing import List
 
 from shared.db.models import ArtistDb
 from shared.exceptions import IntegrityError
-from shared.utils.clean import clean_artist, reverse_artist, split_artists
+from shared.utils.clean import (
+    clean_artist,
+    get_character_voice,
+    reverse_artist,
+    split_artists,
+)
 
 
 def get_by_name(name: str) -> ArtistDb:
@@ -53,7 +58,7 @@ def exists(name: str) -> bool:
     return True if artist is not None else False
 
 
-def add(name: str, return_existing: bool = False) -> ArtistDb:
+def add(name: str, return_existing: bool = False, update_existing=True) -> ArtistDb:
     """Add artist to the database
 
     ## Arguments:
@@ -61,6 +66,11 @@ def add(name: str, return_existing: bool = False) -> ArtistDb:
         - Name of the artist
     - `return_existing`: `bool`, optional:
         - Return existing database object when found or not. Defaults to `False`.
+    - `update_existing`: `bool`, optional:
+        - Update the existing artist when found or not.
+        Only updates the `character_voice` property
+        `return_existing` also needs to be `True` for this to work.
+        Defaults to `False`.
 
     ## Raises:
     - `IntegrityError`:
@@ -75,9 +85,15 @@ def add(name: str, return_existing: bool = False) -> ArtistDb:
     if existing is not None:
         if not return_existing:
             raise IntegrityError("artist already exists")
+        elif update_existing:
+            cv = get_character_voice(name)
+            if cv:
+                existing.character_voice = ArtistDb(name=cv.lower(), name_alt=cv)
         return existing
-    name = clean_artist(name)
-    return ArtistDb(name=name.lower(), name_alt=name)
+    name, cv = clean_artist(name, return_character_voice=True)
+    if cv:
+        cv = add(cv, return_existing=True)
+    return ArtistDb(name=name.lower(), name_alt=name, character_voice=cv)
 
 
 def split(name: str) -> List[str]:

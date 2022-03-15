@@ -1,6 +1,7 @@
 from shared.utils.clean import (
     clean_album,
     clean_artist,
+    get_character_voice,
     reverse_artist,
     romanise_text,
     split_artists,
@@ -25,6 +26,29 @@ def test_clean_artist():
     assert clean_artist("Nishikino Maki (CV. Pile)") == "Nishikino Maki"
     assert clean_artist("Cocoa [CV. Ayane Sakura]") == "Cocoa"
     assert clean_artist("BNSI [中西哲一]") == "BNSI"
+
+
+def test_clean_artist_return_character_voice():
+    artist, cv = clean_artist("Nishikino Maki (CV. Pile)", return_character_voice=True)
+    assert artist == "Nishikino Maki"
+    assert cv == "Pile"
+
+    artist, cv = clean_artist("Cocoa [CV. Ayane Sakura]", return_character_voice=True)
+    assert artist == "Cocoa"
+    assert cv == "Ayane Sakura"
+
+
+def test_get_character_voice():
+    assert get_character_voice("Nishikino Maki (CV. Pile)") == "Pile"
+    assert get_character_voice("Nishikino Maki (C.V. Pile)") == "Pile"
+    assert get_character_voice("Cocoa [CV. Ayane Sakura]") == "Ayane Sakura"
+    assert get_character_voice("Cocoa [C.V. Ayane Sakura]") == "Ayane Sakura"
+    assert get_character_voice("Elizabeth (Vo. Yumi Uchiyama)") == "Yumi Uchiyama"
+    assert get_character_voice("Elizabeth (V.o. Yumi Uchiyama)") == "Yumi Uchiyama"
+    assert (
+        get_character_voice("Ayanokouji Cheriel (CV: Toujou Nozomi (Kusuda Aina))")
+        == "Toujou Nozomi (Kusuda Aina)"
+    )
 
 
 def test_reverse_artist():
@@ -67,4 +91,6 @@ def test_clean_album():
 
 def test_romanise_text():
     assert romanise_text("岡部啓一") == "okabe keiichi"
+    assert romanise_text("岡部啓一：something") == "okabe keiichi : something"
     assert romanise_text("John Doe") == "John Doe"
+    assert romanise_text("John： Doe") == "John： Doe"

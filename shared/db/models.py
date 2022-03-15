@@ -95,6 +95,8 @@ class ArtistDb(db.Entity, BaseMixin):
     name_alt = Required(str)
     albums = Set(AlbumDb)
     songs = Set(SongDb)
+    character_voice = Optional("ArtistDb", reverse="characters_voiced")
+    characters_voiced = Set("ArtistDb", reverse="character_voice")
 
     def __str__(self):
         return f"ArtistDb[{self.id}]: {self.name}"
