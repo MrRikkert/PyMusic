@@ -119,9 +119,9 @@ def get_albums():
 def save_album_art(album: str, path: str):
     album_hash = md5(album.lower().encode("utf-8")).hexdigest()
     art_path = os.path.join(ALBUM_ART_PATH, album_hash[0:2], album_hash + ".png")
-    art = mbipc.library_get_artwork(path, 0)
 
     if not os.path.exists(art_path):
+        art = mbipc.library_get_artwork(path, 0)
         os.makedirs(os.path.dirname(art_path), exist_ok=True)
         with open(art_path, "wb") as fh:
             fh.write(base64.decodebytes(str.encode(art)))
