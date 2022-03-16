@@ -80,7 +80,8 @@ class AlbumDb(db.Entity, BaseMixin):
     name = Required(str, index=True)
     name_alt = Required(str)
     art = Optional(str)
-    album_artist = Required(str)
+    # album_artist is optional because LastFm does not return album artist
+    album_artist = Optional(str)
     album_artists = Set("ArtistDb")
     songs = Set(SongDb)
     scrobbles = Set(ScrobbleDb)

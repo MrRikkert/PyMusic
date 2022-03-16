@@ -16,7 +16,8 @@ class File(BaseSong):
     path: str = Field(...)
     artist: str = Field(...)
     album: str = Field(...)
-    album_artist: str = Field(...)
+    # Default is empty string to not interfere with some functions
+    album_artist: str = Field("")
     genre: str = Field(None)
     vocals: str = Field(None)
     series: str = Field(None)
@@ -34,7 +35,8 @@ class SongIn(BaseSong):
 
     artist: str = Field(...)
     album: str = Field(...)
-    album_artist: str = Field(...)
+    # Default is empty string to not interfere with some functions
+    album_artist: str = Field("")
     tags: Optional[List[TagIn]] = Field([])
 
 
