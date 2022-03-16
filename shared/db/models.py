@@ -80,8 +80,7 @@ class AlbumDb(db.Entity, BaseMixin):
     name = Required(str, index=True)
     name_alt = Required(str)
     art = Optional(str)
-    # TODO: Make required
-    album_artist = Optional(str)
+    album_artist = Required(str)
     songs = Set(SongDb)
     scrobbles = Set(ScrobbleDb)
 
