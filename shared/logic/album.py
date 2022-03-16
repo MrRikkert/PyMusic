@@ -90,8 +90,7 @@ def add(name: str, artist: str = None, return_existing: bool = False) -> AlbumDb
     return AlbumDb(
         name=name.lower(),
         name_alt=name,
-        album_artist=artist_logic.add(artist, return_existing=True)
-        if artist is not None
-        else None,
+        # TODO: Make required
+        album_artist=artist if artist is not None else None,
         art=os.path.join(album_hash[0:2], album_hash + ".png"),
     )
