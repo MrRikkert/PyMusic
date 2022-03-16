@@ -70,7 +70,7 @@ def test_album_exists_non_existing():
 
 @db_session
 def test_add_album_without_artist():
-    with pytest.raises(ValueError):
+    with pytest.raises(Exception):
         album_logic.add(name="album")
 
 
@@ -94,6 +94,13 @@ def test_add_album_with_artist():
     album_logic.add(name="album", artist="artist")
     assert orm.count(a for a in AlbumDb) == 1
     assert orm.count(a for a in ArtistDb) == 1
+
+
+@db_session
+def test_add_album_with_multiple_artists():
+    album_logic.add(name="album", artist="artist, artist2")
+    assert orm.count(a for a in AlbumDb) == 1
+    assert orm.count(a for a in ArtistDb) == 2
 
 
 @db_session
