@@ -81,6 +81,7 @@ class AlbumDb(db.Entity, BaseMixin):
     name_alt = Required(str)
     art = Optional(str)
     album_artist = Required(str)
+    album_artists = Set("ArtistDb")
     songs = Set(SongDb)
     scrobbles = Set(ScrobbleDb)
 
@@ -94,6 +95,7 @@ class ArtistDb(db.Entity, BaseMixin):
     name = Required(str, unique=True, index=True)
     name_alt = Required(str)
     songs = Set(SongDb)
+    albums = Set(AlbumDb)
     character_voice = Optional("ArtistDb", reverse="characters_voiced")
     characters_voiced = Set("ArtistDb", reverse="character_voice")
 
