@@ -267,6 +267,91 @@ def test_add_song_existing_with_replace_exisiting_tags():
 
 
 @db_session
+def test_update_song():
+    db_song = mixer.blend(
+        SongDb,
+        title="title",
+        albums=mixer.blend(AlbumDb, name="album"),
+        artists=mixer.blend(ArtistDb, name="artist"),
+        tags=mixer.blend(TagDb, tag_type="type", value="value"),
+    )
+    song = song_logic.update(
+        db_song,
+        SongIn(
+            title="title",
+            length=1,
+            album="album2",
+            album_artist="artist2",
+            artist="artist",
+            tags=[TagIn(tag_type="type2", value="value2")],
+        ),
+    )
+    db.flush()
+    assert db_song.id == song.id
+    assert len(song.albums) == 2
+    assert len(song.tags) == 2
+
+    assert orm.count(s for s in SongDb) == 1
+    assert orm.count(t for t in TagDb) == 2
+    assert orm.count(a for a in ArtistDb) == 2
+    assert orm.count(a for a in AlbumDb) == 2
+
+
+@db_session
+def test_update_song_add_length():
+    db_song = mixer.blend(
+        SongDb, length=None, title="title", artists=mixer.blend(ArtistDb, name="artist")
+    )
+    song = song_logic.update(
+        db_song,
+        SongIn(
+            title="title",
+            artist="artist",
+            length=250,
+            album="album2",
+            album_artist="artist",
+        ),
+    )
+    db.flush()
+
+    assert db_song.id == song.id
+    assert orm.count(s for s in SongDb) == 1
+    assert db_song.length == song.length
+
+
+@db_session
+def test_update_song_with_replace_exisiting_tags():
+    db_song = mixer.blend(
+        SongDb,
+        title="title",
+        albums=mixer.blend(AlbumDb, name="album"),
+        artists=mixer.blend(ArtistDb, name="artist"),
+        tags=mixer.blend(TagDb, tag_type="type", value="value"),
+    )
+    song = song_logic.update(
+        db_song,
+        SongIn(
+            title="title",
+            length=1,
+            album="album2",
+            album_artist="artist2",
+            artist="artist",
+            tags=[TagIn(tag_type="type2", value="value2")],
+        ),
+        replace_existing_tags=True,
+    )
+    db.flush()
+    assert db_song.id == song.id
+    assert len(song.albums) == 2
+    assert len(song.tags) == 1
+
+    assert orm.count(s for s in SongDb) == 1
+    assert orm.count(t for t in TagDb) == 2
+    assert orm.count(a for a in ArtistDb) == 2
+    assert orm.count(a for a in AlbumDb) == 2
+
+
+@db_session
 def test_get_song_single_artist():
     db_song = mixer.blend(SongDb, artists=mixer.blend(ArtistDb, name="artist"))
     song = song_logic.get(title=db_song.title, artists=["artist"])
