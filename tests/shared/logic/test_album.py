@@ -16,7 +16,7 @@ def setup_function():
 
 @db_session
 def test_get_album_by_name():
-    db_album = mixer.blend(AlbumDb, album_artist=mixer.blend(ArtistDb))
+    db_album = mixer.blend(AlbumDb)
     album = album_logic.get_by_name(name=db_album.name)
     assert album is not None
 
@@ -70,20 +70,20 @@ def test_album_exists_non_existing():
 
 @db_session
 def test_add_album_without_artist():
-    album_logic.add(name="album")
-    assert orm.count(a for a in AlbumDb) == 1
+    with pytest.raises(Exception):
+        album_logic.add(name="album")
 
 
 @db_session
 def test_add_album_correct_alt_name():
-    album = album_logic.add(name="album disc 1")
+    album = album_logic.add(name="album disc 1", artist="artist")
     assert orm.count(a for a in AlbumDb) == 1
     assert album.name_alt == "album"
 
 
 @db_session
 def test_add_album_correct_cased_alt_name():
-    album = album_logic.add(name="Album disc 1")
+    album = album_logic.add(name="Album disc 1", artist="artist")
     assert orm.count(a for a in AlbumDb) == 1
     assert album.name_alt == "Album"
     assert album.name == "album"
@@ -94,6 +94,13 @@ def test_add_album_with_artist():
     album_logic.add(name="album", artist="artist")
     assert orm.count(a for a in AlbumDb) == 1
     assert orm.count(a for a in ArtistDb) == 1
+
+
+@db_session
+def test_add_album_with_multiple_artists():
+    album_logic.add(name="album", artist="artist, artist2")
+    assert orm.count(a for a in AlbumDb) == 1
+    assert orm.count(a for a in ArtistDb) == 2
 
 
 @db_session
@@ -121,23 +128,12 @@ def test_add_album_existing_album_with_return_existing():
 
 
 @db_session
-def test_add_album_existing_with_new_album_artist():
-    db_album = mixer.blend(AlbumDb, album_artist=None)
-    assert not db_album.album_artist
-    album = album_logic.add(name=db_album.name, artist="test", return_existing=True)
-    assert orm.count(a for a in AlbumDb) == 1
-    assert album is not None
-    assert db_album.id == album.id
-    assert db_album.album_artist.name == "test"
-
-
-@db_session
 def test_add_album_correct_hash():
-    album = album_logic.add(name="album disc 1")
+    album = album_logic.add(name="album disc 1", artist="artist")
     assert album.art == os.path.join("87", "8777347537b94cf98aa05b2310877a81.png")
 
-    album = album_logic.add(name="Album2")
+    album = album_logic.add(name="Album2", artist="artist")
     assert album.art == os.path.join("f8", "f8d7bd28b526864cf358256ca7b041c6.png")
 
-    album = album_logic.add(name="Test Album (Disc 1)")
+    album = album_logic.add(name="Test Album (Disc 1)", artist="artist")
     assert album.art == os.path.join("64", "6403be228e301a5fa973392207537642.png")

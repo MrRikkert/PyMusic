@@ -157,17 +157,15 @@ def _top_albums(min_date, playtime):
     SELECT
         al.name_alt AS "album",
         al.art,
-        ar.name_alt AS "artist",
+        al.album_artist AS "artist",
         {get_agg(playtime)}(s.length) AS "length"
     FROM scrobble sc
     INNER JOIN song s
         ON s.id = sc.song
     INNER JOIN album al
         ON sc.album = al.id
-    LEFT JOIN artist ar
-        ON ar.id = al.album_artist
     WHERE "length" IS NOT NULL :date:
-    GROUP BY al.name_alt, al.art, ar.name_alt
+    GROUP BY al.name_alt, al.art, al.album_artist
     ORDER BY "length" DESC
     LIMIT 5
     """

@@ -73,13 +73,14 @@ def test_add_song_multiple_artists():
 
 @db_session
 def test_add_song_existing_album():
-    album = mixer.blend(AlbumDb, album_artist=mixer.blend(ArtistDb))
+    artist = mixer.blend(ArtistDb)
+    album = mixer.blend(AlbumDb, album_artists=artist, album_artist=artist.name)
     song_logic.add(
         SongIn(
             title="title",
             length=1,
             album=album.name,
-            album_artist=album.album_artist.name,
+            album_artist=album.album_artist,
             artist="artist1",
             tags=[TagIn(tag_type="type", value="tag")],
         )
@@ -215,7 +216,13 @@ def test_add_song_existing_add_length():
         SongDb, length=None, title="title", artists=mixer.blend(ArtistDb, name="artist")
     )
     song = song_logic.add(
-        SongIn(title="title", artist="artist", length=250, album="album2"),
+        SongIn(
+            title="title",
+            artist="artist",
+            length=250,
+            album="album2",
+            album_artist="artist",
+        ),
         return_existing=True,
         update_existing=True,
     )
@@ -280,7 +287,13 @@ def test_get_song_multiple_artists():
 @db_session
 def test_get_song_multiple_artists_case_difference():
     db_song = song_logic.add(
-        SongIn(title="Title", album="Album", length=180, artist="Artist1, Artist2")
+        SongIn(
+            title="Title",
+            album="Album",
+            length=180,
+            artist="Artist1, Artist2",
+            album_artist="Artist1, Artist2",
+        )
     )
     artists = [a.name.lower() for a in db_song.artists]
     song = song_logic.get(title="title", artists=artists)
@@ -323,6 +336,7 @@ def test_add_songs_same_title_different_artist():
         SongIn(
             title="Close Your Eyes",
             album="Super Eurobeat Vol. 75",
+            album_artist="Various Artists",
             length=180,
             artist="Sonya",
             tags=[TagIn(tag_type="type", value="Eurobeat")],
@@ -334,6 +348,7 @@ def test_add_songs_same_title_different_artist():
         SongIn(
             title="close your eyes",
             album="Guilty Crown Original Soundtrack",
+            album_artist="Various",
             length=180,
             artist="Honda Michiyo",
             tags=[TagIn(tag_type="type", value="Anime")],
@@ -345,6 +360,7 @@ def test_add_songs_same_title_different_artist():
         SongIn(
             title="Close Your Eyes",
             album="Super Eurobeat Vol. 75",
+            album_artist="Various Artists",
             length=180,
             artist="Sonya",
             tags=[TagIn(tag_type="type", value="Eurobeat")],

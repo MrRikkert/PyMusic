@@ -53,7 +53,7 @@ def test_get_normalized_path_linux_trailing_slash():
 
 
 def test_get_tags_File_object():
-    file = File(path="", artist="", album="", title="")
+    file = File(path="", artist="", album="", title="", album_artist="")
     for tag in TAG_LIST:
         file[tag] = f"{tag} 1"
 

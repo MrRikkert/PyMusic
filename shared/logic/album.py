@@ -81,17 +81,17 @@ def add(name: str, artist: str = None, return_existing: bool = False) -> AlbumDb
     if existing is not None:
         if not return_existing:
             raise IntegrityError("album already exists")
-        if not existing.album_artist and artist:
-            existing.album_artist = artist_logic.add(artist, return_existing=True)
-
         return existing
     album_hash = md5(name.lower().encode("utf-8")).hexdigest()
     name = clean_album(name)
+
+    artists = artist_logic.split(artist)
     return AlbumDb(
         name=name.lower(),
         name_alt=name,
-        album_artist=artist_logic.add(artist, return_existing=True)
-        if artist is not None
-        else None,
+        album_artist=artist,
+        album_artists=[
+            artist_logic.add(artist, return_existing=True) for artist in artists
+        ],
         art=os.path.join(album_hash[0:2], album_hash + ".png"),
     )

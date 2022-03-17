@@ -80,9 +80,11 @@ class AlbumDb(db.Entity, BaseMixin):
     name = Required(str, index=True)
     name_alt = Required(str)
     art = Optional(str)
+    # album_artist is optional because LastFm does not return album artist
+    album_artist = Optional(str)
+    album_artists = Set("ArtistDb")
     songs = Set(SongDb)
     scrobbles = Set(ScrobbleDb)
-    album_artist = Optional("ArtistDb")
 
     def __str__(self):
         return f"AlbumDb[{self.id}]: {self.name} - {self.album_artist}"
@@ -93,8 +95,8 @@ class ArtistDb(db.Entity, BaseMixin):
     id = PrimaryKey(int, auto=True)
     name = Required(str, unique=True, index=True)
     name_alt = Required(str)
-    albums = Set(AlbumDb)
     songs = Set(SongDb)
+    albums = Set(AlbumDb)
     character_voice = Optional("ArtistDb", reverse="characters_voiced")
     characters_voiced = Set("ArtistDb", reverse="character_voice")
 

@@ -33,7 +33,9 @@ def test_add_file_non_existing_file_and_existing_song():
     mixer.blend(
         SongDb,
         title="title",
-        albums=mixer.blend(AlbumDb, name="album", album_artist=artist),
+        albums=mixer.blend(
+            AlbumDb, name="album", album_artists=artist, album_artist=artist.name
+        ),
         artists=artist,
     )
 
@@ -57,7 +59,9 @@ def test_add_file_existing_file_song():
     song_db = mixer.blend(
         SongDb,
         title="title",
-        albums=mixer.blend(AlbumDb, name="album", album_artist=artist),
+        albums=mixer.blend(
+            AlbumDb, name="album", album_artists=artist, album_artist=artist.name
+        ),
         artists=artist,
     )
     mixer.blend(FileDb, path="/music/artist/album/1 - 1 song.flac", song=song_db)
@@ -81,7 +85,9 @@ def test_add_file_existing_file_song_updated():
     song_db = mixer.blend(
         SongDb,
         title="title",
-        albums=mixer.blend(AlbumDb, name="album", album_artist=artist),
+        albums=mixer.blend(
+            AlbumDb, name="album", album_artists=artist, album_artist=artist.name
+        ),
         artists=artist,
         tags=mixer.blend(TagDb, tag_type="genre", value="genre 1"),
     )

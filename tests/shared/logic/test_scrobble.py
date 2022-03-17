@@ -22,6 +22,7 @@ def test_scrobble_without_date():
             title="title",
             length=1,
             album="album",
+            album_artist="artist1",
             artist="artist1",
             tags=[TagIn(tag_type="type", value="tag")],
         )
@@ -30,7 +31,8 @@ def test_scrobble_without_date():
     assert orm.count(s for s in ScrobbleDb) == 1
     assert scrobble.date is not None
     assert scrobble.album is not None
-    assert scrobble.album.album_artist is None
+    assert scrobble.album.album_artist == "artist1"
+    assert len(scrobble.album.album_artists) == 1
 
 
 @db_session
@@ -40,6 +42,7 @@ def test_scrobble_names_correct():
             title="Title",
             length=1,
             album="Album",
+            album_artist="artist1",
             artist="Artist1",
             tags=[TagIn(tag_type="type", value="tag")],
         )
@@ -62,6 +65,7 @@ def test_scrobble_with_date():
             title="title",
             length=1,
             album="album",
+            album_artist="artist1",
             artist="artist1",
             tags=[TagIn(tag_type="type", value="tag")],
             date=date,
@@ -71,7 +75,8 @@ def test_scrobble_with_date():
     assert orm.count(s for s in ScrobbleDb) == 1
     assert scrobble.date == date
     assert scrobble.album is not None
-    assert scrobble.album.album_artist is None
+    assert scrobble.album.album_artist == "artist1"
+    assert len(scrobble.album.album_artists) == 1
 
 
 @db_session
@@ -80,7 +85,7 @@ def test_scrobble_existing_song():
     mixer.blend(
         SongDb,
         title="title",
-        albums=mixer.blend(AlbumDb, name="album"),
+        albums=mixer.blend(AlbumDb, name="album", album_artist="artist1"),
         artists=mixer.blend(ArtistDb, name="artist"),
         tags=mixer.blend(TagDb, tag_type="type", value="value"),
     )
@@ -89,6 +94,7 @@ def test_scrobble_existing_song():
             title="title",
             length=1,
             album="album",
+            album_artist="artist1",
             artist="artist",
             tags=[TagIn(tag_type="type", value="value")],
             date=date,
@@ -98,7 +104,7 @@ def test_scrobble_existing_song():
     assert orm.count(s for s in ScrobbleDb) == 1
     assert scrobble.date == date
     assert scrobble.album is not None
-    assert scrobble.album.album_artist is None
+    assert scrobble.album.album_artist == "artist1"
 
 
 @db_session
@@ -108,7 +114,9 @@ def test_scrobble_existing_song_album_artist():
     mixer.blend(
         SongDb,
         title="title",
-        albums=mixer.blend(AlbumDb, name="album", album_artist=artist),
+        albums=mixer.blend(
+            AlbumDb, name="album", album_artists=artist, album_artist=artist.name
+        ),
         artists=artist,
         tags=mixer.blend(TagDb, tag_type="type", value="value"),
     )
@@ -117,6 +125,7 @@ def test_scrobble_existing_song_album_artist():
             title="title",
             length=1,
             album="album",
+            album_artist=artist.name,
             artist="artist",
             tags=[TagIn(tag_type="type", value="value")],
             date=date,
@@ -126,7 +135,8 @@ def test_scrobble_existing_song_album_artist():
     assert orm.count(s for s in ScrobbleDb) == 1
     assert scrobble.date == date
     assert scrobble.album is not None
-    assert scrobble.album.album_artist.name == "artist"
+    assert scrobble.album.album_artist == "artist"
+    assert len(scrobble.album.album_artists) == 1
 
 
 @db_session
@@ -143,6 +153,7 @@ def test_scrobble_multiple_scrobbles_of_one_sone():
             title="title",
             length=1,
             album="album",
+            album_artist="artist1",
             artist="artist",
             tags=[TagIn(tag_type="type", value="value")],
             date=datetime.now(),
@@ -153,6 +164,7 @@ def test_scrobble_multiple_scrobbles_of_one_sone():
             title="title",
             length=1,
             album="album",
+            album_artist="artist1",
             artist="artist",
             tags=[TagIn(tag_type="type", value="value")],
             date=datetime.now(),
