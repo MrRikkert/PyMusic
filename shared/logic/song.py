@@ -50,23 +50,7 @@ def add(
         if not return_existing:
             raise IntegrityError("Song already exists")
         elif update_existing:
-            existing.albums.add(
-                album_logic.add(
-                    name=song.album, artist=song.album_artist, return_existing=True
-                )
-            )
-
-            if not existing.length and song.length:
-                existing.length = song.length
-
-            if replace_existing_tags:
-                existing.tags.clear()
-            for tag in song.tags:
-                existing.tags.add(
-                    tag_logic.add(
-                        tag_type=tag.tag_type, value=tag.value, return_existing=True
-                    )
-                )
+            existing = update(existing, song, replace_existing_tags)
         return existing
     return SongDb(
         title=song.title.lower(),
@@ -81,6 +65,46 @@ def add(
         ),
         artists=[artist_logic.add(artist, return_existing=True) for artist in artists],
     )
+
+
+def update(
+    existing_song: SongDb, new_song: SongIn, replace_existing_tags: bool = False
+) -> SongDb:
+    """Update song in the database with new data.
+    Only updates the `albums` and `tags` properties. Also updates
+    the length property of it was still empty.
+
+    ## Arguments:
+    - `existing_song`: `SongDb`:
+        - The existing song
+    - `new_song`: `SongIn`:
+        - The song with the new data
+    - `replace_existing_tags`: `bool`, optional:
+        - Remove all `tag` relationships from the song and replace the ones from `new_song`.
+        Defaults to `False`.
+
+    ## Returns:
+    - `SongDb`:
+        - _description_
+    """
+    existing_song.albums.add(
+        album_logic.add(
+            name=new_song.album,
+            artist=new_song.album_artist,
+            return_existing=True,
+        )
+    )
+
+    if not existing_song.length and new_song.length:
+        existing_song.length = new_song.length
+
+    if replace_existing_tags:
+        existing_song.tags.clear()
+    for tag in new_song.tags:
+        existing_song.tags.add(
+            tag_logic.add(tag_type=tag.tag_type, value=tag.value, return_existing=True)
+        )
+    return existing_song
 
 
 def update_from_files(song: SongDb) -> SongDb:
