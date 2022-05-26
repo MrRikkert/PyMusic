@@ -56,58 +56,6 @@ def sync_mb(replace, query, field):
 
 
 @cli.command()
-@click.option(
-    "--path",
-    "-p",
-    help="Path where the export should be stored",
-    default="./.exports/mb.pickle",
-    show_default=True,
-)
-@click.option(
-    "--query", "-q", default="", help="Only sync music that matches the given query"
-)
-@click.option(
-    "--field",
-    "-f",
-    multiple=True,
-    default=["ArtistPeople", "Title", "Album"],
-    show_default=True,
-    help="""
-    Field to use in query.
-    Use multiple times to select multiple fields.
-    """,
-)
-def export_mb(query, field, path):
-    """export musicbee data to a pickle file"""
-    if not path:
-        path = "./.exports/mb.pickle"
-    logger.bind(params=locals()).info("Syncing musicbee library")
-    mb.export_data(query=query, fields=field, export_path=path)
-
-
-@cli.command()
-@click.option(
-    "--path",
-    "-p",
-    help="Path where the export is stored",
-    default="./.exports/mb.pickle",
-    show_default=True,
-)
-@click.option(
-    "--replace",
-    is_flag=True,
-    default=False,
-    show_default=True,
-    help="Replace all tags stored in the database with the new tags",
-)
-def import_mb(replace, path):
-    """import musicbee data from an exported file"""
-    path = "./.exports/mb.pickle"
-    logger.bind(params=locals()).info("Syncing musicbee library")
-    mb.import_data(replace_existing=replace, export_path=path)
-
-
-@cli.command()
 @click.option("--name", "-n", "lastfm", help="Your LastFM username", required=True)
 def sync_scrobbles(lastfm: str):
     """Syncs all scrobbles from LastFM to the database"""
