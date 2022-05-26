@@ -12,6 +12,7 @@ from loguru import logger
 from shared.db.base import db
 from shared.logic import file as file_logic
 from shared.logic import song as song_logic
+from shared.logic.file import get_library_files
 from shared.models.songs import File, SongIn
 from shared.models.tags import TagIn
 from shared.settings import ALBUM_ART_PATH
@@ -134,15 +135,14 @@ def sync_data(
 ):
     start = time.time()
     print(datetime.now().time())
-    paths = get_paths(query=query, fields=fields)
+    files = get_library_files()
 
-    with click.progressbar(paths) as click_paths:
-        for idx, path in enumerate(click_paths):
-            song = get_song(path)
+    with click.progressbar(files) as click_files:
+        for idx, file in enumerate(click_files):
             try:
-                file_logic.add(get_file(path))
+                file_logic.add(file)
             except Exception:
-                logger.bind(song=song.dict()).exception(
+                logger.bind(song=file.dict()).exception(
                     "Something went wrong while adding a song"
                 )
             if idx % 500 == 0:
