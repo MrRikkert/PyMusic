@@ -1,3 +1,4 @@
+from typing import List
 from loguru import logger
 from pony import orm
 
@@ -121,7 +122,7 @@ def exists(path: str) -> bool:
     return True if file is not None else False
 
 
-def get_library_files(library_path: str = "./MusicBeeLibrary.mbl"):
+def get_library_files(library_path: str = "./MusicBeeLibrary.mbl") -> List[File]:
     songs = read_file(library_path)
     files = []
 
