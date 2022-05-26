@@ -143,3 +143,9 @@ def test_file_existst_non_existing():
     path = "/music/album/1 - 1 song.flac"
     exists = file_logic.exists(path)
     assert not exists
+
+
+@db_session
+def test_get_library_files():
+    files = file_logic.get_library_files("./tests/data/MusicBeeLibrary.mbl")
+    assert len(files) == 32785  # Size of test library

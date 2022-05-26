@@ -1,10 +1,12 @@
+from loguru import logger
 from pony import orm
 
 from shared.db.models import FileDb
 from shared.logic import song as song_logic
 from shared.models.songs import File, SongIn
 from shared.settings import TAG_LIST
-from shared.utils.file import get_tags
+from shared.utils.file import get_normalized_path, get_tags
+from shared.utils.musicbee import read_file
 
 
 def add(file: File) -> FileDb:
@@ -117,3 +119,50 @@ def exists(path: str) -> bool:
     """
     file = get(path)
     return True if file is not None else False
+
+
+def get_library_files(library_path: str = "./MusicBeeLibrary.mbl"):
+    songs = read_file(library_path)
+    files = []
+
+    for song in songs:
+        if (
+            # Files that still exist in the library have these values
+            song["file_designation"] == 2
+            and song["status"] == 1
+            # filter out streams and radio stations
+            and "http" not in song["file_path"]
+        ):
+            files.append(
+                File(
+                    path=get_normalized_path(song.get("file_path")),
+                    title=song.get("title"),
+                    artist=song.get("artist"),
+                    length=song.get("track_length") / 1000,
+                    album=song.get("album"),
+                    album_artist=song.get("album_artist"),
+                    genre=song.get("genre"),
+                    vocals=song.get("vocals"),
+                    series=song.get("series"),
+                    franchise=song.get("franchise"),
+                    op_ed=song.get("op_ed"),
+                    season=song.get("season"),
+                    alternate=song.get("alternate"),
+                    type=song.get("type"),
+                    sort_artist=song.get("sort_artist"),
+                    language=song.get("language"),
+                )
+            )
+    return files
+
+
+def sync_library(library_path: str = "./MusicBeeLibrary.mbl"):
+    files = get_library_files(library_path)
+
+    for file in files:
+        try:
+            add(file)
+        except Exception:
+            logger.bind(song=file.dict()).exception(
+                "Something went wrong while adding a song"
+            )
