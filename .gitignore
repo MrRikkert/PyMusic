@@ -144,3 +144,6 @@ dmypy.json
 
 .exports
 .logs
+
+*.mbl
+!tests/data/MusicBeeLibrary.mbl
