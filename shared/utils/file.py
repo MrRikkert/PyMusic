@@ -1,4 +1,5 @@
 import pathlib
+import re
 from typing import List, Union
 
 from shared.db.models import FileDb
@@ -31,7 +32,16 @@ def get_normalized_path(path: str, rel_path: str = None) -> str:
     if not rel_path:
         rel_path = MUSIC_PATH
 
-    return str(pathlib.PurePosixPath(pathlib.Path(path).relative_to(rel_path)))
+    # Check if path is windows or not
+    # https://regex101.com/r/rDtx0s/1
+    if re.match(r"\w:[\\\/]*", path):
+        path = pathlib.PureWindowsPath(path)
+        rel_path = pathlib.PureWindowsPath(rel_path)
+    else:
+        path = pathlib.PurePosixPath(path)
+        rel_path = pathlib.PurePosixPath(rel_path)
+
+    return str(pathlib.PurePosixPath(path.relative_to(rel_path)))
 
 
 def get_tags(file: Union[File, FileDb]) -> List[TagIn]:
