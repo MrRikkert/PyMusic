@@ -1,10 +1,10 @@
-import os
 from typing import List, Union
 
 from shared.db.models import FileDb
 from shared.models.songs import File
 from shared.models.tags import TagIn
 from shared.settings import MUSIC_PATH, TAG_LIST
+import pathlib
 
 
 def get_normalized_path(path: str, rel_path: str = None) -> str:
@@ -30,12 +30,8 @@ def get_normalized_path(path: str, rel_path: str = None) -> str:
     """
     if not rel_path:
         rel_path = MUSIC_PATH
-    # path = os.path.relpath(path, rel_path)
-    path = os.path.join(
-        os.path.relpath(os.path.dirname(path), os.path.dirname(rel_path)),
-        os.path.basename(path),
-    )
-    return path.replace("\\", "/")
+
+    return str(pathlib.PurePosixPath(pathlib.Path(path).relative_to(rel_path)))
 
 
 def get_tags(file: Union[File, FileDb]) -> List[TagIn]:
