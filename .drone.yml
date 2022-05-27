@@ -6,6 +6,8 @@ steps:
   # Testen die uitgevoerd worden bij een normale commit
   - name: test commit
     image: python:3.8
+    environment:
+      MUSIC_PATH: Y:\Music
     commands:
       - pip install -r requirements.dev.txt
       - pytest
@@ -21,6 +23,7 @@ steps:
   - name: test full
     image: python:3.8
     environment:
+      MUSIC_PATH: Y:\Music
       # Deze secrets staan gedefinieerd in de drone server
       LASTFM_KEY:
         from_secret: LASTFM_KEY
