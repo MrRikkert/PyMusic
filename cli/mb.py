@@ -1,4 +1,3 @@
-import base64
 import os
 import time
 from datetime import datetime
