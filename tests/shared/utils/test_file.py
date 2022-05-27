@@ -1,6 +1,3 @@
-import platform
-
-import pytest
 from pony.orm import db_session
 
 from shared.db.models import FileDb, SongDb
@@ -14,9 +11,6 @@ def setup_function():
     reset_db()
 
 
-@pytest.mark.skipif(
-    platform.system() != "Windows", reason="Linux/MacOs fail with windows-like paths"
-)
 def test_get_normalized_path_windows():
     rel_path = "C:\\music"
     path = "C:\\music\\artist\\album\\1-1 song.flac"
@@ -25,9 +19,6 @@ def test_get_normalized_path_windows():
     assert path != "music/artist/album/1-1 song.flac"
 
 
-@pytest.mark.skipif(
-    platform.system() != "Windows", reason="Linux/MacOs fail with windows-like paths"
-)
 def test_get_normalized_path_windows_trailing_slash():
     rel_path = "C:\\music\\"
     path = "C:\\music\\artist\\album\\1-1 song.flac"
