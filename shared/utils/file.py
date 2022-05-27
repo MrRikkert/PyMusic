@@ -1,10 +1,10 @@
+import pathlib
 from typing import List, Union
 
 from shared.db.models import FileDb
 from shared.models.songs import File
 from shared.models.tags import TagIn
 from shared.settings import MUSIC_PATH, TAG_LIST
-import pathlib
 
 
 def get_normalized_path(path: str, rel_path: str = None) -> str:
