@@ -9,9 +9,9 @@ from loguru import logger
 
 from shared.db.base import db
 from shared.logic import file as file_logic
-from shared.utils.clean import clean_album
 from shared.logic.file import get_library_files
 from shared.settings import ALBUM_ART_PATH, MUSIC_PATH
+from shared.utils.clean import clean_album
 
 
 def get_albums():
