@@ -7,7 +7,7 @@ from shared import settings
 db = orm.Database()
 
 
-def database_exists() -> bool:
+def create_database() -> bool:
     params = settings.DB_PARAMS
     try:
         connection = psycopg2.connect(
@@ -31,12 +31,7 @@ def database_exists() -> bool:
             connection.close()
 
 
-def create_database():
-    pass
-
-
 def init_db():
-    if not database_exists():
-        create_database()
+    create_database()
     db.bind(**settings.DB_PARAMS)
     db.generate_mapping(create_tables=True)
