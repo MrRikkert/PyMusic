@@ -4,3 +4,25 @@ services:
     build: .
     ports:
       - "8888:8080"
+    links:
+      - db
+    environment:
+      DB_POSTGRES_PASSWORD: postgres
+      DB_POSTGRES_HOST: db
+      DB_POSTGRES_DATABASE: pymusic
+      DB_POSTGRES_PORT: 5432
+
+  db:
+    image: postgres:latest
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: "postgres"
+    volumes:
+      - pymusic_postgres:/var/lib/postgresql/data
+
+
+volumes:
+  pymusic_postgres:
+    driver: local

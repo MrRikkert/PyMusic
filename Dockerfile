@@ -23,4 +23,4 @@ ENV MUSIC_PATH="C:\\music\\"
 ENV LASTFM_KEY=""
 ENV LASTFM_SECRET=""
 
-CMD ["gunicorn", "--workers=1", "--threads=1", "-b 0.0.0.0:8080", "server:server"]
+CMD ["gunicorn", "--workers=1", "--threads=1", "-b 0.0.0.0:8080", "server:run_server"]
