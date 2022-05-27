@@ -1,4 +1,5 @@
 from typing import List
+
 from loguru import logger
 from pony import orm
 
