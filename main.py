@@ -29,30 +29,10 @@ def wrap_cli():
 
 
 @cli.command()
-@click.option(
-    "--replace",
-    is_flag=True,
-    default=False,
-    help="Replace all tags stored in the database with the new tags",
-)
-@click.option(
-    "--query", "-q", default="", help="Only sync music that matches the given query"
-)
-@click.option(
-    "--field",
-    "-f",
-    multiple=True,
-    default=["ArtistPeople", "Title", "Album"],
-    show_default=True,
-    help="""
-    Field to use in query.
-    Use multiple times to select multiple fields.
-    """,
-)
-def sync_mb(replace, query, field):
+def sync_mb():
     """Sync MusicBee data to the database"""
     logger.bind(params=locals()).info("Syncing musicbee library")
-    mb.sync_data(replace_existing=replace, query=query, fields=field)
+    mb.sync_data()
 
 
 @cli.command()

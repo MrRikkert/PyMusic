@@ -53,11 +53,7 @@ def save_album_art():
             copy(art_path, new_art_path)
 
 
-def sync_data(
-    replace_existing: bool = False,
-    query: str = "",
-    fields=["ArtistPeople", "Title", "Album"],
-):
+def sync_data():
     start = time.time()
     print(datetime.now().time())
     files = get_library_files()
