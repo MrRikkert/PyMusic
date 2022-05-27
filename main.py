@@ -29,82 +29,10 @@ def wrap_cli():
 
 
 @cli.command()
-@click.option(
-    "--replace",
-    is_flag=True,
-    default=False,
-    help="Replace all tags stored in the database with the new tags",
-)
-@click.option(
-    "--query", "-q", default="", help="Only sync music that matches the given query"
-)
-@click.option(
-    "--field",
-    "-f",
-    multiple=True,
-    default=["ArtistPeople", "Title", "Album"],
-    show_default=True,
-    help="""
-    Field to use in query.
-    Use multiple times to select multiple fields.
-    """,
-)
-def sync_mb(replace, query, field):
+def sync_mb():
     """Sync MusicBee data to the database"""
     logger.bind(params=locals()).info("Syncing musicbee library")
-    mb.sync_data(replace_existing=replace, query=query, fields=field)
-
-
-@cli.command()
-@click.option(
-    "--path",
-    "-p",
-    help="Path where the export should be stored",
-    default="./.exports/mb.pickle",
-    show_default=True,
-)
-@click.option(
-    "--query", "-q", default="", help="Only sync music that matches the given query"
-)
-@click.option(
-    "--field",
-    "-f",
-    multiple=True,
-    default=["ArtistPeople", "Title", "Album"],
-    show_default=True,
-    help="""
-    Field to use in query.
-    Use multiple times to select multiple fields.
-    """,
-)
-def export_mb(query, field, path):
-    """export musicbee data to a pickle file"""
-    if not path:
-        path = "./.exports/mb.pickle"
-    logger.bind(params=locals()).info("Syncing musicbee library")
-    mb.export_data(query=query, fields=field, export_path=path)
-
-
-@cli.command()
-@click.option(
-    "--path",
-    "-p",
-    help="Path where the export is stored",
-    default="./.exports/mb.pickle",
-    show_default=True,
-)
-@click.option(
-    "--replace",
-    is_flag=True,
-    default=False,
-    show_default=True,
-    help="Replace all tags stored in the database with the new tags",
-)
-def import_mb(replace, path):
-    """import musicbee data from an exported file"""
-    path = "./.exports/mb.pickle"
-    logger.bind(params=locals()).info("Syncing musicbee library")
-    mb.import_data(replace_existing=replace, export_path=path)
+    mb.sync_data()
 
 
 @cli.command()
@@ -154,7 +82,7 @@ def reset_tags():
 @cli.command()
 def save_art():
     """Save album art to a location"""
-    mb.get_albums()
+    mb.save_album_art()
 
 
 if __name__ == "__main__":
