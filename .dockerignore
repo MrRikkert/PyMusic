@@ -13,7 +13,6 @@
 **/*.dbmdl
 **/*.jfm
 **/bin
-**/charts
 **/docker-compose*
 **/compose*
 **/Dockerfile*
@@ -25,5 +24,14 @@
 README.md
 
 .drone.yml
-.env
+.env.template
+LICENSE
+tox.ini
+pyrightconfig.json
+poetry.lock
+*.mbl
+readme.md
+docstring-template.mustache
+pyproject.toml
+requirements.dev.txt
 *.ipynb
