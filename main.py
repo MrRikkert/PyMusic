@@ -102,7 +102,7 @@ def reset_tags():
 @cli.command()
 def save_art():
     """Save album art to a location"""
-    mb.get_albums()
+    mb.save_album_art()
 
 
 if __name__ == "__main__":
