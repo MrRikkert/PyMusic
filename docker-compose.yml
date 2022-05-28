@@ -7,10 +7,20 @@ services:
     links:
       - db
     environment:
+      DB_POSTGRES_USER: "postgres"
       DB_POSTGRES_PASSWORD: postgres
       DB_POSTGRES_HOST: db
       DB_POSTGRES_DATABASE: pymusic
       DB_POSTGRES_PORT: 5432
+      ALBUM_ART_PATH: ${DOCKER_ALBUM_ART_PATH}
+      IMG_URL: ${DOCKER_IMG_URL}
+      MUSIC_PATH: ${DOCKER_MUSIC_PATH}
+    env_file:
+      - .env
+    volumes:
+      - ./MusicBeeLibrary.mbl:/app/MusicBeeLibrary.mbl:ro
+      - ./.logs:/app/.logs/
+      - ./.exports:/app/.exports/
 
   db:
     image: postgres:latest
@@ -18,6 +28,7 @@ services:
     ports:
       - 5432:5432
     environment:
+      POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "postgres"
     volumes:
       - pymusic_postgres:/var/lib/postgresql/data

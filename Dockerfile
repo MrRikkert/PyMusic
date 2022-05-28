@@ -3,6 +3,7 @@ RUN apt-get -y update && apt-get -y install git
 
 RUN mkdir /app
 WORKDIR /app
+RUN mkdir "/.logs"
 
 COPY requirements.txt .
 RUN pip install -r requirements.txt
@@ -17,7 +18,7 @@ ENV DB_POSTGRES_PASSWORD="postgres"
 ENV DB_POSTGRES_HOST="0.0.0.0"
 ENV DB_POSTGRES_DATABASE="pymusic"
 ENV DB_POSTGRES_PORT=1234
-ENV ALBUM_ART_PATH=C:\art
+ENV ALBUM_ART_PATH="C:\\art"
 ENV IMG_URL="https://myhost:5555/img/"
 ENV MUSIC_PATH="C:\\music\\"
 ENV LASTFM_KEY=""
