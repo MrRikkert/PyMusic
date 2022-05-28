@@ -28,9 +28,4 @@ ENV LASTFM_SECRET=""
 ENV GUNICORN_WORKERS=1
 ENV GUNICORN_THREADS=1
 
-CMD gunicorn \
-    --workers=${GUNICORN_WORKERS} \
-    --threads=${GUNICORN_THREADS} \
-    --worker-tmp-dir=/dev/shm \
-    -b 0.0.0.0:8080 \
-    "server:run_server()"
+CMD sh start.sh
