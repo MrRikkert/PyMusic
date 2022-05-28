@@ -1,87 +1,71 @@
-import logging
+import os
 import time
 from datetime import datetime
+from hashlib import md5
+from shutil import copy
 
 import click
-from app.db.base import db
-from app.logic import song as song_logic
-from app.models.songs import SongIn
-from app.models.tags import TagIn
+from loguru import logger
 
-from cli import musicbeeipc
-
-logger = logging.getLogger()
-
-mbipc = musicbeeipc.MusicBeeIPC()
-tag_types = {
-    "genre": musicbeeipc.MBMD_Genre,
-    "vocals?": musicbeeipc.MBMD_Custom1,
-    "subseries": musicbeeipc.MBMD_Custom2,
-    "series": musicbeeipc.MBMD_Custom3,
-    "op_ed": musicbeeipc.MBMD_Custom4,
-    "season": musicbeeipc.MBMD_Custom5,
-    "alternate": musicbeeipc.MBMD_Custom6,
-    "type": musicbeeipc.MBMD_Custom7,
-    "sort_artist": musicbeeipc.MBMD_Custom8,
-}
+from shared.db.base import db
+from shared.logic import file as file_logic
+from shared.logic.file import get_library_files
+from shared.settings import ALBUM_ART_PATH, MUSIC_PATH
+from shared.utils.clean import clean_album
 
 
-def get_paths(query: str = "", fields=["ArtistPeople", "Title", "Album"]):
-    return mbipc.library_search(query=query, fields=fields)
-
-
-def mb_duration_to_seconds(duration: str) -> int:
-    return sum(x * int(t) for x, t in zip([1, 60, 3600], reversed(duration.split(":"))))
-
-
-def get_tags(path):
-    tags = []
-    for tag_type in tag_types:
-        tags_str = mbipc.library_get_file_tag(path, tag_types[tag_type])
-        for tag in tags_str.split(";"):
-            if tag:
-                tags.append(TagIn(tag_type=tag_type.strip(), value=tag.strip()))
-    return tags
-
-
-def get_song(path: str) -> SongIn:
-    album_artist = mbipc.library_get_file_tag(path, musicbeeipc.MBMD_AlbumArtistRaw)
-
-    return SongIn(
-        title=mbipc.library_get_file_tag(path, musicbeeipc.MBMD_TrackTitle),
-        length=mb_duration_to_seconds(
-            mbipc.library_get_file_property(path, musicbeeipc.MBFP_Duration)
-        ),
-        album=mbipc.library_get_file_tag(path, musicbeeipc.MBMD_Album),
-        album_artist=None if not album_artist else album_artist,
-        artist=mbipc.library_get_file_tag(path, musicbeeipc.MBMD_Artist),
-        tags=get_tags(path),
+def get_albums():
+    logger.info("Getting albums from musicbee")
+    files = get_library_files()
+    paths, albums = zip(
+        *[
+            (os.path.join(os.path.split(MUSIC_PATH)[0], file.path), file.album)
+            for file in files
+        ]
     )
+    _albums = []
+    _paths = []
+
+    logger.info("Filtering albums")
+    for path, album in zip(paths, albums):
+        album = clean_album(album)
+        if album not in _albums:
+            _albums.append(album)
+            _paths.append(path)
+
+    return _albums, _paths
 
 
-def sync_data(
-    replace_existing: bool = False,
-    query: str = "",
-    fields=["ArtistPeople", "Title", "Album"],
-):
+def save_album_art():
+    albums, paths = get_albums()
+    with click.progressbar(length=len(albums)) as bar:
+        for album, path in zip(albums, paths):
+            bar.update(1)
+            album_hash = md5(album.lower().encode("utf-8")).hexdigest()
+            art_path = os.path.join(os.path.dirname(path), "Cover.jpg")
+            new_art_path = os.path.join(
+                ALBUM_ART_PATH, album_hash[0:2], album_hash + ".png"
+            )
+
+            if not os.path.exists(art_path) or os.path.exists(new_art_path):
+                continue
+
+            copy(art_path, new_art_path)
+
+
+def sync_data():
     start = time.time()
     print(datetime.now().time())
-    paths = get_paths(query=query, fields=fields)
+    files = get_library_files()
 
-    with click.progressbar(paths) as click_paths:
-        for idx, path in enumerate(click_paths):
-            song = get_song(path)
+    with click.progressbar(files) as click_files:
+        for idx, file in enumerate(click_files):
             try:
-                song_logic.add(
-                    song,
-                    return_existing=True,
-                    update_existing=True,
-                    replace_existing_tags=replace_existing,
+                file_logic.add(file)
+            except Exception:
+                logger.bind(song=file.dict()).exception(
+                    "Something went wrong while adding a song"
                 )
-            except Exception as ex:
-                print(ex)
-                print(f"{song.title} - {song.artist}")
-                logger.error(f"MB: {song.artist} - {song.title}")
             if idx % 500 == 0:
                 db.commit()
     print(time.time() - start)

@@ -1,0 +1,47 @@
+altair==4.2.0; python_version >= "3.7"
+attrs==21.4.0; python_version >= "3.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version >= "3.7"
+better-exceptions==0.3.3
+brotli==1.0.9; python_version >= "3.6"
+click==8.0.4; python_version >= "3.6"
+colorama==0.4.4; python_version >= "3.6" and python_full_version < "3.0.0" and platform_system == "Windows" and sys_platform == "win32" or platform_system == "Windows" and python_version >= "3.6" and python_full_version >= "3.5.0" and sys_platform == "win32"
+dash-alternative-viz @ git+https://github.com/plotly/dash-alternative-viz.git@master
+dash-bootstrap-components==1.0.3; python_version >= "3.6" and python_version < "4"
+dash-bootstrap-templates==1.0.5
+dash-core-components==2.0.0; python_version >= "3.6" and python_version < "4"
+dash-html-components==2.0.0; python_version >= "3.6" and python_version < "4"
+dash-table==5.0.0; python_version >= "3.6" and python_version < "4"
+dash==2.2.0; python_version >= "3.6"
+deprecated==1.2.13; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.4.0"
+entrypoints==0.4; python_version >= "3.7"
+faker==12.0.1; python_version >= "3.7"
+flask-compress==1.11; python_version >= "3.6" and python_version < "4"
+flask==2.0.3; python_version >= "3.6" and python_version < "4"
+itsdangerous==2.1.0; python_version >= "3.7"
+jaconv==0.3
+jinja2==3.0.3; python_version >= "3.7"
+jsonschema==4.4.0; python_version >= "3.7"
+loguru==0.6.0; python_version >= "3.5"
+markupsafe==2.1.0; python_version >= "3.7"
+mixer==7.2.1; python_version >= "3.7"
+numpy==1.22.2
+pandas==1.4.1; python_version >= "3.8"
+plotly==5.6.0; python_version >= "3.6" and python_version < "4"
+pony==0.7.16
+psycopg2-binary==2.9.3; python_version >= "3.6"
+pydantic==1.9.0; python_full_version >= "3.6.1"
+pykakasi==2.2.1
+pylast==4.5.0; python_version >= "3.6"
+pypiwin32==223; sys_platform == "win32"
+pyrsistent==0.18.1; python_version >= "3.7"
+python-dateutil==2.8.2; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.3.0")
+python-dotenv==0.19.2; python_version >= "3.5"
+pytz==2021.3
+pywin32==303; sys_platform == "win32"
+scipy==1.8.0; python_version >= "3.9" and python_version < "3.11"
+six==1.16.0; python_version >= "3.8" and python_full_version < "3.0.0" or python_full_version >= "3.3.0" and python_version >= "3.8"
+tenacity==8.0.1; python_version >= "3.6"
+toolz==0.11.2; python_version >= "3.7"
+typing-extensions==4.1.1; python_version >= "3.6" and python_full_version >= "3.6.1"
+werkzeug==2.0.3; python_version >= "3.6"
+win32-setctime==1.1.0; sys_platform == "win32" and python_version >= "3.5"
+wrapt==1.13.3; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"

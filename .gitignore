@@ -102,7 +102,8 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-.env
+*.env*
+!*.template
 .venv
 env/
 venv/
@@ -134,9 +135,16 @@ dmypy.json
 !.vscode/launch.json
 
 # test files
+/exports/*
 *.db
 *.sqlite
 *.sqlite3
 *.csv
 
-# only commit template
+*.ipynb
+
+.exports
+.logs
+
+*.mbl
+!tests/data/MusicBeeLibrary.mbl

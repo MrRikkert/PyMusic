@@ -3,7 +3,7 @@ from mixer.factory import GenFactory
 from mixer.main import faker
 from pony import orm
 
-from app.db.base import db
+from shared.db.base import db
 
 
 class MyFactory(GenFactory):
@@ -26,6 +26,7 @@ def reset_db():
         db.bind(provider="sqlite", filename=":memory:")
         # db.bind(provider="sqlite", filename="test.sqlite", create_db=True)
     except orm.core.BindingError:
+        # Logging not needed
         pass
     else:
         db.generate_mapping(check_tables=False)

@@ -6,12 +6,15 @@ steps:
   # Testen die uitgevoerd worden bij een normale commit
   - name: test commit
     image: python:3.8
+    environment:
+      MUSIC_PATH: Y:\Music
+      LIBRARY_BASE_PATH: Y:\Music
     commands:
-      - pip install pipenv
-      # Installeer pip packages naar de host python in plaats van een venv
-      # Check met deploy op de juiste versies en gebruikt dev packages voor tests
-      - pipenv install --system --deploy --dev --ignore-pipfile
+      - pip install -r requirements.dev.txt
       - pytest
+      - flake8
+      - autoflake -r --remove-all-unused-imports --remove-unused-variables .
+      - isort . -c
     when:
       branch:
         exclude:
@@ -21,22 +24,24 @@ steps:
   - name: test full
     image: python:3.8
     environment:
+      MUSIC_PATH: Y:\Music
+      LIBRARY_BASE_PATH: Y:\Music
       # Deze secrets staan gedefinieerd in de drone server
       LASTFM_KEY:
         from_secret: LASTFM_KEY
       LASTFM_SECRET:
         from_secret: LASTFM_SECRET
     commands:
-      - pip install pipenv
-      # Installeer pip packages naar de host python in plaats van een venv
-      # Check met deploy op de juiste versies en gebruikt dev packages voor tests
-      - pipenv install --system --deploy --dev --ignore-pipfile
+      - pip install -r requirements.dev.txt
       # Zet de benodigde env variabelen in de sessie
       # deze worden opgepakt door de applicatie
       - export LASTFM_KEY=$LASTFM_KEY
       - export LASTFM_SECRET=$LASTFM_SECRET
       # Draai ook de lastfm network tests
       - pytest --run-optional-tests=lastfm
+      - flake8
+      - autoflake -r --remove-all-unused-imports --remove-unused-variables .
+      - isort . -c
     when:
       branch:
         - master
@@ -45,3 +50,28 @@ trigger:
   event:
     - push
     - pull_request
+
+---
+kind: pipeline
+type: docker
+name: publish
+
+steps:
+  - name: docker registry
+    image: plugins/docker
+    settings:
+      # Deze secrets staan gedefinieerd in de drone server
+      username:
+        from_secret: DOCKER_ID
+      password:
+        from_secret: DOCKER_PASSWORD
+      repo: mrrikkert/pymusic
+      tags: latest
+
+trigger:
+  branch:
+    - master
+  event:
+    - push
+depends_on:
+  - test
