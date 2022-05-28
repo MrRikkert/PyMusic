@@ -8,8 +8,17 @@ from app.app import app, server  # noqa
 from app.pages.listening_report import get_layout  # noqa: E402
 from shared.db.base import init_db  # noqa: E402
 
-app.layout = get_layout()
+
+def init():
+    app.layout = get_layout()
+    init_db()
+
+
+def run_server():
+    init()
+    return server
+
 
 if __name__ == "__main__":
-    init_db()
+    init()
     app.run_server(debug=True)

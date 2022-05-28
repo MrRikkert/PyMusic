@@ -8,6 +8,7 @@ steps:
     image: python:3.8
     environment:
       MUSIC_PATH: Y:\Music
+      LIBRARY_BASE_PATH: Y:\Music
     commands:
       - pip install -r requirements.dev.txt
       - pytest
@@ -24,6 +25,7 @@ steps:
     image: python:3.8
     environment:
       MUSIC_PATH: Y:\Music
+      LIBRARY_BASE_PATH: Y:\Music
       # Deze secrets staan gedefinieerd in de drone server
       LASTFM_KEY:
         from_secret: LASTFM_KEY
@@ -48,3 +50,28 @@ trigger:
   event:
     - push
     - pull_request
+
+---
+kind: pipeline
+type: docker
+name: publish
+
+steps:
+  - name: docker registry
+    image: plugins/docker
+    settings:
+      # Deze secrets staan gedefinieerd in de drone server
+      username:
+        from_secret: DOCKER_ID
+      password:
+        from_secret: DOCKER_PASSWORD
+      repo: mrrikkert/pymusic
+      tags: latest
+
+trigger:
+  branch:
+    - master
+  event:
+    - push
+depends_on:
+  - test

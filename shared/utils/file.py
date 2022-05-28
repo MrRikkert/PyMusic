@@ -5,7 +5,7 @@ from typing import List, Union
 from shared.db.models import FileDb
 from shared.models.songs import File
 from shared.models.tags import TagIn
-from shared.settings import MUSIC_PATH, TAG_LIST
+from shared.settings import LIBRARY_BASE_PATH, TAG_LIST
 
 
 def get_normalized_path(path: str, rel_path: str = None) -> str:
@@ -30,7 +30,7 @@ def get_normalized_path(path: str, rel_path: str = None) -> str:
         - The normalized path
     """
     if not rel_path:
-        rel_path = MUSIC_PATH
+        rel_path = LIBRARY_BASE_PATH
 
     # Check if path is windows or not
     # https://regex101.com/r/rDtx0s/1
