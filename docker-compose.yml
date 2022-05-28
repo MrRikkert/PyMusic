@@ -15,6 +15,7 @@ services:
       ALBUM_ART_PATH: ${DOCKER_ALBUM_ART_PATH}
       IMG_URL: ${DOCKER_IMG_URL}
       MUSIC_PATH: ${DOCKER_MUSIC_PATH}
+      LIBRARY_BASE_PATH: ${DOCKER_LIBRARY_BASE_PATH}
     env_file:
       - .env
     volumes:

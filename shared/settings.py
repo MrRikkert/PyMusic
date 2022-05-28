@@ -66,7 +66,9 @@ HASH_ALGORITHMS = ["bcrypt"]
 # LastFM
 LASTFMKEY = ""
 LASTFMSECRET = ""
+
 MUSIC_PATH = ""
+LIBRARY_BASE_PATH = ""
 
 # --------------------------------------------------------------------------------------
 
@@ -108,3 +110,5 @@ if os.getenv("IMG_URL"):
     IMG_URL = os.getenv("IMG_URL")
 if os.getenv("MUSIC_PATH"):
     MUSIC_PATH = os.getenv("MUSIC_PATH")
+if os.getenv("LIBRARY_BASE_PATH"):
+    LIBRARY_BASE_PATH = os.getenv("LIBRARY_BASE_PATH")
