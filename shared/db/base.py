@@ -1,6 +1,6 @@
 import psycopg2
-from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 from pony import orm
+from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
 from shared import settings
 
