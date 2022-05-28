@@ -8,6 +8,7 @@ steps:
     image: python:3.8
     environment:
       MUSIC_PATH: Y:\Music
+      LIBRARY_BASE_PATH: Y:\Music
     commands:
       - pip install -r requirements.dev.txt
       - pytest
@@ -24,6 +25,7 @@ steps:
     image: python:3.8
     environment:
       MUSIC_PATH: Y:\Music
+      LIBRARY_BASE_PATH: Y:\Music
       # Deze secrets staan gedefinieerd in de drone server
       LASTFM_KEY:
         from_secret: LASTFM_KEY
