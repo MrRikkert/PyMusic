@@ -25,4 +25,12 @@ ENV LIBRARY_BASE_PATH="/app/music"
 ENV LASTFM_KEY=""
 ENV LASTFM_SECRET=""
 
-CMD ["gunicorn", "--workers=1", "--threads=1", "-b 0.0.0.0:8080", "server:run_server()"]
+ENV GUNICORN_WORKERS=1
+ENV GUNICORN_THREADS=1
+
+CMD gunicorn \
+    --workers=${GUNICORN_WORKERS} \
+    --threads=${GUNICORN_THREADS} \
+    --worker-tmp-dir=/dev/shm \
+    -b 0.0.0.0:8080 \
+    "server:run_server()"
