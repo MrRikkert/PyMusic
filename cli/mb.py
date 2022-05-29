@@ -18,10 +18,7 @@ def get_albums():
     logger.info("Getting albums from musicbee")
     files = get_library_files()
     paths, albums = zip(
-        *[
-            (os.path.join(os.path.split(MUSIC_PATH)[0], file.path), file.album)
-            for file in files
-        ]
+        *[(os.path.join(MUSIC_PATH, file.path), file.album) for file in files]
     )
     _albums = []
     _paths = []
