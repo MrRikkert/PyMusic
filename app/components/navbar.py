@@ -77,7 +77,7 @@ def get_layout():
 def fill_options(value):
     sql = """
     SELECT
-        MAX(sc.date) max_date,
+        MAX(sc.date) + INTERVAL '1 day' max_date,
         MIN(sc.date) min_date
     FROM scrobble sc
     """
