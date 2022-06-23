@@ -34,4 +34,5 @@ readme.md
 docstring-template.mustache
 pyproject.toml
 requirements.dev.txt
+*.mbl
 *.ipynb
