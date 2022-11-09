@@ -153,6 +153,10 @@ def get_library_files(library_path: str = "./MusicBeeLibrary.mbl") -> List[File]
                     type=song.get("type"),
                     sort_artist=song.get("sort_artist"),
                     language=song.get("language"),
+                    date_added=song.get("date_added"),
+                    file_size=song.get("file_size"),
+                    bitrate=song.get("bitrate"),
+                    sample_rate=song.get("sample_rate"),
                 )
             )
     return files

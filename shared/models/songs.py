@@ -28,6 +28,10 @@ class File(BaseSong):
     type: str = Field(None)
     sort_artist: str = Field(None)
     language: str = Field(None)
+    date_added: datetime = Field(None)
+    file_size: int = Field(None)
+    bitrate: int = Field(None)
+    sample_rate: int = Field(None)
 
 
 class SongIn(BaseSong):
