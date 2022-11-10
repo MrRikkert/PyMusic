@@ -5,7 +5,7 @@ name: test
 steps:
   # Testen die uitgevoerd worden bij een normale commit
   - name: test commit
-    image: python:3.8
+    image: python:3.9
     environment:
       MUSIC_PATH: Y:\Music
       LIBRARY_BASE_PATH: Y:\Music
@@ -22,7 +22,7 @@ steps:
 
   # Deze testen worden bij commits/pull requests op master uitgevoerd
   - name: test full
-    image: python:3.8
+    image: python:3.9
     environment:
       MUSIC_PATH: Y:\Music
       LIBRARY_BASE_PATH: Y:\Music
