@@ -6,7 +6,7 @@ authors = ["MrRikkert"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-pylast = "^4.2.1"
+pylast = "^5.1.0"
 pony = "^0.7.14"
 python-dotenv = "^0.19.2"
 pypiwin32 = { version="^223", markers="sys_platform == 'win32'" }

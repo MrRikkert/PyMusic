@@ -48,6 +48,10 @@ def add(file: File) -> FileDb:
         artist=file.artist,
         album=file.album,
         album_artist=file.album_artist,
+        date_added=file.date_added,
+        file_size=file.file_size,
+        bitrate=file.bitrate,
+        sample_rate=file.sample_rate,
     )
     for tag in TAG_LIST:
         file_db[tag] = file[tag]
@@ -153,6 +157,10 @@ def get_library_files(library_path: str = "./MusicBeeLibrary.mbl") -> List[File]
                     type=song.get("type"),
                     sort_artist=song.get("sort_artist"),
                     language=song.get("language"),
+                    date_added=song.get("date_added"),
+                    file_size=song.get("file_size"),
+                    bitrate=song.get("bitrate"),
+                    sample_rate=song.get("sample_rate"),
                 )
             )
     return files

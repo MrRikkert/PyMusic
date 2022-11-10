@@ -1,4 +1,5 @@
 # https://gist.github.com/lempamo/6e8977065da593e372e45d4c628e7fc7
+from datetime import datetime, timedelta
 from enum import Enum
 from typing import List
 
@@ -60,6 +61,19 @@ def __read_str(file):
     return file.read(length).decode("utf-8")
 
 
+# https://stackoverflow.com/a/69542738
+def __ticks_to_datetime(binary_time: int) -> datetime:
+    binary_time_string = f"{binary_time:064b}"
+
+    # Not used here, but you can expand to check based on
+    # https://learn.microsoft.com/en-us/dotnet/api/system.datetimekind?view=net-5.0
+    time_kind = binary_time_string[:2]  # noqa
+
+    time_microseconds = int(binary_time_string[2:], 2) / 10
+    time_difference = timedelta(microseconds=time_microseconds)
+    return datetime(1, 1, 1) + time_difference
+
+
 def read_file(library_location: str) -> List[dict]:  # noqa
     with open(library_location, "rb") as mbl:
         count = __read_int(mbl.read(4))
@@ -94,8 +108,8 @@ def read_file(library_location: str) -> List[dict]:  # noqa
                 media["bitrate_type"] = __read_uint(mbl.read(1))
                 media["bitrate"] = __read_int(mbl.read(2))
                 media["track_length"] = __read_int(mbl.read(4))
-                media["date_added"] = __read_int(mbl.read(8))
-                media["date_modified"] = __read_int(mbl.read(8))
+                media["date_added"] = __ticks_to_datetime(__read_int(mbl.read(8)))
+                media["date_modified"] = __ticks_to_datetime(__read_int(mbl.read(8)))
 
                 media["artwork"] = []
                 while True:

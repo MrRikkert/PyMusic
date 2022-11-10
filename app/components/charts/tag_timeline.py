@@ -75,7 +75,7 @@ def _get_data(playtime, min_date, max_date, group, resample, frmt):
             lambda x: x.drop_duplicates("date")
             .set_index("date")
             .resample(resample)
-            .sum()
+            .sum(numeric_only=True)
         )
         .reset_index()
     )
