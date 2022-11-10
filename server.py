@@ -1,6 +1,12 @@
 import warnings
 
 warnings.filterwarnings("ignore", category=FutureWarning, module="altair")
+# filter out pandas SQLAlchemy UserWarning
+warnings.filterwarnings(
+    "ignore",
+    category=UserWarning,
+    message=r".*pandas.*SQLAlchemy.*",
+)
 
 # Import settings before anything else
 import shared.settings  # noqa isort:skip
