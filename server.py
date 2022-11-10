@@ -1,6 +1,6 @@
 import warnings
 
-warnings.filterwarnings("ignore", category=UserWarning, module="pandas")
+warnings.filterwarnings("ignore", category=FutureWarning, module="altair")
 
 # Import settings before anything else
 import shared.settings  # noqa isort:skip
