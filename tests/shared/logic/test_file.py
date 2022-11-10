@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from pony import orm
 from pony.orm import db_session
 
@@ -21,6 +23,10 @@ def test_add_file_non_existing_file_and_song():
             album="album",
             album_artist="artist_album",
             length=120,
+            date_added=datetime.now(),
+            bitrate=320,
+            sample_rate=44100,
+            file_size=1000,
         )
     )
     assert orm.count(f for f in FileDb) == 1
@@ -47,6 +53,10 @@ def test_add_file_non_existing_file_and_existing_song():
             album="album",
             album_artist="artist",
             length=120,
+            date_added=datetime.now(),
+            bitrate=320,
+            sample_rate=44100,
+            file_size=1000,
         )
     )
     assert orm.count(f for f in FileDb) == 1
