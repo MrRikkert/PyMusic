@@ -80,7 +80,7 @@ def _get_streamgraph(playtime):
     df = get_df_from_sql(sql, None, None, where=False, parse_dates="date")
     df.index = df["date"]
 
-    df = df.groupby("album").resample("D").mean().reset_index()
+    df = df.groupby("album").resample("D").mean(numeric_only=True).reset_index()
 
     d = df.set_index(["date", "album"])
     midx = pd.MultiIndex.from_product(
