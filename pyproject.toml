@@ -27,6 +27,7 @@ altair = "^4.2.0"
 scipy = { version="^1.7.3", python=">=3.9,<3.11" }
 dash-alternative-viz = {git = "https://github.com/plotly/dash-alternative-viz.git"}
 pydantic = "^1.9.0"
+Pillow = "^9.3.0"
 
 [tool.poetry.dev-dependencies]
 black = "^22.1.0"

@@ -25,6 +25,7 @@ markupsafe==2.1.0; python_version >= "3.7"
 mixer==7.2.1; python_version >= "3.7"
 numpy==1.22.2
 pandas==1.4.1; python_version >= "3.8"
+pillow==9.3.0; python_version >= "3.7"
 plotly==5.6.0; python_version >= "3.6" and python_version < "4"
 pony==0.7.16
 psycopg2-binary==2.9.3; python_version >= "3.6"
