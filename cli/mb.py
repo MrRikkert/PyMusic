@@ -12,6 +12,31 @@ from shared.logic import file as file_logic
 from shared.logic.file import get_library_files
 from shared.settings import ALBUM_ART_PATH, MUSIC_PATH
 from shared.utils.clean import clean_album
+from PIL import Image, UnidentifiedImageError
+
+
+def __get_art_path(path) -> Path:
+    base_path = Path(os.path.dirname(path))
+    art_path = base_path / "Cover.jpg"
+    if not os.path.exists(art_path):
+        art_path = base_path / "cover.jpg"
+    return Path(art_path)
+
+
+def __get_new_art_path(album_hash, size) -> Path:
+    return Path(ALBUM_ART_PATH) / album_hash[0:2] / f"{album_hash}x{size}.png"
+
+
+def __save_thumbnail(im, album_hash, size):
+    im.thumbnail((size, size), Image.ANTIALIAS)
+    new_art_path = __get_new_art_path(album_hash, size)
+    new_art_path.parent.mkdir(parents=True, exist_ok=True)
+
+    if new_art_path.exists():
+        return
+    if im.mode != "RGB":
+        im = im.convert("RGB")
+    im.save(new_art_path, optimize=True, quality=85)
 
 
 def get_albums():
@@ -34,40 +59,17 @@ def get_albums():
 
 
 def save_album_art():
-    from PIL import Image, UnidentifiedImageError
-
-    def __get_art_path(path) -> Path:
-        base_path = Path(os.path.dirname(path))
-        art_path = base_path / "Cover.jpg"
-        if not os.path.exists(art_path):
-            art_path = base_path / "cover.jpg"
-        return Path(art_path)
-
-    def __get_new_art_path(album_hash, size) -> Path:
-        return Path(ALBUM_ART_PATH) / album_hash[0:2] / f"{album_hash}x{size}.png"
-
-    sizes = [512, 256, 128, 64]
     albums, paths = get_albums()
     with click.progressbar(length=len(albums)) as bar:
         for album, path in zip(albums, paths):
             bar.update(1)
             album_hash = md5(album.lower().encode("utf-8")).hexdigest()
-
             art_path = __get_art_path(path)
 
             try:
                 im = Image.open(art_path)
-
-                for size in sizes:
-                    im.thumbnail((size, size), Image.ANTIALIAS)
-                    new_art_path = __get_new_art_path(album_hash, size)
-                    new_art_path.parent.mkdir(parents=True, exist_ok=True)
-
-                    if new_art_path.exists():
-                        continue
-                    if im.mode != "RGB":
-                        im = im.convert("RGB")
-                    im.save(new_art_path, optimize=True, quality=85)
+                for size in [512, 256, 128, 64]:
+                    __save_thumbnail(im, album_hash, size)
             except FileNotFoundError:
                 logger.bind(file=art_path).info("Cover not found")
             except UnidentifiedImageError:
