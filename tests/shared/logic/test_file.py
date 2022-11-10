@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from pony import orm
 from pony.orm import db_session
 
@@ -5,7 +7,6 @@ from shared.db.models import AlbumDb, ArtistDb, FileDb, SongDb, TagDb
 from shared.logic import file as file_logic
 from shared.models.songs import File
 from tests.utils import mixer, reset_db
-from datetime import datetime
 
 
 def setup_function():
