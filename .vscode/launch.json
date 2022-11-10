@@ -5,19 +5,26 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Debug CLI",
-      "type": "python",
-      "request": "launch",
-      "program": "${workspaceFolder}/main.py",
-      "console": "integratedTerminal",
-      "args": ["import"]
+        "name": "Debug Dash",
+        "type": "python",
+        "request": "launch",
+        "program": "${workspaceFolder}/server.py",
+        "console": "integratedTerminal"
     },
     {
-      "name": "Python: Current File",
-      "type": "python",
-      "request": "launch",
-      "program": "${file}",
-      "console": "integratedTerminal"
+        "name": "Debug CLI",
+        "type": "python",
+        "request": "launch",
+        "program": "${workspaceFolder}/main.py",
+        "console": "integratedTerminal",
+        "args": ["import"]
+    },
+    {
+        "name": "Python: Current File",
+        "type": "python",
+        "request": "launch",
+        "program": "${file}",
+        "console": "integratedTerminal"
     }
   ]
 }
