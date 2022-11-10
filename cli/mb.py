@@ -63,8 +63,11 @@ def save_album_art():
                     new_art_path = __get_new_art_path(album_hash, size)
                     new_art_path.parent.mkdir(parents=True, exist_ok=True)
 
-                    if not new_art_path.exists():
-                        im.save(new_art_path, optimize=True, quality=85)
+                    if new_art_path.exists():
+                        continue
+                    if im.mode != "RGB":
+                        im = im.convert("RGB")
+                    im.save(new_art_path, optimize=True, quality=85)
             except FileNotFoundError:
                 logger.bind(file=art_path).info("Cover not found")
             except UnidentifiedImageError:
