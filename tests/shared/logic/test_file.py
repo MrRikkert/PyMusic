@@ -5,6 +5,7 @@ from shared.db.models import AlbumDb, ArtistDb, FileDb, SongDb, TagDb
 from shared.logic import file as file_logic
 from shared.models.songs import File
 from tests.utils import mixer, reset_db
+from datetime import datetime
 
 
 def setup_function():
@@ -21,6 +22,10 @@ def test_add_file_non_existing_file_and_song():
             album="album",
             album_artist="artist_album",
             length=120,
+            date_added=datetime.now(),
+            bitrate=320,
+            sample_rate=44100,
+            file_size=1000,
         )
     )
     assert orm.count(f for f in FileDb) == 1
@@ -47,6 +52,10 @@ def test_add_file_non_existing_file_and_existing_song():
             album="album",
             album_artist="artist",
             length=120,
+            date_added=datetime.now(),
+            bitrate=320,
+            sample_rate=44100,
+            file_size=1000,
         )
     )
     assert orm.count(f for f in FileDb) == 1
