@@ -53,7 +53,7 @@ steps:
       branch:
         - master
 
-  - name: restore-cache-with-filesystem
+  - name: build-cache-with-filesystem
     image: meltwater/drone-cache
     settings:
       backend: "filesystem"
