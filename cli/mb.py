@@ -6,13 +6,13 @@ from pathlib import Path
 
 import click
 from loguru import logger
+from PIL import Image, UnidentifiedImageError
 
 from shared.db.base import db
 from shared.logic import file as file_logic
 from shared.logic.file import get_library_files
 from shared.settings import ALBUM_ART_PATH, MUSIC_PATH
 from shared.utils.clean import clean_album
-from PIL import Image, UnidentifiedImageError
 
 
 def __get_art_path(path) -> Path:

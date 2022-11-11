@@ -4,7 +4,7 @@ from dash import Input, Output, State, html
 from pony.orm import db_session
 
 from app.app import app
-from app.utils import seconds_to_text, get_art_url
+from app.utils import get_art_url, seconds_to_text
 
 
 def get_layout(_type):
