@@ -9,9 +9,6 @@ on:
   pull_request:
     branches: [ "develop", "master" ]
 
-permissions:
-  contents: read
-
 env:
   LIBRARY_BASE_PATH: "Y:\\Music"
   MUSIC_PATH: Y:\\Music
