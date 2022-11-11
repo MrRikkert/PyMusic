@@ -19,6 +19,7 @@ steps:
       branch:
         exclude:
           - master
+          - github-actions
 
   # Deze testen worden bij commits/pull requests op master uitgevoerd
   - name: test full
