@@ -72,6 +72,12 @@ trigger:
     - push
     - pull_request
 
+
+volumes:
+  - name: cache
+    host:
+      path: /volume1/docker/drone/cache
+
 ---
 kind: pipeline
 type: docker
@@ -96,9 +102,3 @@ trigger:
     - push
 depends_on:
   - test
-
-
-volumes:
-  - name: cache
-    host:
-      path: /volume1/docker/drone/cache
