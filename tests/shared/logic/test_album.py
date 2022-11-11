@@ -130,10 +130,10 @@ def test_add_album_existing_album_with_return_existing():
 @db_session
 def test_add_album_correct_hash():
     album = album_logic.add(name="album disc 1", artist="artist")
-    assert album.art == os.path.join("87", "8777347537b94cf98aa05b2310877a81.png")
+    assert album.art == os.path.join("a4", "a4b2d20f456833bcdac42e73edad64c0.png")
 
     album = album_logic.add(name="Album2", artist="artist")
     assert album.art == os.path.join("f8", "f8d7bd28b526864cf358256ca7b041c6.png")
 
     album = album_logic.add(name="Test Album (Disc 1)", artist="artist")
-    assert album.art == os.path.join("64", "6403be228e301a5fa973392207537642.png")
+    assert album.art == os.path.join("68", "68798d8741b8c53335aadcc9eb291ad1.png")
