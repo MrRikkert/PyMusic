@@ -8,6 +8,7 @@ from dash import dcc
 from dateutil.relativedelta import relativedelta
 
 from shared.db.base import db
+from shared.settings import IMG_URL
 
 
 def get_min_max_date(dates):
@@ -96,3 +97,10 @@ def set_length_scale(df, column, playtime):
     else:
         scale = "Plays"
     return (df, scale)
+
+
+def get_art_url(hash_, size=512):
+    if size not in [512, 256, 128, 64]:
+        raise ValueError("unsupported image size")
+    idx = hash_.rfind(".")
+    return IMG_URL + hash_[:idx] + f"x{size}" + hash_[idx:]

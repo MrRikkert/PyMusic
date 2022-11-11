@@ -4,8 +4,7 @@ from dash import Input, Output, State, html
 from pony.orm import db_session
 
 from app.app import app
-from app.utils import seconds_to_text
-from shared.settings import IMG_URL
+from app.utils import get_art_url, seconds_to_text
 
 
 def get_layout(_type):
@@ -112,7 +111,7 @@ def _get_rows(df, name_column):
                         className="fw-bold",
                     ),
                     html.Img(
-                        src=IMG_URL + row.Art,
+                        src=row["Art"],
                         className="me-3",
                         style={"width": "60px", "height": "60px", "padding": "5px"},
                     ),
@@ -140,6 +139,21 @@ def _get_rows(df, name_column):
     return rows
 
 
+def __get_data(df, playtime):
+    df = pd.read_json(df, orient="split")
+    df["relative"] = df["seconds"] / df.iloc[0]["seconds"] * 100
+    if playtime:
+        df["seconds"] = df["seconds"].apply(seconds_to_text)
+    else:
+        df["seconds"] = df["seconds"].apply(lambda i: f"{i} plays")
+
+    df.loc[df.index[0], "Art"] = get_art_url(df.iloc[0]["Art"], size=512)
+    df.loc[df.index[1:], "Art"] = df.loc[df.index[1:], "Art"].apply(
+        get_art_url, size=64
+    )
+    return df
+
+
 @app.callback(
     Output("top-mixed-image-chart-top-name", "children"),
     Output("top-mixed-image-chart-top-playtime", "children"),
@@ -150,16 +164,11 @@ def _get_rows(df, name_column):
 )
 @db_session
 def _top_mixed(df, playtime):
-    df = pd.read_json(df, orient="split")
-    df["relative"] = df["seconds"] / df.iloc[0]["seconds"] * 100
-    if playtime:
-        df["seconds"] = df["seconds"].apply(seconds_to_text)
-    else:
-        df["seconds"] = df["seconds"].apply(lambda i: f"{i} plays")
+    df = __get_data(df, playtime)
     return (
         df.iloc[0]["Name"],
         df.iloc[0]["seconds"],
-        IMG_URL + df.iloc[0].Art,
+        df.iloc[0]["Art"],
         _get_rows(df.iloc[1:], "Name"),
     )
 
@@ -174,16 +183,11 @@ def _top_mixed(df, playtime):
 )
 @db_session
 def _top_artists(df, playtime):
-    df = pd.read_json(df, orient="split")
-    df["relative"] = df["seconds"] / df.iloc[0]["seconds"] * 100
-    if playtime:
-        df["seconds"] = df["seconds"].apply(seconds_to_text)
-    else:
-        df["seconds"] = df["seconds"].apply(lambda i: f"{i} plays")
+    df = __get_data(df, playtime)
     return (
         df.iloc[0]["Artist"],
         df.iloc[0]["seconds"],
-        IMG_URL + df.iloc[0].Art,
+        df.iloc[0]["Art"],
         _get_rows(df.iloc[1:], "Artist"),
     )
 
@@ -199,16 +203,11 @@ def _top_artists(df, playtime):
 )
 @db_session
 def _top_albums(df, playtime):
-    df = pd.read_json(df, orient="split")
-    df["relative"] = df["seconds"] / df.iloc[0]["seconds"] * 100
-    if playtime:
-        df["seconds"] = df["seconds"].apply(seconds_to_text)
-    else:
-        df["seconds"] = df["seconds"].apply(lambda i: f"{i} plays")
+    df = __get_data(df, playtime)
     return (
         df.iloc[0]["Album"],
         df.iloc[0]["seconds"],
         df.iloc[0]["Artist"],
-        IMG_URL + df.iloc[0].Art,
+        df.iloc[0]["Art"],
         _get_rows(df.iloc[1:], "Album"),
     )
