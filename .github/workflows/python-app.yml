@@ -45,19 +45,19 @@ jobs:
       run: poetry install --with dev
     - name: Lint
       run: |
-        flake8
-        autoflake -r --remove-all-unused-imports --remove-unused-variables .
-        isort . -c
+        poetry run flake8
+        poetry run autoflake -r --remove-all-unused-imports --remove-unused-variables .
+        poetry run isort . -c
     - name: Test
       run: |
-        pytest
+        poetry run pytest
     - name: Test optionals
       env:
         LASTFM_KEY: ${{ secrets.LASTFM_KEY }}
         LASTFM_SECRET: ${{ secrets.LASTFM_SECRET }}
       if: github.ref == 'refs/heads/master'
       run: |
-        pytest -m lastfm
+        poetry run pytest -m lastfm
 
   docker:
     runs-on: ubuntu-latest
