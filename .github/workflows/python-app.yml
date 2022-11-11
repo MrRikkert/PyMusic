@@ -43,15 +43,18 @@ jobs:
     - name: Install dependencies
       if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
       run: poetry install --with dev
-    - name: Lint
+    - name: Check Llinting
       run: |
         poetry run flake8
         poetry run autoflake -r --remove-all-unused-imports --remove-unused-variables .
+    - name: Check formatting
+      run: |
+        poetry run black . --check
         poetry run isort . -c
-    - name: Test
+    - name: Run tests
       run: |
         poetry run pytest
-    - name: Test optionals
+    - name: Run optional tests
       env:
         LASTFM_KEY: ${{ secrets.LASTFM_KEY }}
         LASTFM_SECRET: ${{ secrets.LASTFM_SECRET }}
