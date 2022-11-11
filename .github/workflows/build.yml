@@ -26,4 +26,4 @@ jobs:
           push: true
           tags:
             mrrikkert/pymusic:latest
-            mrrikkert/pymusic:${{ env.GITHUB_SHA }}
+            mrrikkert/pymusic:${{ github.event.pull_request.base.sha }}
