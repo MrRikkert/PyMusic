@@ -43,7 +43,7 @@ jobs:
     - name: Install dependencies
       if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
       run: poetry install --with dev
-    - name: Check Llinting
+    - name: Check linting
       run: |
         poetry run flake8
         poetry run autoflake -r --remove-all-unused-imports --remove-unused-variables .
