@@ -82,8 +82,8 @@ def add(name: str, artist: str = None, return_existing: bool = False) -> AlbumDb
         if not return_existing:
             raise IntegrityError("album already exists")
         return existing
-    album_hash = md5(name.lower().encode("utf-8")).hexdigest()
     name = clean_album(name)
+    album_hash = md5(name.lower().encode("utf-8")).hexdigest()
 
     artists = artist_logic.split(artist)
     return AlbumDb(
