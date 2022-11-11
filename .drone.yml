@@ -3,6 +3,20 @@ type: docker
 name: test
 
 steps:
+  - name: restore-cache-with-filesystem
+    image: meltwater/drone-cache
+    settings:
+      backend: "filesystem"
+      restore: true
+      cache_key: "volume"
+      archive_format: "gzip"
+      # filesystem_cache_root: "/tmp/cache"
+      mount:
+        - "~/.cache/pip"
+    volumes:
+    - name: cache
+      path: /tmp/cache
+
   - name: test commit
     image: python:3.9
     environment:
@@ -40,6 +54,21 @@ steps:
       branch:
         - master
 
+  - name: restore-cache-with-filesystem
+    image: meltwater/drone-cache
+    settings:
+      backend: "filesystem"
+      rebuild: true
+      cache_key: "volume"
+      archive_format: "gzip"
+      # filesystem_cache_root: "/tmp/cache"
+      mount:
+        - "~/.cache/pip"
+    volumes:
+    - name: cache
+      path: /tmp/cache
+
+
 trigger:
   event:
     - push
@@ -69,3 +98,9 @@ trigger:
     - push
 depends_on:
   - test
+
+
+volumes:
+  - name: cache
+    host:
+      path: /volume1/docker/drone/cache
