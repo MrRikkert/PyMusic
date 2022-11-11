@@ -64,7 +64,7 @@ jobs:
 
   docker:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master' && github.event == 'push'
+    if: github.ref == 'refs/heads/master' && github.event.pull_request.merged == true
     needs: "build"
     steps:
       - name: Set up QEMU
