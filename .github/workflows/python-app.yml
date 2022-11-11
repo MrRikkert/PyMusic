@@ -21,6 +21,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
+    - name: Set commit status to pending
+      uses: ouzi-dev/commit-status-updater@v2
     - name: Set up Python 3.9
       uses: actions/setup-python@v4
       with:
@@ -52,6 +54,11 @@ jobs:
       if: github.ref == 'refs/heads/master'
       run: |
         pytest -m lastfm
+    - name: Update commit status
+      uses: ouzi-dev/commit-status-updater@v2
+      if: always()
+      with:
+        status: "${{ job.status }}"
   docker:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master' && github.event == 'push'
