@@ -1,7 +1,6 @@
 import os
 import time
 from datetime import datetime
-from hashlib import md5
 from pathlib import Path
 
 import click
@@ -10,6 +9,7 @@ from PIL import Image, UnidentifiedImageError
 
 from shared.db.base import db
 from shared.logic import file as file_logic
+from shared.logic.album import get_album_art_hash
 from shared.logic.file import get_library_files
 from shared.settings import ALBUM_ART_PATH, MUSIC_PATH
 from shared.utils.clean import clean_album
@@ -63,7 +63,7 @@ def save_album_art():
     with click.progressbar(length=len(albums)) as bar:
         for album, path in zip(albums, paths):
             bar.update(1)
-            album_hash = md5(album.lower().encode("utf-8")).hexdigest()
+            album_hash = get_album_art_hash(album)
             art_path = __get_art_path(path)
 
             try:
