@@ -10,7 +10,6 @@ steps:
       restore: true
       cache_key: "volume"
       archive_format: "gzip"
-      # filesystem_cache_root: "/tmp/cache"
       mount:
         - "~/.cache/pip"
     volumes:
@@ -61,7 +60,6 @@ steps:
       rebuild: true
       cache_key: "volume"
       archive_format: "gzip"
-      # filesystem_cache_root: "/tmp/cache"
       mount:
         - "~/.cache/pip"
     volumes:
@@ -83,13 +81,13 @@ steps:
   - name: docker registry
     image: plugins/docker
     settings:
-      # Deze secrets staan gedefinieerd in de drone server
       username:
         from_secret: DOCKER_ID
       password:
         from_secret: DOCKER_PASSWORD
       repo: mrrikkert/pymusic
       tags: latest
+      cache-from: mrrikkert/pymusic
 
 trigger:
   branch:
