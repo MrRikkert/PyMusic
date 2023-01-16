@@ -24,6 +24,8 @@ def __get_art_path(path) -> Path:
 
 
 def __get_new_art_path(album_hash, size) -> Path:
+    # Strip extension
+    album_hash = os.path.splitext(album_hash)[0]
     return Path(ALBUM_ART_PATH) / f"{album_hash}x{size}.png"
 
 
