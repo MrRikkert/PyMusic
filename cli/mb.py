@@ -24,7 +24,7 @@ def __get_art_path(path) -> Path:
 
 
 def __get_new_art_path(album_hash, size) -> Path:
-    return Path(ALBUM_ART_PATH) / album_hash[0:2] / f"{album_hash}x{size}.png"
+    return Path(ALBUM_ART_PATH) / f"{album_hash}x{size}.png"
 
 
 def __save_thumbnail(im, album_hash, size):
